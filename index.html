@@ -101,7 +101,8 @@
 
   <!-- MAIN CONTENT AREA -->
   <main id="mainAppContent" class="hidden p-4 space-y-5">
-    <!-- TAB 1: DASHBOARD -->
+    
+    <!-- TAB 1: DASHBOARD & REPORT -->
     <section id="tab-dashboard" class="space-y-5">
       <div class="bg-brand-sky border border-blue-100 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
@@ -154,7 +155,7 @@
           <h3 class="text-sm font-bold flex items-center gap-2 text-brand-yellow">
             <i class="fa-solid fa-coins"></i> ဌာနဆိုင်ရာ ငွေစာရင်းနှင့် အမြတ်အရှုံး (P&L) Report
           </h3>
-          <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded text-yellow-200">Admin & Finance Only</span>
+          <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded text-yellow-200">Finance & Admin Only</span>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-left">
           <div class="bg-white/10 rounded-xl p-3">
@@ -173,12 +174,12 @@
       </div>
     </section>
 
-    <!-- TAB 2: STUDENTS & INQUIRIES -->
+    <!-- TAB 2: SALES & LEADS (လာမေးသူနှင့် သင်တန်းသားများ) -->
     <section id="tab-leads" class="hidden space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h2 class="text-base font-bold text-brand-blue">သင်တန်းလာမေးသူနှင့် ငွေသွင်းသူ စာရင်းများ</h2>
-          <p class="text-xs text-slate-500">မှတ်ချက်များ၊ အလားအလာ အဆင့်များနှင့် Group အခြေအနေများ</p>
+          <h2 class="text-base font-bold text-brand-blue">Sales ဌာန - သင်တန်းလာမေးသူနှင့် သင်တန်းသားများ</h2>
+          <p class="text-xs text-slate-500">လာမေးသူစာရင်းများ၊ အလားအလာရှိသူများနှင့် ငွေမသွင်းရသေးသူများ စာရင်း</p>
         </div>
         <button onclick="window.openLeadModal()" class="bg-brand-blue text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow">
           + စာရင်းအသစ်သွင်းရန်
@@ -203,12 +204,12 @@
       <div id="leadsContainer" class="space-y-3"></div>
     </section>
 
-    <!-- TAB 3: FINANCE & PURCHASE -->
+    <!-- TAB 3: FINANCE & PURCHASE (အဝယ်နှင့် ငွေစာရင်း) -->
     <section id="tab-finance" class="hidden space-y-4">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-base font-bold text-brand-blue">Purchase (အဝယ်) နှင့် Sales (အရောင်း) စာရင်းများ</h2>
-          <p class="text-xs text-slate-500">Finance နှင့် Purchase ဌာနများသာ ဝင်ရောက်ကြည့်ရှုနိုင်သည်</p>
+          <h2 class="text-base font-bold text-brand-blue">Finance & Purchase ဌာန - အဝယ်နှင့် ငွေစာရင်းများ</h2>
+          <p class="text-xs text-slate-500">ကုန်ကျစရိတ်၊ အသုံးစရိတ်များနှင့် ရောင်းရငွေများကို ပေါင်းစပ်တွက်ချက်သည့်နေရာ</p>
         </div>
         <button onclick="window.openExpenseModal()" class="bg-brand-yellow text-brand-blue text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm">
           + Purchase / အသုံးစရိတ် သွင်းရန်
@@ -217,23 +218,23 @@
       <div id="purchaseListSection" class="space-y-3"></div>
     </section>
 
-    <!-- TAB 4: ADMIN CONTROL CENTER -->
+    <!-- TAB 4: ADMIN SETTINGS (အသေးစိတ် ဆက်တင်များ) -->
     <section id="tab-admin" class="hidden space-y-6">
       <div class="bg-brand-sky border-l-4 border-brand-blue p-3.5 rounded-r-xl">
-        <h2 class="text-sm font-bold text-brand-blue"><i class="fa-solid fa-sliders text-brand-gold"></i> Admin Control Center (အသေးစိတ် Settings များ)</h2>
-        <p class="text-xs text-slate-600 mt-1">သင်တန်းများ၊ Pay စနစ်များ၊ လာမေးသည့် Source များကို အလွယ်တကူ အသစ်တိုးခြင်းနှင့် ဖျက်သိမ်းခြင်းများ လုပ်ဆောင်နိုင်သည်</p>
+        <h2 class="text-sm font-bold text-brand-blue"><i class="fa-solid fa-sliders text-brand-gold"></i> Admin Control Center (အသေးစိတ် ဆက်တင်များ)</h2>
+        <p class="text-xs text-slate-600 mt-1">ဝန်ထမ်းခွင့်ပြုချက်များ၊ ဌာနခွဲခြားခြင်း၊ သင်တန်းအသစ်တိုးခြင်းနှင့် Pay စနစ်များ စီမံရန်</p>
       </div>
 
-      <!-- Staff Approval -->
+      <!-- Staff Approval & Role Assignment -->
       <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
         <div class="flex items-center justify-between">
-          <h3 class="text-sm font-bold text-brand-blue">၁။ ဝန်ထမ်း ခွင့်ပြုချက် (Approval) နှင့် ရာထူးသတ်မှတ်ခြင်း</h3>
+          <h3 class="text-sm font-bold text-brand-blue">၁။ ဝန်ထမ်း ခွင့်ပြုချက် (Approval) နှင့် ဌာနသတ်မှတ်ခြင်း</h3>
           <button onclick="window.openStaffModal()" class="bg-brand-blue text-white text-xs font-bold px-3 py-2 rounded-xl">+ ဝန်ထမ်းအသစ် ကြိုထည့်ရန်</button>
         </div>
         <div id="staffListContainer" class="space-y-2.5"></div>
       </div>
 
-      <!-- Settings: Courses -->
+      <!-- Courses Settings -->
       <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
         <h3 class="text-sm font-bold text-brand-blue">၂။ သင်တန်းအမျိုးအစားများ စီမံရန် (Add / Remove Courses)</h3>
         <div class="flex gap-2">
@@ -244,7 +245,7 @@
         <div id="courseManageList" class="space-y-2"></div>
       </div>
 
-      <!-- Settings: Payment Methods -->
+      <!-- Payment Methods Settings -->
       <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
         <h3 class="text-sm font-bold text-brand-blue">၃။ Pay နှင့် Bank စနစ်များ စီမံရန်</h3>
         <div class="flex gap-2">
@@ -254,7 +255,7 @@
         <div id="payManageList" class="flex flex-wrap gap-2"></div>
       </div>
 
-      <!-- Settings: Lead Sources -->
+      <!-- Lead Sources Settings -->
       <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
         <h3 class="text-sm font-bold text-brand-blue">၄။ စုံစမ်းလာသည့်နေရာ (Source) များ စီမံရန်</h3>
         <div class="flex gap-2">
@@ -270,10 +271,10 @@
   <nav id="bottomNavBar" class="hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 shadow-lg max-w-[480px] md:max-w-[960px] mx-auto">
     <div class="grid grid-cols-4 py-1.5">
       <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex flex-col items-center justify-center py-1 text-brand-blue font-bold">
-        <i class="fa-solid fa-chart-pie text-lg"></i><span class="text-[11px]">Report</span>
+        <i class="fa-solid fa-chart-pie text-lg"></i><span class="text-[11px]">Report ချုပ်</span>
       </button>
       <button onclick="window.switchTab('leads')" id="nav-leads" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400">
-        <i class="fa-solid fa-users text-lg"></i><span class="text-[11px]">လာမေးသူ/သင်တန်းသား</span>
+        <i class="fa-solid fa-users text-lg"></i><span class="text-[11px]">Sales / လာမေးသူ</span>
       </button>
       <button onclick="window.switchTab('finance')" id="nav-finance" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400">
         <i class="fa-solid fa-wallet text-lg"></i><span class="text-[11px]">Finance & Purchase</span>
@@ -286,7 +287,7 @@
 </div>
 
 <!-- MODAL: LEAD & INQUIRY -->
-<div id="leadModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+<div id="leadModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 items-center justify-center p-4">
   <div class="bg-white w-full max-w-lg rounded-3xl p-5 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
     <div class="flex justify-between border-b pb-3">
       <h3 class="font-bold text-brand-blue text-base">သင်တန်းလာမေးသူ / သင်တန်းသား စာရင်းသွင်းရန်</h3>
@@ -361,7 +362,7 @@
 </div>
 
 <!-- MODAL: EXPENSE / PURCHASE -->
-<div id="expenseModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+<div id="expenseModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 items-center justify-center p-4">
   <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl">
     <div class="flex justify-between border-b pb-3">
       <h3 class="font-bold text-brand-blue text-base">Purchase / အသုံးစရိတ် သွင်းရန်</h3>
@@ -392,7 +393,7 @@
 </div>
 
 <!-- MODAL: STAFF -->
-<div id="staffModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+<div id="staffModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 items-center justify-center p-4">
   <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl">
     <div class="flex justify-between border-b pb-3">
       <h3 class="font-bold text-brand-blue text-base">ဝန်ထမ်း အသစ် ကြိုထည့်ရန်</h3>
@@ -886,8 +887,20 @@
     html2pdf().from(element).set(opt).save();
   };
 
-  window.openModal = (id) => document.getElementById(id).classList.add('flex'), document.getElementById(id).classList.remove('hidden');
-  window.closeModal = (id) => document.getElementById(id).classList.remove('flex'), document.getElementById(id).classList.add('hidden');
+  window.openModal = (id) => {
+    const el = document.getElementById(id);
+    if(el) {
+      el.classList.remove('hidden');
+      el.classList.add('flex');
+    }
+  };
+  window.closeModal = (id) => {
+    const el = document.getElementById(id);
+    if(el) {
+      el.classList.remove('flex');
+      el.classList.add('hidden');
+    }
+  };
 </script>
 </body>
 </html>
