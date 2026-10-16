@@ -69,3 +69,23 @@ The portal is intentionally OFF. When a domain and a controlled public route are
 ## Gemini
 
 Do not put a production Gemini private API key in public GitHub JavaScript. Use a server-side proxy / Cloud Function when Gemini features are enabled.
+
+
+## UI / bilingual refresh
+
+- Supplied Micro logo: `assets/micro-logo.jpg`
+- Brand palette: navy `#142245`, yellow `#F0AE19`, white and light-blue surfaces
+- Wave accents on login and dashboard hero
+- MY / EN language toggle for navigation, major headings, actions and key dashboard copy
+- Bulk attendance now avoids duplicate student/date records
+- GitHub Pages workflow: `.github/workflows/pages.yml`
+
+## GitHub Pages deployment
+
+1. Create a GitHub repository and upload this folder to the `main` branch.
+2. GitHub → **Settings → Pages** → choose **GitHub Actions**.
+3. Push to `main`; the included workflow deploys the static frontend.
+4. Firebase Authentication → **Settings → Authorized domains** → add your GitHub Pages hostname.
+5. Test Google login on the deployed URL.
+
+GitHub Pages hosts the frontend; Firebase remains the backend for Auth, Firestore and Storage.

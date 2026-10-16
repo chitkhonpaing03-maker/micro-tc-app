@@ -45,3 +45,13 @@
 ## Staff accounts
 - [ ] Never store plaintext passwords in Firestore
 - [ ] For automatic Admin-created username/password accounts, deploy a trusted Firebase Cloud Function / Admin SDK backend
+
+
+## GitHub Pages
+- [ ] Upload project to GitHub `main`
+- [ ] Settings → Pages → Source = GitHub Actions
+- [ ] `.github/workflows/pages.yml` succeeds
+- [ ] Add GitHub Pages host to Firebase Auth → Authorized domains
+- [ ] Test Google login on the deployed URL
+- [ ] Test MY / EN toggle on desktop and mobile
+- [ ] Verify supplied logo and navy/yellow/white wave theme

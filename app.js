@@ -13,6 +13,7 @@ setPersistence(auth, browserLocalPersistence).catch(() => {});
 const S = {
   user: null, profile: null, view: 'dashboard', data: {},
   settings: { academyName: 'Micro Training Center', logoUrl: '', studentPortalEnabled: false },
+  lang: localStorage.getItem('mtc-lang') || 'my',
   filters: { student: '' }
 };
 
@@ -54,10 +55,18 @@ async function load() {
   try { const q = await getDoc(doc(db,'settings','main')); if (q.exists()) S.settings = {...S.settings,...q.data()}; } catch (_) {}
 }
 
+
+const I18N = {
+  my: { dashboard:'ပင်မစာမျက်နှာ', students:'သင်တန်းသားများ', courses:'သင်တန်းများ', schedule:'အချိန်ဇယား', attendance:'တက်ရောက်မှု', finance:'ငွေစာရင်း', reports:'အစီရင်ခံစာ', staff:'ဝန်ထမ်း / ဆရာ', approvals:'အတည်ပြုချက်များ', settings:'ဆက်တင်', newStudent:'＋ သင်တန်းသားအသစ်', welcome:'ပြန်လည်ကြိုဆိုပါတယ်', language:'ဘာသာစကား', cloud:'Cloud Firestore', signIn:'ဝင်ရောက်မည်', continueGoogle:'Google ဖြင့် ဝင်ရောက်မည်', studentAdd:'＋ သင်တန်းသားထည့်မည်', courseAdd:'＋ သင်တန်းထည့်မည်', scheduleAdd:'＋ အချိန်ဇယားထည့်မည်', attendanceAdd:'＋ တက်ရောက်မှုမှတ်မည်', transactionAdd:'＋ ငွေစာရင်းထည့်မည်', saved:'သိမ်းဆည်းပြီးပါပြီ', permission:'ခွင့်ပြုချက် မရှိပါ', noData:'ဒေတာ မရှိသေးပါ', search:'နာမည် / Code / ဖုန်း / Course ရှာရန်' },
+  en: { dashboard:'Dashboard', students:'Students', courses:'Courses', schedule:'Schedule', attendance:'Attendance', finance:'Finance', reports:'Reports', staff:'Staff', approvals:'Approvals', settings:'Settings', newStudent:'＋ New Student', welcome:'Welcome back', language:'Language', cloud:'Cloud Firestore', signIn:'Sign in', continueGoogle:'Continue with Google', studentAdd:'＋ Add Student', courseAdd:'＋ Add Course', scheduleAdd:'＋ Add Schedule', attendanceAdd:'＋ Mark Attendance', transactionAdd:'＋ Add Transaction', saved:'Saved successfully', permission:'No permission', noData:'No data yet', search:'Search name / code / phone / course' }
+};
+const t = key => I18N[S.lang]?.[key] || I18N.en[key] || key;
+function setLang(lang){ S.lang=lang==='en'?'en':'my'; localStorage.setItem('mtc-lang',S.lang); document.documentElement.lang=S.lang==='my'?'my':'en'; render(); }
+
 const nav = [
-  ['dashboard','⌂','Dashboard'],['students','◉','Students'],['courses','▣','Courses'],['schedule','◷','Schedule'],
-  ['attendance','✓','Attendance'],['finance','₵','Finance'],['reports','▤','Reports'],['staff','♙','Staff'],
-  ['approvals','⌁','Approvals'],['settings','⚙','Settings']
+  ['dashboard','⌂','dashboard'],['students','◉','students'],['courses','▣','courses'],['schedule','◷','schedule'],
+  ['attendance','✓','attendance'],['finance','₵','finance'],['reports','▤','reports'],['staff','♙','staff'],
+  ['approvals','⌁','approvals'],['settings','⚙','settings']
 ];
 
 function stat(label, value, hint, icon='') { return `<div class="stat"><span class="stat-icon">${icon}</span><small>${label}</small><strong>${value}</strong><em>${hint}</em></div>`; }
@@ -65,15 +74,36 @@ function empty(text='Data မရှိသေးပါ') { return `<div class="em
 function pageTitle(title, sub, action='') { return `<div class="page-title"><div><span class="eyebrow">MTC ENTERPRISE</span><h1>${title}</h1><p>${sub}</p></div>${action}</div>`; }
 
 function render() {
-  const titles = Object.fromEntries(nav.map(x=>[x[0],x[2]]));
-  $('#title').textContent = titles[S.view] || 'Dashboard';
-  $('#nav').innerHTML = nav.map(([v,i,t]) => `<button class="nav ${S.view===v?'active':''}" data-v="${v}"><span class="nav-ico">${i}</span><span>${t}</span></button>`).join('');
+  const titles = Object.fromEntries(nav.map(x=>[x[0],t(x[2])]));
+  $('#title').textContent = titles[S.view] || t('dashboard');
+  $('#nav').innerHTML = nav.map(([v,i,key]) => `<button class="nav ${S.view===v?'active':''}" data-v="${v}"><span class="nav-ico">${i}</span><span>${t(key)}</span></button>`).join('');
   $('#who').innerHTML = `<span class="who-name">${esc(S.profile?.displayName || 'Staff')}</span><small>${esc(S.profile?.role || 'staff')}</small>`;
   const logo = S.settings.logoUrl || 'assets/logo.svg';
-  $('#sideLogo').src = logo; $('#auth-logo').src = logo;
+  $('#sideLogo').src = logo; $('#auth-logo').src = logo; document.documentElement.lang=S.lang==='my'?'my':'en'; const lt=$('#langToggle'); if(lt) lt.textContent=S.lang==='my'?'EN':'MY';
   $('#academy').textContent = S.settings.academyName || 'Micro Training Center';
   $('#view').innerHTML = (views[S.view] || views.dashboard)();
+  localizeView();
   bind();
+}
+
+
+function localizeView(){
+  const root=$('#view'); if(!root) return;
+  const titlePairs = S.lang==='my' ? {'Students':'သင်တန်းသားများ','Course Management':'သင်တန်းစီမံခန့်ခွဲမှု','Teacher Schedule':'ဆရာ အချိန်ဇယား','Attendance':'တက်ရောက်မှု','Finance':'ငွေစာရင်း','Reports':'အစီရင်ခံစာ','Staff':'ဝန်ထမ်း / ဆရာ','Approvals':'အတည်ပြုချက်များ','Settings':'ဆက်တင်','Dashboard':'ပင်မစာမျက်နှာ'} : {};
+  if(Object.keys(titlePairs).length){ const hs=root.querySelectorAll('h1,h2'); hs.forEach(h=>{ if(titlePairs[h.textContent.trim()]) h.textContent=titlePairs[h.textContent.trim()]; }); }
+  const pairs = S.lang==='en' ? {
+    'သင်တန်းသားစာရင်း • Code • Course • Paid / Day-1 Free':'Students • Code • Course • Paid / Day-1 Free',
+    'Course အသစ်တစ်ခုထည့်တာနဲ့ Student / Schedule / Report selector တွေမှာ Auto အသုံးပြုနိုင်ပါတယ်။':'New courses automatically appear in Student / Schedule / Report selectors.',
+    'ဆရာတစ်ဦးချင်းစီရဲ့ ပုံ၊ ကိုယ်ပိုင်နာမည်၊ Course၊ Batch၊ အချိန်နဲ့ Room ကို တစ်နေရာတည်းမှာကြည့်နိုင်ပါတယ်။':'View teacher photo, name, course, batch, time and room in one place.',
+    'ယနေ့ Attendance ကို လွယ်လွယ်ကူကူမှတ်တမ်းတင်ပါ။':'Record today\'s attendance quickly.',
+    'လက်ရှိလကို Dashboard မှာ သီးခြားပြပြီး အရင်လတွေကို Reports ကနေ ပြန်ကြည့်နိုင်ပါတယ်။':'Current month is shown separately; previous months remain available in Reports.',
+    'နေ့စဉ်အလုပ်များ':'Daily tasks','Student အသစ်':'New Student','Course အသစ်':'New Course','Report Center':'Report Center','Attendance':'Attendance',
+    'ယနေ့အတွက် တစ်ချက်နှိပ်ပြီး မှတ်တမ်းတင်':'Mark today\'s attendance in one click','လက်ရှိလ':'Current Month','စုစုပေါင်း record':'Total records','Active courses':'Active courses','Profiles':'Profiles','Present':'Present'
+  } : {};
+  if(Object.keys(pairs).length){ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode); nodes.forEach(n=>{let x=n.nodeValue; for(const [a,b] of Object.entries(pairs)) x=x.split(a).join(b); n.nodeValue=x;}); }
+  const authMap={ '#googleLogin':'continueGoogle', '#passLogin':'signIn', '#authLangToggle':'language' }; Object.entries(authMap).forEach(([sel,key])=>{const el=document.querySelector(sel);if(el)el.textContent= key==='language' ? (S.lang==='my'?'မြန်မာ / English':'Myanmar / English') : t(key);});
+  const map={'#addStudent':'studentAdd','#addCourse':'courseAdd','#addBatch':'scheduleAdd','#bulk':'attendanceAdd','#addTx':'transactionAdd','#newStudent':'newStudent','#studentSearch':'search'};
+  Object.entries(map).forEach(([sel,key])=>{const el=document.querySelector(sel);if(el&&key){if(el.tagName==='INPUT')el.placeholder=t(key);else el.textContent=t(key);}});
 }
 
 const views = {
@@ -172,7 +202,7 @@ function courseForm(){modal('Add Course',`<div class="formgrid"><label>Course Na
 function batchForm(){const cs=(S.data.courses||[]).filter(c=>c.active!==false), sf=(S.data.staff||[]).filter(s=>['teacher','staff','manager','admin'].includes(s.role||'staff'));if(!cs.length)return toast('Course အရင်ထည့်ပါ','err');modal('Teacher Schedule',`<div class="formgrid"><label>Batch Name<input id="bn" placeholder="ဥပမာ — Batch 01"></label><label>Course<select id="bc">${cs.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select></label><label>Teacher<select id="bt"><option value="">-- Teacher ရွေးပါ --</option>${sf.map(s=>`<option value="${esc(s.id)}">${esc(s.displayName)}</option>`).join('')}</select></label><label>Day<select id="bd"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></label><label>Start<input id="bs" type="time"></label><label>End<input id="be" type="time"></label><label>Room<input id="br" placeholder="Room / Zoom"></label></div>`,async()=>{const t=sf.find(s=>s.id===$('#bt').value), c=cs.find(x=>x.id===$('#bc').value);await addDoc(collection(db,'batches'),{name:$('#bn').value.trim()||'Batch',courseId:c?.id||'',courseName:c?.name||'',teacherId:t?.id||'',teacherName:t?.displayName||'',teacherPhoto:t?.photoUrl||'',day:$('#bd').value,start:$('#bs').value,end:$('#be').value,room:$('#br').value.trim(),active:true,createdAt:serverTimestamp(),createdBy:S.user.uid});await audit('schedule_created',{course:c?.name,teacher:t?.displayName})})}
 function staffForm(){if(!can('staff'))return toast('Permission မရှိပါ','err');modal('Staff / Teacher Profile',`<div class="formgrid"><label>Display Name *<input id="fn" placeholder="ဝန်ထမ်းကိုယ်ပိုင်နာမည်"></label><label>Role<select id="fr"><option value="staff">Staff</option><option value="teacher">Teacher</option><option value="manager">Manager</option></select></label><label>Department<select id="fd"><option>General</option><option>Administration</option><option>Academic</option><option>Finance</option><option>Marketing</option><option>HR</option><option>IT</option></select></label><label>Photo URL<input id="fp" placeholder="Photo URL (optional)"></label><label>Permissions<input id="fq" value="dashboard,students,courses,schedule,attendance,finance,reports"></label></div><p class="muted">မှတ်ချက် — Firebase Auth account ကို Client-side မှာ password သိမ်းပြီးဖန်တီးခြင်း မလုပ်ပါ။ Staff profile ကို ဒီနေရာမှာ စီမံပြီး login account provisioning ကို Firebase/Backend မှာ လုံခြုံစွာလုပ်ရပါမယ်။</p>`,async()=>{const n=$('#fn').value.trim();if(!n)throw Error('Display Name ထည့်ပါ');await addDoc(collection(db,'staff'),{displayName:n,role:$('#fr').value,department:$('#fd').value,photoUrl:$('#fp').value.trim(),permissions:$('#fq').value.split(',').map(x=>x.trim()).filter(Boolean),createdAt:serverTimestamp(),createdBy:S.user.uid});await audit('staff_profile_created',{name:n,role:$('#fr').value})})}
 function txForm(){modal('Add Transaction',`<div class="formgrid"><label>Date<input id="td" type="date" value="${today()}"></label><label>Type<select id="tt"><option value="income">Income</option><option value="expense">Expense</option></select></label><label>Category<input id="tc" placeholder="ဥပမာ — Course Fee / Rent"></label><label>Amount<input id="ta" type="number" min="0" placeholder="0"></label><label>Note<textarea id="tn" placeholder="မှတ်ချက်"></textarea></label></div>`,async()=>{const d=$('#td').value;if(!d)throw Error('Date ထည့်ပါ');await addDoc(collection(db,'transactions'),{date:d,period:d.slice(0,7),type:$('#tt').value,category:$('#tc').value.trim(),amount:+$('#ta').value||0,note:$('#tn').value.trim(),createdAt:serverTimestamp(),createdBy:S.user.uid});await audit('transaction_created',{date:d,type:$('#tt').value,amount:+$('#ta').value||0})})}
-function attendanceForm(){const st=S.data.students||[];if(!st.length)return toast('Student မရှိသေးပါ','err');modal('Mark Attendance',`<label>Date<input id="ad" type="date" value="${today()}"></label><div class="bulk">${st.map(s=>`<label><input type="checkbox" value="${esc(s.id)}"> <span><b>${esc(s.name)}</b><small>${esc(s.code)} • ${esc(s.courseName||'')}</small></span></label>`).join('')}</div>`,async()=>{const d=$('#ad').value,b=writeBatch(db);$$('.bulk input:checked').forEach(i=>b.set(doc(collection(db,'attendance')),{studentId:i.value,date:d,period:d.slice(0,7),status:'present',markedBy:S.user.uid,createdAt:serverTimestamp()}));await b.commit();await audit('attendance_bulk_marked',{date:d,count:$$('.bulk input:checked').length})})}
+function attendanceForm(){const st=S.data.students||[];if(!st.length)return toast('Student မရှိသေးပါ','err');modal('Mark Attendance',`<label>Date<input id="ad" type="date" value="${today()}"></label><div class="bulk">${st.map(s=>`<label><input type="checkbox" value="${esc(s.id)}"> <span><b>${esc(s.name)}</b><small>${esc(s.code)} • ${esc(s.courseName||'')}</small></span></label>`).join('')}</div>`,async()=>{const d=$('#ad').value,b=writeBatch(db);$$('.bulk input:checked').forEach(i=>{const exists=(S.data.attendance||[]).some(x=>x.date===d&&x.studentId===i.value);if(!exists)b.set(doc(collection(db,'attendance')),{studentId:i.value,date:d,period:d.slice(0,7),status:'present',markedBy:S.user.uid,createdAt:serverTimestamp()});});await b.commit();await audit('attendance_bulk_marked',{date:d,count:$$('.bulk input:checked').length})})}
 async function markAttendance(id,status){const d=today(), old=(S.data.attendance||[]).find(x=>x.date===d&&x.studentId===id);if(old)await updateDoc(doc(db,'attendance',old.id),{status,updatedAt:serverTimestamp()});else await addDoc(collection(db,'attendance'),{studentId:id,date:d,period:d.slice(0,7),status,markedBy:S.user.uid,createdAt:serverTimestamp()});await load();render()}
 function csv(rows,name){if(!rows.length)return toast('Export လုပ်ရန် Data မရှိပါ','err');const keys=[...new Set(rows.flatMap(x=>Object.keys(x)))];const s='\ufeff'+[keys.join(','),...rows.map(x=>keys.map(k=>`"${String(x[k]??'').replaceAll('"','""')}"`).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv;charset=utf-8'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 
@@ -201,6 +231,9 @@ function bind(){
   $('#saveSet')?.addEventListener('click',saveSettings); $('#logo')?.addEventListener('change',e=>uploadLogo(e).catch(err=>toast(err.message,'err'))); $('#migrate')?.addEventListener('click',migrateLegacy);
   $$('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a==='student')studentForm();if(a==='course')courseForm();if(a==='attendance')attendanceForm();if(a==='report'){S.view='reports';render()}});
 }
+
+$('#langToggle')?.addEventListener('click',()=>setLang(S.lang==='my'?'en':'my'));
+$('#authLangToggle')?.addEventListener('click',()=>setLang(S.lang==='my'?'en':'my'));
 
 $$('.tabs button').forEach(b=>b.onclick=()=>{$$('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#googlePanel').classList.toggle('hide',b.dataset.tab!=='google');$('#passPanel').classList.toggle('hide',b.dataset.tab!=='password')});
 $('#googleLogin').onclick=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){toast(e.message||'Google login failed','err')}};
