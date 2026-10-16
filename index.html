@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Micro Training Center - Online Management App</title>
+  <title>Micro Computer Training Center - Enterprise OS</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            brand: {
-              blue: '#1E3A8A',
-              lightBlue: '#2563EB',
-              sky: '#EFF6FF',
-              yellow: '#FACC15',
-              gold: '#EAB308',
-              yellowSoft: '#FEF9C3'
+            micro: {
+              navy: '#142143',
+              yellow: '#ffaf00',
+              grey: '#e4e4e4',
+              blue: '#1a5d94',
+              darkBlue: '#11225b',
+              softBg: '#F4F7FB'
             }
           },
           fontFamily: {
@@ -29,878 +29,2298 @@
     }
   </script>
   <style>
-    body { font-family: 'Inter', 'Padauk', 'Pyidaungsu', sans-serif; background-color: #F8FAFC; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Inter', 'Padauk', 'Pyidaungsu', sans-serif;
+      background-color: #F4F7FB;
+      color: #142143;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+    .ios-glass {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(228, 228, 228, 0.8);
+    }
+    .ios-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 26px -4px rgba(20, 33, 67, 0.06), 0 2px 6px -1px rgba(20, 33, 67, 0.03);
+      border: 1px solid rgba(228, 228, 228, 0.7);
+      transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .ios-card:hover {
+      box-shadow: 0 12px 32px -4px rgba(20, 33, 67, 0.1);
+    }
+    .ios-btn {
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .ios-btn:active {
+      transform: scale(0.96);
+    }
+    .drawer-backdrop {
+      background: rgba(20, 33, 67, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: opacity 0.3s ease;
+    }
+    .drawer-panel {
+      transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #FFFFFF; box-shadow: 0 0 25px rgba(30, 58, 138, 0.08); position: relative; padding-bottom: 85px; }
-    @media (min-width: 768px) { .app-container { max-width: 960px; } }
   </style>
 </head>
-<body class="text-slate-800">
+<body class="min-h-screen flex flex-col">
 
-<div class="app-container" id="appRoot">
-  <!-- TOP HEADER BAR -->
-  <header class="bg-brand-blue text-white sticky top-0 z-30 shadow-md border-b-4 border-brand-yellow">
-    <div class="px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-brand-yellow text-brand-blue flex items-center justify-center font-bold text-lg shadow">
-          <i class="fa-solid fa-graduation-cap"></i>
+  <!-- ================= TOP LIVE WIDGETS BAR ================= -->
+  <div class="bg-[#0e1730] text-white text-[11px] px-4 py-1.5 border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar">
+        <button onclick="window.promptUpdateUsdRate()" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 px-2.5 py-0.5 rounded-full transition cursor-pointer" title="Admin များနှိပ်၍ USD Rate ပြင်နိုင်သည်">
+          <i class="fa-solid fa-dollar-sign text-micro-yellow"></i>
+          <span>USD Rate: <strong class="text-micro-yellow" id="widgetUsdRate">3,550 Ks</strong></span>
+          <i class="fa-solid fa-pen text-[9px] opacity-60 ml-0.5"></i>
+        </button>
+        <div class="flex items-center gap-1.5">
+          <i class="fa-regular fa-clock text-micro-yellow"></i>
+          <span id="widgetClock">Yangon Time: --:--</span>
         </div>
-        <div>
-          <h1 class="font-bold text-base md:text-lg leading-tight tracking-wide">Micro Training Center</h1>
-          <p class="text-xs text-yellow-300 font-medium" id="currentRoleBadge">Checking Login...</p>
+        <div class="flex items-center gap-1.5">
+          <i class="fa-solid fa-cloud-sun text-micro-yellow"></i>
+          <span id="widgetWeather">Yangon: 32°C (Sunny)</span>
         </div>
       </div>
+      <div class="flex items-center gap-3 ml-auto">
+        <div class="flex items-center gap-1.5 truncate max-w-[180px] sm:max-w-xs">
+          <i class="fa-brands fa-google text-micro-yellow"></i>
+          <span id="activeUserEmail" class="truncate text-slate-300">Not Signed In</span>
+        </div>
+        <span class="px-2 py-0.5 rounded-full bg-micro-yellow/20 text-micro-yellow font-semibold" id="syncStatusBadge">
+          <i class="fa-solid fa-wifi mr-1"></i>Connecting...
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN STICKY HEADER WITH HAMBURGER (3 LINES) ================= -->
+  <header class="bg-micro-navy text-white sticky top-0 z-30 shadow-lg border-b-4 border-micro-yellow">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <!-- 3-Line Hamburger Button -->
+        <button id="btnHamburger" onclick="window.toggleDrawer(true)" class="w-11 h-11 rounded-2xl bg-micro-blue/60 hover:bg-micro-blue border border-micro-yellow/40 flex items-center justify-center text-micro-yellow text-xl shadow-md ios-btn" aria-label="Open Departments Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Micro Brand Logo (SVG matching uploaded Logo) -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.switchTab('dashboard')">
+          <div class="w-12 h-12 rounded-2xl bg-[#142143] border-2 border-micro-yellow flex items-center justify-center shadow-md overflow-hidden shrink-0">
+            <svg viewBox="0 0 120 70" class="w-11 h-11">
+              <!-- Graduation Cap above 'i' -->
+              <polygon points="56,10 42,16 56,22 70,16" fill="#ffaf00"/>
+              <path d="M48,19 L48,25 C48,25 56,28 64,25 L64,19" fill="#ffaf00"/>
+              <path d="M68,17 L71,25" stroke="#ffaf00" stroke-width="2" fill="none"/>
+              <!-- Micro Text -->
+              <text x="10" y="50" fill="#ffaf00" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-style="italic" font-size="31" letter-spacing="-1">Micro</text>
+              <!-- Underline Swoosh -->
+              <path d="M45,58 Q75,53 108,56" stroke="#ffaf00" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-extrabold text-base sm:text-lg tracking-wide text-white leading-tight">
+                Micro <span class="text-micro-yellow">Training Center</span>
+              </h1>
+            </div>
+            <p class="text-[11px] text-micro-grey/90 font-medium flex items-center gap-1.5 mt-0.5">
+              <span id="currentDeptTitle" class="text-micro-yellow font-bold">Overview Dashboard</span>
+              <span>•</span>
+              <span id="currentRoleBadge">Checking Login...</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Action Buttons -->
       <div class="flex items-center gap-2">
-        <button id="btnLogout" onclick="window.handleLogout()" class="hidden bg-rose-600 hover:bg-rose-500 text-white text-xs px-2.5 py-1.5 rounded-lg font-bold flex items-center gap-1 shadow-sm transition">
-          <i class="fa-solid fa-right-from-bracket"></i> ထွက်ရန်
+        <button onclick="window.openLeadModal()" id="headerQuickAddBtn" class="hidden sm:flex items-center gap-1.5 bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow ios-btn">
+          <i class="fa-solid fa-plus"></i>
+          <span>စာရင်းသွင်းရန်</span>
+        </button>
+        <button id="btnLogout" onclick="window.handleLogout()" class="hidden bg-rose-600 hover:bg-rose-500 text-white text-xs px-3 py-2 rounded-xl font-bold items-center gap-1.5 shadow ios-btn">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span class="hidden sm:inline">ထွက်ရန်</span>
         </button>
       </div>
     </div>
-    <div class="bg-blue-950/80 px-4 py-1.5 text-[11px] flex items-center justify-between text-blue-100">
-      <div class="flex items-center gap-1.5 truncate">
-        <i class="fa-brands fa-google text-brand-yellow"></i>
-        <span id="activeUserEmail" class="truncate">Not Signed In</span>
-      </div>
-      <span class="px-2 py-0.5 rounded bg-brand-yellow/20 text-brand-yellow font-semibold" id="syncStatusBadge">
-        <i class="fa-solid fa-wifi mr-1"></i>Connecting...
-      </span>
-    </div>
   </header>
 
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen" class="p-6 text-center my-10">
-    <div class="w-20 h-20 mx-auto bg-brand-sky border-2 border-brand-blue text-brand-blue rounded-3xl flex items-center justify-center text-3xl mb-4 shadow">
-      <i class="fa-solid fa-graduation-cap"></i>
-    </div>
-    <h2 class="text-xl font-extrabold text-brand-blue mb-1">Micro Training Center</h2>
-    <p class="text-xs text-slate-500 mb-6">Online Management & Real-Time Reporting System</p>
-    <div class="max-w-xs mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4 shadow-xs">
-      <p class="text-xs text-slate-600 leading-relaxed">စနစ်ကိုအသုံးပြုရန် သင်၏ <strong>Gmail အကောင့်</strong>ဖြင့် ဝင်ရောက်ပါ။</p>
-      <button onclick="window.handleGoogleLogin()" class="w-full bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-xl shadow flex items-center justify-center gap-2.5 text-sm transition">
-        <i class="fa-brands fa-google text-brand-yellow text-base"></i> Sign in with Google (Gmail)
+  <!-- ================= SLIDE-OUT HAMBURGER DRAWER (DEPARTMENTS MENU) ================= -->
+  <div id="drawerOverlay" class="fixed inset-0 z-50 hidden">
+    <div onclick="window.toggleDrawer(false)" class="drawer-backdrop absolute inset-0"></div>
+    <aside id="drawerPanel" class="drawer-panel relative w-80 max-w-[85vw] bg-micro-navy text-white h-full flex flex-col justify-between shadow-2xl border-r-2 border-micro-yellow z-10 overflow-y-auto">
+      <div>
+        <!-- Drawer Header -->
+        <div class="p-5 bg-gradient-to-br from-micro-navy via-[#182c59] to-micro-blue border-b border-white/10">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 rounded-xl bg-micro-navy border-2 border-micro-yellow flex items-center justify-center shadow">
+                <span class="text-micro-yellow font-black italic text-sm">M</span>
+              </div>
+              <div>
+                <h2 class="font-extrabold text-sm text-white">Micro Enterprise OS</h2>
+                <p class="text-[10px] text-micro-yellow">All-in-One Department Control</p>
+              </div>
+            </div>
+            <button onclick="window.toggleDrawer(false)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-sm">
+              ✕
+            </button>
+          </div>
+          <!-- Active User Profile Card inside Drawer -->
+          <div class="bg-white/10 rounded-2xl p-3 border border-white/10">
+            <div class="text-xs font-bold text-white truncate" id="drawerUserName">Guest User</div>
+            <div class="text-[11px] text-slate-300 truncate" id="drawerUserEmail">-</div>
+            <div id="drawerUserRoles" class="flex flex-wrap gap-1 mt-2"></div>
+          </div>
+        </div>
+
+        <!-- Department Navigation Links -->
+        <div class="p-3 space-y-1">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-micro-yellow/80 px-3 py-1.5">
+            Departments (ဌာနများ ရွေးချယ်ရန်)
+          </div>
+
+          <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold bg-micro-yellow text-micro-navy shadow transition">
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-chart-pie text-base w-5 text-center"></i>
+              <span>၁။ Overview & P&L Report ချုပ်</span>
+            </span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+          </button>
+
+          <button onclick="window.switchTab('leads')" id="nav-leads" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-wand-magic-sparkles text-base w-5 text-center text-micro-yellow"></i>
+              <span>၂။ Page Admin & AI Scanner</span>
+            </span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-micro-yellow" id="badgeLeadsCount">0</span>
+          </button>
+
+          <button onclick="window.switchTab('sales')" id="nav-sales" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-file-invoice-dollar text-base w-5 text-center text-emerald-400"></i>
+              <span>၃။ Sales & Invoices (သင်တန်းအပ်သူ)</span>
+            </span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300" id="badgeSalesCount">0</span>
+          </button>
+
+          <button onclick="window.switchTab('manager')" id="nav-manager" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-bullhorn text-base w-5 text-center text-amber-400"></i>
+              <span>၄။ Manager & Follow-up Hub</span>
+            </span>
+            <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
+          </button>
+
+          <button onclick="window.switchTab('academic')" id="nav-academic" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-chalkboard-user text-base w-5 text-center text-sky-400"></i>
+              <span>၅။ Academic & Attendance</span>
+            </span>
+            <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
+          </button>
+
+          <button onclick="window.switchTab('finance')" id="nav-finance" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-wallet text-base w-5 text-center text-rose-400"></i>
+              <span>၆။ Purchase & Finance ဌာန</span>
+            </span>
+            <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
+          </button>
+
+          <button onclick="window.switchTab('admin')" id="nav-admin" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+            <span class="flex items-center gap-3">
+              <i class="fa-solid fa-sliders text-base w-5 text-center text-micro-yellow"></i>
+              <span>၇။ Founder / Admin Settings</span>
+            </span>
+            <i class="fa-solid fa-shield-halved text-xs text-micro-yellow"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="p-4 border-t border-white/10 text-[11px] text-slate-400 flex items-center justify-between">
+        <span>Micro Training Center</span>
+        <span class="text-micro-yellow font-bold">v3.0 iOS Pro</span>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ================= LOGIN SCREEN ================= -->
+  <div id="loginScreen" class="p-6 text-center my-12 max-w-md mx-auto w-full">
+    <div class="ios-card p-8 space-y-5 border-t-4 border-micro-yellow">
+      <div class="w-24 h-24 mx-auto bg-micro-navy border-4 border-micro-yellow rounded-3xl flex items-center justify-center shadow-lg">
+        <svg viewBox="0 0 120 70" class="w-20 h-20">
+          <polygon points="56,10 42,16 56,22 70,16" fill="#ffaf00"/>
+          <path d="M48,19 L48,25 C48,25 56,28 64,25 L64,19" fill="#ffaf00"/>
+          <text x="10" y="50" fill="#ffaf00" font-family="Arial Black, sans-serif" font-weight="900" font-style="italic" font-size="31">Micro</text>
+          <path d="M45,58 Q75,53 108,56" stroke="#ffaf00" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-2xl font-extrabold text-micro-navy">Micro Training Center</h2>
+        <p class="text-xs text-slate-500 mt-1">All-in-One Smart ERP, AI Lead Scanner & Real-Time System</p>
+      </div>
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 leading-relaxed">
+        သက်ဆိုင်ရာ Department အလိုက် စနစ်ကိုအသုံးပြုရန် သင်၏ <strong>Gmail အကောင့်</strong>ဖြင့် ဝင်ရောက်ပါ။
+      </div>
+      <button onclick="window.handleGoogleLogin()" class="w-full bg-micro-navy hover:bg-micro-blue text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg flex items-center justify-center gap-3 text-sm ios-btn">
+        <i class="fa-brands fa-google text-micro-yellow text-lg"></i>
+        <span>Sign in with Google (Gmail)</span>
       </button>
     </div>
   </div>
 
-  <!-- PENDING APPROVAL LOCK SCREEN -->
-  <div id="pendingLockScreen" class="hidden p-6 text-center my-12">
-    <div class="w-20 h-20 mx-auto bg-brand-yellowSoft text-brand-gold rounded-full flex items-center justify-center text-3xl mb-4 shadow-inner">
-      <i class="fa-solid fa-user-lock"></i>
-    </div>
-    <h2 class="text-xl font-bold text-brand-blue mb-2">တည်ထောင်သူ / Admin ခွင့်ပြုချက် စောင့်ဆိုင်းနေပါသည်</h2>
-    <p class="text-sm text-slate-600 mb-6 max-w-md mx-auto leading-relaxed">
-      တည်ထောင်သူ (Founder) ဖုန်းထဲတွင် သင့်အကောင့် ပေါ်နေပါပြီ။ Approve ပေးလိုက်သည်နှင့် ဤမျက်နှာပြင် ပွင့်သွားပါမည်။
-    </p>
-    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 max-w-sm mx-auto mb-6 text-left text-xs space-y-1.5">
-      <div><span class="text-slate-400">Name:</span> <strong id="pendingUserName">-</strong></div>
-      <div><span class="text-slate-400">Gmail:</span> <strong id="pendingUserEmail">-</strong></div>
-      <div><span class="text-slate-400">Status:</span> <span class="text-amber-600 font-bold">⏳ Waiting for Founder Approval</span></div>
+  <!-- ================= PENDING APPROVAL LOCK SCREEN ================= -->
+  <div id="pendingLockScreen" class="hidden p-6 text-center my-12 max-w-md mx-auto w-full">
+    <div class="ios-card p-7 space-y-4 border-t-4 border-micro-yellow">
+      <div class="w-20 h-20 mx-auto bg-amber-50 text-micro-yellow rounded-full flex items-center justify-center text-3xl shadow-inner border border-amber-200">
+        <i class="fa-solid fa-user-lock"></i>
+      </div>
+      <h2 class="text-xl font-extrabold text-micro-navy">တည်ထောင်သူ / Admin ခွင့်ပြုချက် စောင့်ဆိုင်းနေပါသည်</h2>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        တည်ထောင်သူ (Founder) ထံတွင် သင့်အကောင့် ပေါ်နေပါပြီ။ သက်ဆိုင်ရာ Department များ သတ်မှတ်ပြီး Approve ပေးလိုက်သည်နှင့် ဤမျက်နှာပြင် အလိုအလျောက် ပွင့်သွားပါမည်။
+      </p>
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left text-xs space-y-2">
+        <div><span class="text-slate-400">Name:</span> <strong id="pendingUserName">-</strong></div>
+        <div><span class="text-slate-400">Gmail:</span> <strong id="pendingUserEmail">-</strong></div>
+        <div><span class="text-slate-400">Status:</span> <span class="text-amber-600 font-bold">⏳ Waiting for Founder Approval</span></div>
+      </div>
     </div>
   </div>
 
-  <!-- MAIN CONTENT AREA -->
-  <main id="mainAppContent" class="hidden p-4 space-y-5">
-    
-    <!-- TAB 1: DASHBOARD & REPORT -->
-    <section id="tab-dashboard" class="space-y-5">
-      <div class="bg-brand-sky border border-blue-100 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-filter text-brand-blue"></i>
-          <span class="text-xs font-bold text-brand-blue">သင်တန်းအလိုက် ကြည့်ရန်:</span>
-        </div>
-        <div class="flex items-center gap-2 flex-1 sm:flex-initial justify-end">
-          <select id="dashboardCourseFilter" onchange="window.renderAll()" class="bg-white border border-blue-200 text-xs font-semibold text-slate-700 rounded-xl px-3 py-2">
-            <option value="ALL">သင်တန်းအားလုံး (All Courses)</option>
-          </select>
-          <button onclick="window.exportReportPDF()" id="btnExportPDF" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-file-pdf text-brand-yellow"></i> PDF Report ထုတ်ရန်
-          </button>
+  <!-- ================= MAIN APPLICATION CONTENT ================= -->
+  <main id="mainAppContent" class="hidden max-w-7xl mx-auto w-full p-4 md:p-6 space-y-6 flex-grow">
+
+    <!-- GLOBAL FILTER BAR (Course + Custom Date Range + Export) -->
+    <div class="ios-card p-4 bg-white border-l-4 border-micro-navy flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-extrabold text-micro-navy flex items-center gap-1.5 mr-1">
+          <i class="fa-solid fa-filter text-micro-blue"></i> စစ်ထုတ်ကြည့်ရန်:
+        </span>
+        <select id="dashboardCourseFilter" onchange="window.renderAll()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-micro-navy rounded-xl px-3 py-2">
+          <option value="ALL">သင်တန်းအားလုံး (All Courses)</option>
+        </select>
+        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
+          <span class="text-slate-400 font-semibold">မှ:</span>
+          <input type="date" id="filterStartDate" onchange="window.renderAll()" class="bg-transparent font-semibold text-micro-navy focus:outline-none" />
+          <span class="text-slate-400 font-semibold">ထိ:</span>
+          <input type="date" id="filterEndDate" onchange="window.renderAll()" class="bg-transparent font-semibold text-micro-navy focus:outline-none" />
+          <button onclick="window.clearDateFilter()" class="text-rose-500 hover:text-rose-700 font-bold px-1" title="ရက်စွဲပြန်ရှင်းရန်">✕</button>
         </div>
       </div>
 
-      <div>
-        <div class="flex items-center justify-between mb-2.5">
-          <h2 class="text-sm font-bold text-brand-blue flex items-center gap-1.5">
-            <i class="fa-solid fa-users-viewfinder text-brand-gold"></i> စုံစမ်းသူနှင့် သင်တန်းသား စာရင်းချုပ်
-          </h2>
-          <button onclick="window.openLeadModal()" class="text-xs bg-brand-yellow text-brand-blue font-bold px-3 py-1.5 rounded-lg shadow-sm hover:bg-yellow-300">
-            + စာရင်းအသစ်သွင်းရန်
-          </button>
+      <div class="flex flex-wrap items-center gap-2 justify-end">
+        <button onclick="window.toggleDrawer(true)" class="bg-micro-navy/10 hover:bg-micro-navy/20 text-micro-navy text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 ios-btn">
+          <i class="fa-solid fa-bars"></i> ဌာနများ ပြောင်းရန်
+        </button>
+        <button onclick="window.exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
+          <i class="fa-solid fa-file-excel"></i> Excel (CSV)
+        </button>
+        <button onclick="window.exportReportPDF()" class="bg-micro-navy hover:bg-micro-blue text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
+          <i class="fa-solid fa-file-pdf text-micro-yellow"></i> PDF Report ထုတ်ရန်
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= TAB 1: OVERVIEW DASHBOARD & P&L REPORT ================= -->
+    <section id="tab-dashboard" class="space-y-6">
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div onclick="window.jumpToLeads('ALL')" class="cursor-pointer ios-card p-4 border-b-4 border-micro-blue hover:translate-y-[-2px]">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">လာမေးသူ စုစုပေါင်း (Leads)</span>
+            <span class="w-8 h-8 rounded-xl bg-blue-50 text-micro-blue flex items-center justify-center"><i class="fa-solid fa-comments"></i></span>
+          </div>
+          <div class="text-2xl md:text-3xl font-black text-micro-navy mt-2" id="kpiTotalLeads">0</div>
+          <p class="text-[11px] text-slate-400 mt-1">နှိပ်၍ အသေးစိတ်ကြည့်ရန်</p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div onclick="window.jumpToLeads('ALL')" class="cursor-pointer bg-white border-2 border-blue-100 hover:border-brand-blue rounded-2xl p-3.5 shadow-sm">
-            <div class="text-xs text-slate-500 mb-1">လာမေးသူ စုစုပေါင်း (Leads)</div>
-            <div class="text-2xl font-extrabold text-brand-blue" id="kpiTotalLeads">0</div>
+        <div onclick="window.jumpToLeads('HOT')" class="cursor-pointer ios-card p-4 border-b-4 border-rose-500 hover:translate-y-[-2px]">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">🔥 အလားအလာရှိသူ (Hot)</span>
+            <span class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center"><i class="fa-solid fa-fire"></i></span>
           </div>
-          <div onclick="window.jumpToLeads('HOT')" class="cursor-pointer bg-white border-2 border-rose-200 hover:border-rose-400 rounded-2xl p-3.5 shadow-sm">
-            <div class="text-xs text-slate-500 mb-1">🔥 အပ်နှံရန်အလားအလာရှိသူ</div>
-            <div class="text-2xl font-extrabold text-rose-600" id="kpiHotLeads">0</div>
+          <div class="text-2xl md:text-3xl font-black text-rose-600 mt-2" id="kpiHotLeads">0</div>
+          <p class="text-[11px] text-rose-500 font-medium mt-1">Follow-up ဦးစားပေးရန်</p>
+        </div>
+
+        <div onclick="window.jumpToLeads('PAID')" class="cursor-pointer ios-card p-4 border-b-4 border-emerald-500 hover:translate-y-[-2px]">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">✅ သင်တန်းအပ်ပြီး (Sales)</span>
+            <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-user-check"></i></span>
           </div>
-          <div onclick="window.jumpToLeads('PAID')" class="cursor-pointer bg-white border-2 border-blue-100 hover:border-brand-blue rounded-2xl p-3.5 shadow-sm">
-            <div class="text-xs text-slate-500 mb-1">✅ ငွေသွင်းပြီးသူ (Sale)</div>
-            <div class="text-2xl font-extrabold text-brand-blue" id="kpiPaidCount">0</div>
+          <div class="text-2xl md:text-3xl font-black text-emerald-600 mt-2" id="kpiPaidCount">0</div>
+          <p class="text-[11px] text-emerald-600 font-medium mt-1" id="kpiConversionRate">Conversion: 0%</p>
+        </div>
+
+        <div onclick="window.jumpToLeads('NOGROUP')" class="cursor-pointer ios-card p-4 border-b-4 border-micro-yellow hover:translate-y-[-2px]">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">Group သွင်းရန်ကျန်သူ</span>
+            <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-user-clock"></i></span>
           </div>
-          <div onclick="window.jumpToLeads('NOGROUP')" class="cursor-pointer bg-white border-2 border-amber-200 hover:border-amber-400 rounded-2xl p-3.5 shadow-sm">
-            <div class="text-xs text-slate-500 mb-1">Group သွင်းရန်ကျန်</div>
-            <div class="text-2xl font-extrabold text-amber-600" id="kpiGroupPendingCount">0</div>
+          <div class="text-2xl md:text-3xl font-black text-amber-600 mt-2" id="kpiGroupPendingCount">0</div>
+          <p class="text-[11px] text-amber-600 font-medium mt-1">FB / Telegram စစ်ဆေးရန်</p>
+        </div>
+      </div>
+
+      <!-- Financial P&L Overview (Visible to Founder, Admin, Finance) -->
+      <div id="financeDashboardBlock" class="hidden bg-gradient-to-r from-micro-navy via-[#182d5e] to-micro-blue text-white rounded-3xl p-5 md:p-6 shadow-xl border-b-4 border-micro-yellow space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-base font-extrabold flex items-center gap-2 text-micro-yellow">
+              <i class="fa-solid fa-scale-balanced"></i> ဘဏ္ဍာရေးနှင့် အရှုံးအမြတ် စာရင်းချုပ် (Real-Time P&L Statement)
+            </h3>
+            <p class="text-xs text-slate-300">ရွေးချယ်ထားသော သင်တန်းနှင့် ရက်စွဲအလိုက် တွက်ချက်ထားမှု</p>
+          </div>
+          <span class="text-[11px] bg-micro-yellow/20 border border-micro-yellow/40 px-3 py-1 rounded-full text-micro-yellow font-bold">
+            <i class="fa-solid fa-lock mr-1"></i>Admin & Finance Only
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
+            <div class="text-xs text-slate-300">ရရှိပြီး သင်တန်းကြေး (Total Revenue)</div>
+            <div class="text-xl md:text-2xl font-black text-micro-yellow mt-1" id="finTotalRevenue">0 Ks</div>
+            <div class="text-[11px] text-slate-300 mt-1" id="finTotalRevenueUsd">≈ $0.00 USD</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
+            <div class="text-xs text-slate-300">ရရန်ကျန် အရစ်ကျကြွေး (Receivables)</div>
+            <div class="text-xl md:text-2xl font-black text-sky-300 mt-1" id="finTotalReceivable">0 Ks</div>
+            <div class="text-[11px] text-slate-300 mt-1">အရစ်ကျ ပေးသွင်းရန်ကျန်ငွေ</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
+            <div class="text-xs text-slate-300">စုစုပေါင်း အသုံးစရိတ် (Total Expense)</div>
+            <div class="text-xl md:text-2xl font-black text-rose-300 mt-1" id="finTotalExpense">0 Ks</div>
+            <div class="text-[11px] text-slate-300 mt-1" id="finTotalExpenseUsd">≈ $0.00 USD</div>
+          </div>
+          <div class="bg-micro-yellow text-micro-navy rounded-2xl p-4 shadow-lg">
+            <div class="text-xs font-extrabold opacity-80">အသားတင် အမြတ် / အရှုံး (Net Profit)</div>
+            <div class="text-xl md:text-2xl font-black mt-1" id="finNetProfit">0 Ks</div>
+            <div class="text-[11px] font-bold opacity-80 mt-1" id="finNetProfitUsd">≈ $0.00 USD</div>
           </div>
         </div>
       </div>
 
-      <!-- Financial Overview (Admin & Finance Department Only) -->
-      <div id="financeDashboardBlock" class="hidden bg-gradient-to-br from-brand-blue to-blue-900 text-white rounded-2xl p-4 shadow-md border-b-4 border-brand-yellow space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="text-sm font-bold flex items-center gap-2 text-brand-yellow">
-            <i class="fa-solid fa-coins"></i> ဌာနဆိုင်ရာ ငွေစာရင်းနှင့် အမြတ်အရှုံး (P&L) Report
-          </h3>
-          <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded text-yellow-200">Finance & Admin Only</span>
+      <!-- Department-Wise Summaries & AI Business Insights -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- Course Breakdown -->
+        <div class="ios-card p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-sm text-micro-navy flex items-center gap-2">
+              <i class="fa-solid fa-layer-group text-micro-blue"></i> သင်တန်းအလိုက် စာရင်းချုပ် (Course Summary)
+            </h3>
+          </div>
+          <div id="dashboardCourseBreakdown" class="space-y-2.5 text-xs"></div>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-left">
-          <div class="bg-white/10 rounded-xl p-3">
-            <div class="text-[11px] text-blue-200">ရရှိပြီး သင်တန်းကြေး (Sales)</div>
-            <div class="text-lg font-extrabold text-brand-yellow mt-0.5" id="finTotalRevenue">0 Ks</div>
+
+        <!-- Page Admin / Staff Performance Summary -->
+        <div class="ios-card p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-sm text-micro-navy flex items-center gap-2">
+              <i class="fa-solid fa-award text-micro-yellow"></i> Page Admin & Sales ဝန်ထမ်းအလိုက် စွမ်းဆောင်ရည်
+            </h3>
+            <span class="text-[11px] text-slate-400">မည်သူ လူဘယ်နှစ်ဦးရပြီလဲ ကြည့်ရန်</span>
           </div>
-          <div class="bg-white/10 rounded-xl p-3">
-            <div class="text-[11px] text-blue-200">အသုံးစရိတ် / Purchase</div>
-            <div class="text-lg font-extrabold text-rose-300 mt-0.5" id="finTotalExpense">0 Ks</div>
-          </div>
-          <div class="bg-white/10 rounded-xl p-3 col-span-2 md:col-span-2 bg-brand-yellow text-brand-blue">
-            <div class="text-[11px] font-bold opacity-80">အသားတင် အမြတ် / အရှုံး (Net P&L)</div>
-            <div class="text-xl font-extrabold mt-0.5" id="finNetProfit">0 Ks</div>
-          </div>
+          <div id="dashboardStaffPerformance" class="space-y-2.5 text-xs"></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: SALES & LEADS (လာမေးသူနှင့် သင်တန်းသားများ) -->
-    <section id="tab-leads" class="hidden space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+    <!-- ================= TAB 2: PAGE ADMIN & AI SCREENSHOT SCANNER ================= -->
+    <section id="tab-leads" class="hidden space-y-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
-          <h2 class="text-base font-bold text-brand-blue">Sales ဌာန - သင်တန်းလာမေးသူနှင့် သင်တန်းသားများ</h2>
-          <p class="text-xs text-slate-500">လာမေးသူစာရင်းများ၊ အလားအလာရှိသူများနှင့် ငွေမသွင်းရသေးသူများ စာရင်း</p>
+          <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-micro-yellow"></i> Page Admin & Marketing ဌာန
+          </h2>
+          <p class="text-xs text-slate-500">သက်ဆိုင်ရာ Site များမှ လာမေးသူများကို စာရင်းသွင်းရန်နှင့် Screenshot ပုံထည့်၍ AI ဖြင့် အလားအလာ စစ်ဆေးရန်</p>
         </div>
-        <button onclick="window.openLeadModal()" class="bg-brand-blue text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow">
-          + စာရင်းအသစ်သွင်းရန်
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="window.openLeadModal()" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+            + လာမေးသူ စာရင်းအသစ်သွင်းရန်
+          </button>
+        </div>
       </div>
 
-      <div class="space-y-2.5">
+      <!-- AI CHAT SCREENSHOT SCANNER CARD -->
+      <div class="ios-card p-5 bg-gradient-to-br from-white to-blue-50/50 border-2 border-micro-blue/20 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-start gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-micro-navy text-micro-yellow flex items-center justify-center text-lg shrink-0 shadow">
+              <i class="fa-solid fa-camera-viewfinder"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-micro-yellow text-micro-navy">AI Vision Lead Analyzer</span>
+              <h3 class="font-extrabold text-sm text-micro-navy mt-1">Customer မေးမြန်းချက် Screenshot ပုံထည့်၍ AI Scan ဖတ်ရန်</h3>
+              <p class="text-xs text-slate-600">Messenger / Viber / TikTok Chat Screenshot ပုံထည့်လိုက်ရုံဖြင့် အလားအလာရှိ/မရှိ ခွဲခြားပေးပြီး အကြံပေးချက်နှင့် ပြန်စာ ထုတ်ပေးပါမည်။</p>
+            </div>
+          </div>
+          <label class="cursor-pointer bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-4 py-3 rounded-2xl shadow flex items-center gap-2 shrink-0 ios-btn">
+            <i class="fa-solid fa-image"></i>
+            <span>Screenshot ပုံရွေးရန်</span>
+            <input type="file" id="aiScreenshotInput" accept="image/*" class="hidden" onchange="window.handleScreenshotUpload(event)" />
+          </label>
+        </div>
+
+        <!-- Paste Text or Quick Test Option -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-slate-200/80">
+          <div class="md:col-span-2">
+            <input type="text" id="aiChatTextInput" placeholder="သို့မဟုတ် Customer မေးထားသော စာသားကို ဤနေရာတွင် Paste ထည့်၍လည်း AI Scan ဖတ်နိုင်ပါသည်..." class="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs bg-white" />
+          </div>
+          <button onclick="window.runAiLeadAnalysis()" class="bg-micro-blue hover:bg-micro-navy text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow ios-btn flex items-center justify-center gap-2">
+            <i class="fa-solid fa-brain text-micro-yellow"></i> AI ဖြင့် သုံးသပ်မည်
+          </button>
+        </div>
+
+        <!-- AI Scan Output Result Box -->
+        <div id="aiScanResultContainer" class="hidden bg-white rounded-2xl p-4 border-2 border-micro-yellow shadow-md space-y-3">
+          <div class="flex flex-col md:flex-row gap-4 items-start">
+            <img id="aiScreenshotPreview" src="" alt="Chat Preview" class="hidden w-28 h-36 object-cover rounded-xl border shadow-sm shrink-0" />
+            <div class="flex-1 space-y-2 text-xs">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="font-extrabold text-micro-navy text-sm flex items-center gap-2">
+                  <i class="fa-solid fa-robot text-micro-blue"></i>
+                  <span>AI Lead スcore & အကြံပြုချက်</span>
+                </div>
+                <span id="aiDetectedBadge" class="px-3 py-1 rounded-full font-extrabold text-xs bg-rose-100 text-rose-700">🔥 HOT LEAD (92%)</span>
+              </div>
+              <p id="aiAdviceText" class="text-slate-700 bg-slate-50 p-3 rounded-xl border leading-relaxed"></p>
+              <div class="bg-amber-50/90 border border-amber-200 p-3 rounded-xl space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <strong class="text-micro-navy"><i class="fa-solid fa-reply text-micro-blue mr-1"></i>AI အကြံပြု ပြန်စာ (Suggested Reply):</strong>
+                  <button onclick="window.copyAiReply()" class="text-[11px] bg-micro-navy text-micro-yellow px-2.5 py-1 rounded-lg font-bold">Copy ကူးရန်</button>
+                </div>
+                <p id="aiSuggestedReply" class="text-slate-700 leading-relaxed"></p>
+              </div>
+              <div class="flex justify-end pt-1">
+                <button onclick="window.openLeadModalFromAi()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm ios-btn">
+                  + ဤအချက်အလက်ဖြင့် စာရင်းတန်းသွင်းမည်
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Filter Pills -->
+      <div class="space-y-3">
         <div class="relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
-          <input type="text" id="leadSearchInput" oninput="window.renderLeads()" placeholder="အမည်၊ ဖုန်း၊ လာမေးသည့်နေရာ (Source)၊ မှတ်ချက်ဖြင့် ရှာရန်..." class="w-full pl-9 pr-4 py-2.5 bg-white border rounded-xl text-xs" />
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 text-xs"></i>
+          <input type="text" id="leadSearchInput" oninput="window.renderLeads()" placeholder="အမည်၊ ဖုန်းနံပါတ်၊ လာမေးသည့်နေရာ (Source)၊ သင်တန်း၊ ဝန်ထမ်းအမည် သို့မဟုတ် မှတ်ချက်ဖြင့် ရှာရန်..." class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-xs shadow-sm focus:outline-none focus:border-micro-blue" />
         </div>
 
-        <div class="flex items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1">
-          <button onclick="window.setLeadFilter('ALL')" data-filter="ALL" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-blue text-white whitespace-nowrap">အားလုံး</button>
-          <button onclick="window.setLeadFilter('HOT')" data-filter="HOT" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-200 whitespace-nowrap">🔥 အပ်နှံရန်အလားအလာရှိသူ</button>
-          <button onclick="window.setLeadFilter('MEDIUM')" data-filter="MEDIUM" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap">💡 အလယ်အလတ်</button>
-          <button onclick="window.setLeadFilter('INTERESTED')" data-filter="INTERESTED" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap">⭐ စိတ်ဝင်စားသူ</button>
-          <button onclick="window.setLeadFilter('PAID')" data-filter="PAID" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap">✅ ငွေသွင်းပြီး (Sale)</button>
+        <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1">
+          <button onclick="window.setLeadFilter('ALL')" data-filter="ALL" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-bold bg-micro-navy text-micro-yellow whitespace-nowrap">အားလုံး (All)</button>
+          <button onclick="window.setLeadFilter('HOT')" data-filter="HOT" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-rose-200 whitespace-nowrap">🔥 အပ်နှံရန်အလားအလာရှိသူ (Hot)</button>
+          <button onclick="window.setLeadFilter('MEDIUM')" data-filter="MEDIUM" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap">💡 အလယ်အလတ် (Medium)</button>
+          <button onclick="window.setLeadFilter('INTERESTED')" data-filter="INTERESTED" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap">⭐ စိတ်ဝင်စားသူ (Interested)</button>
+          <button onclick="window.setLeadFilter('PAID')" data-filter="PAID" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-emerald-700 border whitespace-nowrap">✅ ငွေသွင်းပြီး (Enrolled)</button>
+          <button onclick="window.setLeadFilter('NOGROUP')" data-filter="NOGROUP" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-amber-700 border whitespace-nowrap">⚠️ Group သွင်းရန်ကျန်</button>
         </div>
       </div>
 
+      <!-- Leads List Container -->
       <div id="leadsContainer" class="space-y-3"></div>
     </section>
 
-    <!-- TAB 3: FINANCE & PURCHASE (အဝယ်နှင့် ငွေစာရင်း) -->
-    <section id="tab-finance" class="hidden space-y-4">
-      <div class="flex items-center justify-between">
+    <!-- ================= TAB 3: SALES & INVOICES DEPARTMENT ================= -->
+    <section id="tab-sales" class="hidden space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 class="text-base font-bold text-brand-blue">Finance & Purchase ဌာန - အဝယ်နှင့် ငွေစာရင်းများ</h2>
-          <p class="text-xs text-slate-500">ကုန်ကျစရိတ်၊ အသုံးစရိတ်များနှင့် ရောင်းရငွေများကို ပေါင်းစပ်တွက်ချက်သည့်နေရာ</p>
+          <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
+            <i class="fa-solid fa-file-invoice-dollar text-emerald-600"></i> Sales & Enrollment ဌာန (အရောင်းနှင့် ဘောက်ချာများ)
+          </h2>
+          <p class="text-xs text-slate-500">ငွေသွင်းပြီးသော သင်တန်းသားများ၊ အရစ်ကျ (Installment) စာရင်းများနှင့် Official Invoice ထုတ်ယူရန်</p>
         </div>
-        <button onclick="window.openExpenseModal()" class="bg-brand-yellow text-brand-blue text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm">
-          + Purchase / အသုံးစရိတ် သွင်းရန်
+        <button onclick="window.openLeadModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+          + အရောင်းဘောက်ချာ / ကျောင်းသားသစ် သွင်းရန်
         </button>
       </div>
+
+      <div id="salesInvoicesContainer" class="space-y-3"></div>
+    </section>
+
+    <!-- ================= TAB 4: MANAGER & FOLLOW-UP HUB ================= -->
+    <section id="tab-manager" class="hidden space-y-6">
+      <div class="ios-card p-5 bg-gradient-to-r from-micro-navy to-micro-blue text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base font-extrabold text-micro-yellow flex items-center gap-2">
+            <i class="fa-solid fa-user-tie"></i> Manager Control & Follow-up Content Hub
+          </h2>
+          <p class="text-xs text-slate-200 mt-1">ဘယ် Customer က အလားအလာရှိ/မရှိ စစ်ဆေးသုံးသပ်ရန်နှင့် Page Admin များအတွက် Follow-up Content / Script များ ပို့ပေးရန်</p>
+        </div>
+        <button onclick="window.openScriptModal()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2.5 rounded-xl shadow shrink-0 ios-btn">
+          + Follow-up Content / ಟာဝန် အသစ်ပို့ရန်
+        </button>
+      </div>
+
+      <!-- Follow-up Scripts & Broadcast Tasks for Page Admins -->
+      <div class="ios-card p-5 space-y-3">
+        <h3 class="font-extrabold text-sm text-micro-navy flex items-center gap-2">
+          <i class="fa-solid fa-bullhorn text-micro-blue"></i> Page Admin များအတွက် Follow-up Content နှင့် ညွှန်ကြားချက်များ
+        </h3>
+        <div id="managerScriptsList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+      </div>
+
+      <!-- High Potential Leads Review for Managers -->
+      <div class="ios-card p-5 space-y-3">
+        <h3 class="font-extrabold text-sm text-micro-navy flex items-center gap-2">
+          <i class="fa-solid fa-fire text-rose-600"></i> မန်နေဂျာ စစ်ဆေးရန် - အပ်နှံဖို့ အလားအလာရှိသူများ (Hot & Medium Leads)
+        </h3>
+        <div id="managerHotLeadsList" class="space-y-2.5"></div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 5: ACADEMIC & ATTENDANCE DEPARTMENT ================= -->
+    <section id="tab-academic" class="hidden space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
+            <i class="fa-solid fa-chalkboard-user text-micro-blue"></i> Academic & Attendance ဌာန
+          </h2>
+          <p class="text-xs text-slate-500">အတန်းခွဲများ (Batches)၊ အချိန်ဇယား၊ Zoom Link နှင့် သင်တန်းသား Group သွင်းမှု စစ်ဆေးရန်</p>
+        </div>
+        <button onclick="window.openBatchModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+          + အတန်းခွဲ (Batch) အသစ်ဖွင့်ရန်
+        </button>
+      </div>
+
+      <div id="academicBatchesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ================= TAB 6: PURCHASE & FINANCE DEPARTMENT ================= -->
+    <section id="tab-finance" class="hidden space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
+            <i class="fa-solid fa-wallet text-micro-blue"></i> Purchase & Finance ဌာန (အဝယ်နှင့် အသုံးစရိတ်များ)
+          </h2>
+          <p class="text-xs text-slate-500">သင်တန်းကျောင်းအတွက် ကုန်ကျသမျှ အသုံးစရိတ်များကို လိုချင်သော ရက်စွဲဖြင့် သွင်းနိုင်/ပြန်ပြင်နိုင်သည်</p>
+        </div>
+        <button onclick="window.openExpenseModal()" class="bg-micro-yellow text-micro-navy text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+          + Purchase / အသုံးစရိတ် အသစ်သွင်းရန်
+        </button>
+      </div>
+
       <div id="purchaseListSection" class="space-y-3"></div>
     </section>
 
-    <!-- TAB 4: ADMIN SETTINGS (အသေးစိတ် ဆက်တင်များ) -->
+    <!-- ================= TAB 7: FOUNDER / ADMIN SETTINGS ================= -->
     <section id="tab-admin" class="hidden space-y-6">
-      <div class="bg-brand-sky border-l-4 border-brand-blue p-3.5 rounded-r-xl">
-        <h2 class="text-sm font-bold text-brand-blue"><i class="fa-solid fa-sliders text-brand-gold"></i> Admin Control Center (အသေးစိတ် ဆက်တင်များ)</h2>
-        <p class="text-xs text-slate-600 mt-1">ဝန်ထမ်းခွင့်ပြုချက်များ၊ ဌာနခွဲခြားခြင်း၊ သင်တန်းအသစ်တိုးခြင်းနှင့် Pay စနစ်များ စီမံရန်</p>
+      <div class="ios-card p-5 bg-micro-navy text-white border-l-8 border-micro-yellow">
+        <h2 class="text-base font-extrabold text-micro-yellow flex items-center gap-2">
+          <i class="fa-solid fa-sliders"></i> Founder & Super Admin Control Center
+        </h2>
+        <p class="text-xs text-slate-300 mt-1">
+          ဝန်ထမ်းတစ်ဦးချင်းစီကို Department နှစ်ခု/သုံးခု စိတ်ကြိုက်ခွင့်ပြုချက် (Multi-Department Approval) ပေးခြင်း၊ သင်တန်းများ၊ Pay/Bank များနှင့် ပြင်ဆင်မှုမှတ်တမ်း (Audit Logs) စစ်ဆေးခြင်း
+        </p>
       </div>
 
-      <!-- Staff Approval & Role Assignment -->
-      <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="text-sm font-bold text-brand-blue">၁။ ဝန်ထမ်း ခွင့်ပြုချက် (Approval) နှင့် ဌာနသတ်မှတ်ခြင်း</h3>
-          <button onclick="window.openStaffModal()" class="bg-brand-blue text-white text-xs font-bold px-3 py-2 rounded-xl">+ ဝန်ထမ်းအသစ် ကြိုထည့်ရန်</button>
+      <!-- 1. Staff Approval & Multi-Department Assignment -->
+      <div class="ios-card p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-sm font-extrabold text-micro-navy">၁။ ဝန်ထမ်း ခွင့်ပြုချက် (Approval) နှင့် Department များ ခွဲဝေသတ်မှတ်ခြင်း</h3>
+            <p class="text-xs text-slate-500">ဝန်ထမ်းတစ်ဦးကို Department တစ်ခုထက်မက အမှန်ခြစ်ပေး၍ တာဝန်ပေးအပ်နိုင်ပါသည်</p>
+          </div>
+          <button onclick="window.openStaffModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-3.5 py-2 rounded-xl shadow ios-btn">
+            + ဝန်ထမ်းအသစ် ကြိုထည့်ရန်
+          </button>
         </div>
-        <div id="staffListContainer" class="space-y-2.5"></div>
+        <div id="staffListContainer" class="space-y-3"></div>
       </div>
 
-      <!-- Courses Settings -->
-      <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
-        <h3 class="text-sm font-bold text-brand-blue">၂။ သင်တန်းအမျိုးအစားများ စီမံရန် (Add / Remove Courses)</h3>
-        <div class="flex gap-2">
-          <input type="text" id="newCourseName" placeholder="သင်တန်းအမည်အသစ်..." class="flex-1 border rounded-xl px-3 py-2 text-xs" />
-          <input type="number" id="newCourseFee" placeholder="သင်တန်းကြေး (Ks)" class="w-32 border rounded-xl px-3 py-2 text-xs" />
-          <button onclick="window.addCourse()" class="bg-brand-yellow text-brand-blue font-bold text-xs px-4 py-2 rounded-xl">+ ထည့်မည်</button>
+      <!-- 2. Courses Management (with Edit) -->
+      <div class="ios-card p-5 space-y-3">
+        <h3 class="text-sm font-extrabold text-micro-navy">၂။ သင်တန်းအမျိုးအစားများနှင့် သင်တန်းကြေး စီမံရန်</h3>
+        <div class="flex flex-wrap gap-2">
+          <input type="text" id="newCourseName" placeholder="သင်တန်းအမည်အသစ်..." class="flex-1 min-w-[180px] border rounded-xl px-3.5 py-2 text-xs" />
+          <input type="number" id="newCourseFee" placeholder="သင်တန်းကြေး (Ks)" class="w-36 border rounded-xl px-3.5 py-2 text-xs font-bold" />
+          <button onclick="window.addCourse()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl shadow-sm ios-btn">+ ထည့်မည်</button>
         </div>
         <div id="courseManageList" class="space-y-2"></div>
       </div>
 
-      <!-- Payment Methods Settings -->
-      <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
-        <h3 class="text-sm font-bold text-brand-blue">၃။ Pay နှင့် Bank စနစ်များ စီမံရန်</h3>
-        <div class="flex gap-2">
-          <input type="text" id="newPayName" placeholder="Pay / Bank အမည်သစ်..." class="flex-1 border rounded-xl px-3 py-2 text-xs" />
-          <button onclick="window.addPaymentMethod()" class="bg-brand-yellow text-brand-blue font-bold text-xs px-4 py-2 rounded-xl">+ ထည့်မည်</button>
+      <!-- 3. Payment Methods & Lead Sources -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="ios-card p-5 space-y-3">
+          <h3 class="text-sm font-extrabold text-micro-navy">၃။ မြန်မာနိုင်ငံရှိ Pay နှင့် Bank စနစ်များ စီမံရန်</h3>
+          <div class="flex gap-2">
+            <input type="text" id="newPayName" placeholder="Pay / Bank အမည်သစ်..." class="flex-1 border rounded-xl px-3 py-2 text-xs" />
+            <button onclick="window.addPaymentMethod()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl">+ ထည့်မည်</button>
+          </div>
+          <div id="payManageList" class="flex flex-wrap gap-2"></div>
         </div>
-        <div id="payManageList" class="flex flex-wrap gap-2"></div>
+
+        <div class="ios-card p-5 space-y-3">
+          <h3 class="text-sm font-extrabold text-micro-navy">၄။ စုံစမ်းလာသည့်နေရာ (Lead Sources) စီမံရန်</h3>
+          <div class="flex gap-2">
+            <input type="text" id="newSourceInput" placeholder="Source အသစ် (ဥပမာ - Website)..." class="flex-1 border rounded-xl px-3 py-2 text-xs" />
+            <button onclick="window.addLeadSource()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl">+ ထည့်မည်</button>
+          </div>
+          <div id="sourceManageList" class="flex flex-wrap gap-2"></div>
+        </div>
       </div>
 
-      <!-- Lead Sources Settings -->
-      <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
-        <h3 class="text-sm font-bold text-brand-blue">၄။ စုံစမ်းလာသည့်နေရာ (Source) များ စီမံရန်</h3>
-        <div class="flex gap-2">
-          <input type="text" id="newSourceInput" placeholder="Source အသစ် (ဥပမာ - Instagram)..." class="flex-1 border rounded-xl px-3 py-2 text-xs" />
-          <button onclick="window.addLeadSource()" class="bg-brand-yellow text-brand-blue font-bold text-xs px-4 py-2 rounded-xl">+ ထည့်မည်</button>
-        </div>
-        <div id="sourceManageList" class="flex flex-wrap gap-2"></div>
+      <!-- 5. Audit Trail / Activity Logs -->
+      <div class="ios-card p-5 space-y-3">
+        <h3 class="text-sm font-extrabold text-micro-navy flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-micro-blue"></i> ၅။ ဝန်ထမ်းများ စာရင်းသွင်း/ပြင်ဆင်မှု မှတ်တမ်း (Audit Logs)
+        </h3>
+        <div id="auditLogsContainer" class="max-h-60 overflow-y-auto space-y-1.5 text-xs"></div>
       </div>
     </section>
+
   </main>
 
-  <!-- BOTTOM NAV -->
-  <nav id="bottomNavBar" class="hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 shadow-lg max-w-[480px] md:max-w-[960px] mx-auto">
-    <div class="grid grid-cols-4 py-1.5">
-      <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex flex-col items-center justify-center py-1 text-brand-blue font-bold">
-        <i class="fa-solid fa-chart-pie text-lg"></i><span class="text-[11px]">Report ချုပ်</span>
-      </button>
-      <button onclick="window.switchTab('leads')" id="nav-leads" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400">
-        <i class="fa-solid fa-users text-lg"></i><span class="text-[11px]">Sales / လာမေးသူ</span>
-      </button>
-      <button onclick="window.switchTab('finance')" id="nav-finance" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400">
-        <i class="fa-solid fa-wallet text-lg"></i><span class="text-[11px]">Finance & Purchase</span>
-      </button>
-      <button onclick="window.switchTab('admin')" id="nav-admin" class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400">
-        <i class="fa-solid fa-user-gear text-lg"></i><span class="text-[11px]">Admin Settings</span>
-      </button>
-    </div>
-  </nav>
-</div>
+  <!-- ================= MODAL 1: ADD / EDIT LEAD & SALE ================= -->
+  <div id="leadModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xl rounded-3xl p-5 md:p-6 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl border-t-4 border-micro-yellow">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-extrabold text-micro-navy text-base" id="leadModalTitle">သင်တန်းလာမေးသူ / သင်တန်းသား စာရင်းသွင်းရန်</h3>
+        <button onclick="window.closeModal('leadModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold">✕</button>
+      </div>
 
-<!-- MODAL: LEAD & INQUIRY -->
-<div id="leadModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 items-center justify-center p-4">
-  <div class="bg-white w-full max-w-lg rounded-3xl p-5 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-    <div class="flex justify-between border-b pb-3">
-      <h3 class="font-bold text-brand-blue text-base">သင်တန်းလာမေးသူ / သင်တန်းသား စာရင်းသွင်းရန်</h3>
-      <button onclick="window.closeModal('leadModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">✕</button>
-    </div>
-    <input type="hidden" id="editLeadId" />
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-      <div>
-        <label class="font-bold block mb-1">အမည် *</label>
-        <input type="text" id="leadName" placeholder="မောင်အောင်" class="w-full border rounded-xl px-3 py-2.5" />
-      </div>
-      <div>
-        <label class="font-bold block mb-1">ဖုန်းနံပါတ် *</label>
-        <input type="tel" id="leadPhone" placeholder="09xxxxxxxxx" class="w-full border rounded-xl px-3 py-2.5" />
-      </div>
-      <div>
-        <label class="font-bold block mb-1">သင်တန်းအမျိုးအစား *</label>
-        <select id="leadCourse" class="w-full border rounded-xl px-3 py-2.5 bg-white"></select>
-      </div>
-      <div>
-        <label class="font-bold block mb-1">လာမေးသည့်နေရာ (Source)</label>
-        <select id="leadSource" class="w-full border rounded-xl px-3 py-2.5 bg-white"></select>
-      </div>
-      <div>
-        <label class="font-bold block mb-1">အလားအလာ အဆင့် (Lead Status)</label>
-        <select id="leadStage" class="w-full border rounded-xl px-3 py-2.5 bg-white font-bold text-brand-blue">
-          <option value="INTERESTED">⭐ စိတ်ဝင်စားသူ (Interested)</option>
-          <option value="MEDIUM">💡 အလယ်အလတ် (Medium)</option>
-          <option value="HOT">🔥 အပ်နှံဖို့အလားအလာရှိသူ (Hot)</option>
-          <option value="ENROLLED">✅ သင်တန်းအပ်နှံပြီး (Enrolled)</option>
-        </select>
-      </div>
-      <div>
-        <label class="font-bold block mb-1">ငွေပေးအနေအထား (Payment)</label>
-        <select id="leadPaymentStatus" class="w-full border rounded-xl px-3 py-2.5 bg-white font-bold text-brand-blue">
-          <option value="UNPAID">⏳ ငွေမသွင်းရသေး (Inquiry)</option>
-          <option value="PAID">✅ ငွေသွင်းပြီး (Sale)</option>
-        </select>
-      </div>
-      <div>
-        <label class="font-bold block mb-1">သွင်းပြီးငွေ (Ks)</label>
-        <input type="number" id="leadPaidAmount" value="0" class="w-full border rounded-xl px-3 py-2.5 font-bold" />
-      </div>
-      <div>
-        <label class="font-bold block mb-1">Pay / Bank</label>
-        <select id="leadPaymentMethod" class="w-full border rounded-xl px-3 py-2.5 bg-white"></select>
-      </div>
-    </div>
+      <input type="hidden" id="editLeadId" />
 
-    <!-- Group Checklist -->
-    <div class="bg-brand-sky border border-blue-200 rounded-2xl p-3 space-y-2">
-      <div class="text-xs font-bold text-brand-blue">Group ထဲသွင်းပြီး/မပြီး စစ်ဆေးရန် (သင်တန်းအပ်သူများအတွက်)</div>
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border cursor-pointer">
-          <input type="checkbox" id="chkFbGroup" class="w-4 h-4 accent-brand-blue" />
-          <span class="font-semibold">FB Group သွင်းပြီး</span>
-        </label>
-        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border cursor-pointer">
-          <input type="checkbox" id="chkTgGroup" class="w-4 h-4 accent-brand-blue" />
-          <span class="font-semibold">Telegram သွင်းပြီး</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="text-xs">
-      <label class="font-bold block mb-1">မှတ်ချက် (Remarks / ဆွေးနွေးချက်များ)</label>
-      <textarea id="leadNote" rows="2" placeholder="ဥပမာ - ဈေးနှုန်းမေးသည်၊ လကုန်မှ ငွေလွှဲမည်..." class="w-full border rounded-xl px-3 py-2"></textarea>
-    </div>
-
-    <button onclick="window.saveLead()" class="w-full py-3 bg-brand-blue text-white rounded-xl font-bold shadow">💾 စာရင်းသိမ်းဆည်းမည်</button>
-  </div>
-</div>
-
-<!-- MODAL: EXPENSE / PURCHASE -->
-<div id="expenseModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 items-center justify-center p-4">
-  <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl">
-    <div class="flex justify-between border-b pb-3">
-      <h3 class="font-bold text-brand-blue text-base">Purchase / အသုံးစရိတ် သွင်းရန်</h3>
-      <button onclick="window.closeModal('expenseModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">✕</button>
-    </div>
-    <div class="space-y-3 text-xs">
-      <div>
-        <label class="font-bold block mb-1">အကြောင်းအရာ *</label>
-        <input type="text" id="expTitle" placeholder="ဥပမာ - Facebook Boost ကြော်ငြာခ" class="w-full border rounded-xl px-3 py-2.5" />
-      </div>
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
         <div>
-          <label class="font-bold block mb-1">ကုန်ကျငွေ (Ks) *</label>
-          <input type="number" id="expAmount" placeholder="50000" class="w-full border rounded-xl px-3 py-2.5 font-bold text-rose-600" />
+          <label class="font-bold block mb-1 text-micro-navy">အမည် (Student / Customer Name) *</label>
+          <input type="text" id="leadName" placeholder="ဥပမာ - မောင်အောင်" class="w-full border rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-micro-blue" />
         </div>
         <div>
-          <label class="font-bold block mb-1">ပေးချေသည့် Pay / Bank</label>
-          <select id="expPaymentMethod" class="w-full border rounded-xl px-3 py-2.5 bg-white"></select>
+          <label class="font-bold block mb-1 text-micro-navy">ဖုန်းနံပါတ် *</label>
+          <input type="tel" id="leadPhone" placeholder="09xxxxxxxxx" class="w-full border rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-micro-blue" />
         </div>
-      </div>
-      <div>
-        <label class="font-bold block mb-1">တာဝန်ခံအမည်</label>
-        <input type="text" id="expBy" class="w-full border rounded-xl px-3 py-2.5" />
-      </div>
-    </div>
-    <button onclick="window.saveExpense()" class="w-full py-2.5 bg-brand-blue text-white rounded-xl font-bold">💾 သိမ်းဆည်းမည်</button>
-  </div>
-</div>
-
-<!-- MODAL: STAFF -->
-<div id="staffModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 items-center justify-center p-4">
-  <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl">
-    <div class="flex justify-between border-b pb-3">
-      <h3 class="font-bold text-brand-blue text-base">ဝန်ထမ်း အသစ် ကြိုထည့်ရန်</h3>
-      <button onclick="window.closeModal('staffModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">✕</button>
-    </div>
-    <div class="space-y-3 text-xs">
-      <div>
-        <label class="font-bold block mb-1">ဝန်ထမ်းအမည် *</label>
-        <input type="text" id="staffNameInput" placeholder="မတင်တင်လှိုင်" class="w-full border rounded-xl px-3 py-2.5" />
-      </div>
-      <div>
-        <label class="font-bold block mb-1">Gmail လိပ်စာ *</label>
-        <input type="email" id="staffEmailInput" placeholder="staff@gmail.com" class="w-full border rounded-xl px-3 py-2.5" />
-      </div>
-      <div>
-        <label class="font-bold block mb-1">ဌာနနှင့် ရာထူး (Department / Role) *</label>
-        <select id="staffRoleInput" class="w-full border rounded-xl px-3 py-2.5 bg-white font-bold text-brand-blue">
-          <option value="ADMIN">🛡️ Admin / Founder (အရာအားလုံး မြင်ရ/ပြင်နိုင်)</option>
-          <option value="FINANCE">💰 Finance Department (ငွေစာရင်း၊ အမြတ်အရှုံးမြင်ရ)</option>
-          <option value="SALES">📈 Sales Department (အရောင်း၊ လာမေးသူစာရင်း)</option>
-          <option value="PURCHASE">🛒 Purchase Department (အဝယ်စရိတ်သွင်းရန်)</option>
-          <option value="PAGE_ADMIN">💬 Facebook Page Admin</option>
-        </select>
-      </div>
-    </div>
-    <button onclick="window.saveStaffMember()" class="w-full py-2.5 bg-brand-blue text-white rounded-xl font-bold">💾 သိမ်းဆည်းမည်</button>
-  </div>
-</div>
-
-<!-- FIREBASE REAL-TIME SCRIPT & PDF GENERATOR -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  const FOUNDER_GMAIL = "chitkhonpaing03@gmail.com";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyA_FVMmgcE11h09sB8nhFpc0C3BSzq2Qek",
-    authDomain: "micro-training-center.firebaseapp.com",
-    projectId: "micro-training-center",
-    storageBucket: "micro-training-center.firebasestorage.app",
-    messagingSenderId: "535516234007",
-    appId: "1:535516234007:web:3c8844c8196c39023f3752",
-    measurementId: "G-35Y4E4BBFE"
-  };
-
-  let auth = null;
-  let db = null;
-  let sharedDocRef = null;
-  let currentAuthUser = null;
-  let currentLeadFilter = 'ALL';
-
-  const defaultData = {
-    courses: [
-      { id: 'c1', name: 'Advance Excel', fee: 50000 },
-      { id: 'c2', name: 'Excel for Job Training', fee: 35000 }
-    ],
-    paymentMethods: ['KBZPay', 'WavePay', 'CB Pay', 'AYA Pay', 'Cash (ငွေသား)'],
-    leadSources: ['Facebook Page Messenger', 'Facebook Ads', 'TikTok', 'Telegram', 'Viber', 'Phone Call'],
-    users: [],
-    leads: [],
-    expenses: []
-  };
-
-  let state = JSON.parse(JSON.stringify(defaultData));
-
-  const app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  sharedDocRef = doc(db, "micro_training_center", "shared_state");
-
-  async function syncToCloud() {
-    if (!sharedDocRef) return;
-    await setDoc(sharedDocRef, state, { merge: true });
-  }
-
-  onAuthStateChanged(auth, async (user) => {
-    currentAuthUser = user;
-    if (!user) {
-      document.getElementById('loginScreen').classList.remove('hidden');
-      document.getElementById('pendingLockScreen').classList.add('hidden');
-      document.getElementById('mainAppContent').classList.add('hidden');
-      document.getElementById('bottomNavBar').classList.add('hidden');
-      document.getElementById('btnLogout').classList.add('hidden');
-      return;
-    }
-
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('btnLogout').classList.remove('hidden');
-    document.getElementById('activeUserEmail').textContent = user.email;
-
-    const snap = await getDoc(sharedDocRef);
-    if (!snap.exists()) await setDoc(sharedDocRef, defaultData);
-
-    onSnapshot(sharedDocRef, async (docSnap) => {
-      if (docSnap.exists()) state = { ...defaultData, ...docSnap.data() };
-      document.getElementById('syncStatusBadge').innerHTML = `<i class="fa-solid fa-cloud text-brand-yellow mr-1"></i>Live Synced`;
-
-      const email = user.email.toLowerCase();
-      const isFounder = email === FOUNDER_GMAIL.toLowerCase() || state.users.length === 0;
-      let uObj = state.users.find(u => u.email.toLowerCase() === email);
-
-      if (!uObj) {
-        uObj = { id: 'u_' + Date.now(), name: user.displayName || email.split('@')[0], email: user.email, role: isFounder ? 'FOUNDER' : 'PAGE_ADMIN', approved: isFounder };
-        state.users.push(uObj);
-        await syncToCloud();
-      } else if (isFounder && (!uObj.approved || uObj.role !== 'FOUNDER')) {
-        uObj.role = 'FOUNDER'; uObj.approved = true;
-        await syncToCloud();
-      }
-      window.renderAll();
-    });
-  });
-
-  window.handleGoogleLogin = async () => {
-    try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (e) { alert(e.message); }
-  };
-  window.handleLogout = async () => { await signOut(auth); };
-
-  function getActiveUser() {
-    if (!currentAuthUser) return { approved: false };
-    return state.users.find(u => u.email.toLowerCase() === currentAuthUser.email.toLowerCase()) || { approved: false };
-  }
-
-  function canViewFinance() {
-    const u = getActiveUser();
-    return u.role === 'FOUNDER' || u.role === 'ADMIN' || u.role === 'FINANCE';
-  }
-
-  window.switchTab = (tab) => {
-    const u = getActiveUser();
-    if (tab === 'finance' && u.role !== 'FOUNDER' && u.role !== 'ADMIN' && u.role !== 'FINANCE' && u.role !== 'PURCHASE') {
-      alert('ဤဌာနသို့ ဝင်ရောက်ခွင့် မရှိပါ။');
-      return;
-    }
-    if (tab === 'admin' && u.role !== 'FOUNDER' && u.role !== 'ADMIN') {
-      alert('Admin ဌာနသို့ တည်ထောင်သူနှင့် Admin များသာ ဝင်ရောက်နိုင်ပါသည်။');
-      return;
-    }
-    ['dashboard', 'leads', 'finance', 'admin'].forEach(t => {
-      document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
-    });
-    window.renderAll();
-  };
-
-  window.jumpToLeads = (filter) => {
-    window.setLeadFilter(filter);
-    window.switchTab('leads');
-  };
-
-  window.setLeadFilter = (f) => {
-    currentLeadFilter = f;
-    document.querySelectorAll('.filter-pill').forEach(btn => {
-      btn.className = btn.getAttribute('data-filter') === f
-        ? 'filter-pill px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-blue text-white whitespace-nowrap'
-        : 'filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 whitespace-nowrap';
-    });
-    window.renderLeads();
-  };
-
-  window.renderAll = () => {
-    const user = getActiveUser();
-    document.getElementById('currentRoleBadge').textContent = `${user.name || ''} • ${user.role || ''}`;
-    if (!user.approved) {
-      document.getElementById('pendingLockScreen').classList.remove('hidden');
-      document.getElementById('mainAppContent').classList.add('hidden');
-      document.getElementById('bottomNavBar').classList.add('hidden');
-      document.getElementById('pendingUserName').textContent = user.name;
-      document.getElementById('pendingUserEmail').textContent = user.email;
-      return;
-    }
-    document.getElementById('pendingLockScreen').classList.add('hidden');
-    document.getElementById('mainAppContent').classList.remove('hidden');
-    document.getElementById('bottomNavBar').classList.remove('hidden');
-
-    const leads = state.leads;
-    const hotLeads = leads.filter(l => l.leadStage === 'HOT' && l.paymentStatus === 'UNPAID');
-    const paidLeads = leads.filter(l => l.paymentStatus === 'PAID');
-    const groupPending = leads.filter(l => l.paymentStatus === 'PAID' && (!l.fbGroup || !l.tgGroup));
-
-    document.getElementById('kpiTotalLeads').textContent = leads.length;
-    document.getElementById('kpiHotLeads').textContent = hotLeads.length;
-    document.getElementById('kpiPaidCount').textContent = paidLeads.length;
-    document.getElementById('kpiGroupPendingCount').textContent = groupPending.length;
-
-    // Secure Finance Block (Admin & Finance Only)
-    const finBlock = document.getElementById('financeDashboardBlock');
-    if (canViewFinance()) {
-      finBlock.classList.remove('hidden');
-      const rev = paidLeads.reduce((s, l) => s + Number(l.paidAmount || 0), 0);
-      const exp = state.expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
-      document.getElementById('finTotalRevenue').textContent = rev.toLocaleString() + ' Ks';
-      document.getElementById('finTotalExpense').textContent = exp.toLocaleString() + ' Ks';
-      document.getElementById('finNetProfit').textContent = (rev - exp).toLocaleString() + ' Ks';
-    } else {
-      finBlock.classList.add('hidden');
-    }
-
-    window.renderLeads();
-    renderFinanceTab();
-    renderAdminPanel();
-  };
-
-  window.renderLeads = () => {
-    const q = (document.getElementById('leadSearchInput')?.value || '').toLowerCase().trim();
-    const list = state.leads.filter(l => {
-      if (currentLeadFilter === 'HOT' && l.leadStage !== 'HOT') return false;
-      if (currentLeadFilter === 'MEDIUM' && l.leadStage !== 'MEDIUM') return false;
-      if (currentLeadFilter === 'INTERESTED' && l.leadStage !== 'INTERESTED') return false;
-      if (currentLeadFilter === 'PAID' && l.paymentStatus !== 'PAID') return false;
-      if (q) return `${l.name} ${l.phone} ${l.source} ${l.note || ''} ${l.course}`.toLowerCase().includes(q);
-      return true;
-    });
-
-    const container = document.getElementById('leadsContainer');
-    if (list.length === 0) {
-      container.innerHTML = `<div class="bg-slate-50 border border-dashed rounded-2xl p-8 text-center text-xs text-slate-400">စာရင်း မရှိသေးပါ။</div>`;
-      return;
-    }
-
-    const showMoney = canViewFinance();
-
-    container.innerHTML = list.map(l => {
-      const stageBadge = l.leadStage === 'HOT' ? '<span class="px-2 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px]">🔥 အပ်ရန်အလားအလာရှိ</span>' :
-                         l.leadStage === 'MEDIUM' ? '<span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold text-[10px]">💡 အလယ်အလတ်</span>' :
-                         '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-700 font-bold text-[10px]">⭐ စိတ်ဝင်စားသူ</span>';
-
-      const payBadge = l.paymentStatus === 'PAID' ? '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold text-[10px]">✅ ငွေသွင်းပြီး (Sale)</span>' : '<span class="px-2 py-0.5 rounded bg-amber-50 text-amber-600 font-bold text-[10px]">⏳ ငွေမသွင်းရသေး (Inquiry)</span>';
-
-      return `
-        <div class="bg-white border rounded-2xl p-4 shadow-xs space-y-2.5">
-          <div class="flex items-start justify-between">
-            <div>
-              <div class="flex items-center gap-2">
-                <h4 class="font-bold text-sm text-brand-blue">${l.name}</h4>
-                <span class="text-[11px] px-2 py-0.5 rounded bg-brand-sky text-brand-blue">${l.course}</span>
-              </div>
-              <div class="text-xs text-slate-500 mt-1">
-                <a href="tel:${l.phone}" class="text-brand-lightBlue font-semibold"><i class="fa-solid fa-phone mr-1"></i>${l.phone}</a> • 📍 လာမေးသည့်နေရာ: <strong>${l.source}</strong>
-                ${showMoney && l.paidAmount > 0 ? ` • ငွေပမာဏ: <strong class="text-emerald-600">${Number(l.paidAmount).toLocaleString()} Ks</strong>` : ''}
-              </div>
-            </div>
-            <div class="text-right space-y-1">
-              <div>${stageBadge}</div>
-              <div>${payBadge}</div>
-            </div>
-          </div>
-          ${l.note ? `<div class="text-xs text-slate-600 bg-yellow-50/80 p-2 rounded-xl border border-yellow-200"><i class="fa-regular fa-note-sticky text-brand-gold mr-1"></i><strong>မှတ်ချက်:</strong> ${l.note}</div>` : ''}
-          <div class="flex items-center justify-between pt-2 border-t text-xs">
-            <span class="text-slate-400">ရက်စွဲ: ${l.date}</span>
-            <button onclick="window.deleteLead('${l.id}')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash mr-1"></i>ဖျက်မည်</button>
-          </div>
-        </div>`;
-    }).join('');
-  };
-
-  window.openLeadModal = () => {
-    document.getElementById('leadCourse').innerHTML = state.courses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-    document.getElementById('leadSource').innerHTML = state.leadSources.map(s => `<option value="${s}">${s}</option>`).join('');
-    document.getElementById('leadPaymentMethod').innerHTML = state.paymentMethods.map(p => `<option value="${p}">${p}</option>`).join('');
-    document.getElementById('leadName').value = '';
-    document.getElementById('leadPhone').value = '';
-    document.getElementById('leadNote').value = '';
-    window.openModal('leadModal');
-  };
-
-  window.saveLead = async () => {
-    const name = document.getElementById('leadName').value.trim();
-    const phone = document.getElementById('leadPhone').value.trim();
-    if (!name || !phone) return alert('အမည်နှင့် ဖုန်းနံပါတ် ထည့်သွင်းပါ။');
-
-    state.leads.unshift({
-      id: 'L' + Date.now(),
-      name, phone,
-      course: document.getElementById('leadCourse').value,
-      source: document.getElementById('leadSource').value,
-      leadStage: document.getElementById('leadStage').value,
-      paymentStatus: document.getElementById('leadPaymentStatus').value,
-      paidAmount: Number(document.getElementById('leadPaidAmount').value || 0),
-      paymentMethod: document.getElementById('leadPaymentMethod').value,
-      fbGroup: document.getElementById('chkFbGroup').checked,
-      tgGroup: document.getElementById('chkTgGroup').checked,
-      note: document.getElementById('leadNote').value.trim(),
-      date: new Date().toISOString().slice(0, 10)
-    });
-    window.closeModal('leadModal');
-    await syncToCloud();
-  };
-
-  window.deleteLead = async (id) => {
-    if (!confirm('ဖျက်သိမ်းမှာ သေချာပါသလား?')) return;
-    state.leads = state.leads.filter(x => x.id !== id);
-    await syncToCloud();
-  };
-
-  // Finance Tab Render
-  function renderFinanceTab() {
-    const pContainer = document.getElementById('purchaseListSection');
-    pContainer.innerHTML = state.expenses.length === 0
-      ? `<div class="p-6 text-center text-xs text-slate-400 bg-slate-50 rounded-2xl">Purchase / အသုံးစရိတ် စာရင်း မရှိသေးပါ။</div>`
-      : state.expenses.map(e => `
-        <div class="bg-white border rounded-2xl p-3.5 flex items-center justify-between text-xs">
-          <div>
-            <div class="font-bold text-slate-800">${e.title}</div>
-            <div class="text-slate-500 mt-0.5">ပေးချေမှု: ${e.paymentMethod} • တာဝန်ခံ: ${e.by} (${e.date})</div>
-          </div>
-          <div class="text-right">
-            <div class="font-extrabold text-rose-600">-${Number(e.amount).toLocaleString()} Ks</div>
-            <button onclick="window.deleteExpense('${e.id}')" class="text-rose-500 text-[10px] mt-1">ဖျက်မည်</button>
-          </div>
-        </div>`).join('');
-  }
-
-  window.openExpenseModal = () => {
-    document.getElementById('expPaymentMethod').innerHTML = state.paymentMethods.map(p => `<option value="${p}">${p}</option>`).join('');
-    document.getElementById('expTitle').value = '';
-    document.getElementById('expAmount').value = '';
-    document.getElementById('expBy').value = getActiveUser().name;
-    window.openModal('expenseModal');
-  };
-
-  window.saveExpense = async () => {
-    const title = document.getElementById('expTitle').value.trim();
-    const amount = Number(document.getElementById('expAmount').value || 0);
-    if (!title || amount <= 0) return alert('အကြောင်းအရာနှင့် ငွေပမာဏ ထည့်ပါ။');
-    state.expenses.unshift({
-      id: 'E' + Date.now(),
-      title, amount,
-      paymentMethod: document.getElementById('expPaymentMethod').value,
-      by: document.getElementById('expBy').value.trim() || getActiveUser().name,
-      date: new Date().toISOString().slice(0, 10)
-    });
-    window.closeModal('expenseModal');
-    await syncToCloud();
-  };
-
-  window.deleteExpense = async (id) => {
-    if (!confirm('ဖျက်သိမ်းမှာ သေချာပါသလား?')) return;
-    state.expenses = state.expenses.filter(x => x.id !== id);
-    await syncToCloud();
-  };
-
-  // Admin Panel Settings
-  function renderAdminPanel() {
-    document.getElementById('staffListContainer').innerHTML = state.users.map(u => `
-      <div class="p-3 rounded-xl border bg-slate-50 flex items-center justify-between text-xs">
         <div>
-          <strong>${u.name}</strong> (${u.email}) - <span class="text-blue-600 font-bold">${u.role}</span>
-          ${!u.approved ? '<span class="text-amber-600 font-bold ml-2">⏳ Pending</span>' : ''}
+          <label class="font-bold block mb-1 text-micro-navy">ရက်စွဲ (လိုချင်သော ရက်စွဲ ရွေးချယ်နိုင်သည်) *</label>
+          <input type="date" id="leadDate" class="w-full border rounded-xl px-3.5 py-2.5 font-semibold text-micro-navy bg-slate-50" />
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="window.toggleApprove('${u.id}')" class="px-2.5 py-1 rounded font-bold ${u.approved ? 'bg-emerald-100 text-emerald-800' : 'bg-brand-blue text-white'}">
-            ${u.approved ? 'Approved' : 'Approve ပေးမည်'}
-          </button>
-          <select onchange="window.changeRole('${u.id}', this.value)" class="border rounded px-2 py-1 text-xs bg-white font-bold">
-            <option value="ADMIN" ${u.role==='ADMIN'?'selected':''}>Admin</option>
-            <option value="FINANCE" ${u.role==='FINANCE'?'selected':''}>Finance</option>
-            <option value="SALES" ${u.role==='SALES'?'selected':''}>Sales</option>
-            <option value="PURCHASE" ${u.role==='PURCHASE'?'selected':''}>Purchase</option>
-            <option value="PAGE_ADMIN" ${u.role==='PAGE_ADMIN'?'selected':''}>Page Admin</option>
+        <div>
+          <label class="font-bold block mb-1 text-micro-navy">သင်တန်းအမျိုးအစား *</label>
+          <select id="leadCourse" onchange="window.autoFillCourseFee()" class="w-full border rounded-xl px-3.5 py-2.5 bg-white font-semibold"></select>
+        </div>
+        <div>
+          <label class="font-bold block mb-1 text-micro-navy">လာမေးသည့်နေရာ (Source)</label>
+          <select id="leadSource" class="w-full border rounded-xl px-3.5 py-2.5 bg-white"></select>
+        </div>
+        <div>
+          <label class="font-bold block mb-1 text-micro-navy">အလားအလာ အဆင့် (Lead Status)</label>
+          <select id="leadStage" class="w-full border rounded-xl px-3.5 py-2.5 bg-white font-bold text-micro-navy">
+            <option value="INTERESTED">⭐ စိတ်ဝင်စားသူ (Interested)</option>
+            <option value="MEDIUM">💡 အလယ်အလတ် (Medium)</option>
+            <option value="HOT">🔥 အပ်နှံဖို့အလားအလာရှိသူ (Hot)</option>
+            <option value="ENROLLED">✅ သင်တန်းအပ်နှံပြီး (Enrolled)</option>
           </select>
-          <button onclick="window.deleteStaff('${u.id}')" class="text-rose-600">✕</button>
         </div>
-      </div>`).join('');
+        <div>
+          <label class="font-bold block mb-1 text-micro-navy">ငွေပေးချေမှု အနေအထား (Payment)</label>
+          <select id="leadPaymentStatus" class="w-full border rounded-xl px-3.5 py-2.5 bg-white font-bold text-micro-blue">
+            <option value="UNPAID">⏳ ငွေမသွင်းရသေး (Inquiry)</option>
+            <option value="PARTIAL">🌗 အရစ်ကျ ပေးသွင်းထားသူ (Installment)</option>
+            <option value="PAID">✅ ငွေအကြေသွင်းပြီး (Full Sale)</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-bold block mb-1 text-micro-navy">Pay / Bank စနစ်</label>
+          <select id="leadPaymentMethod" class="w-full border rounded-xl px-3.5 py-2.5 bg-white"></select>
+        </div>
+        <div>
+          <label class="font-bold block mb-1 text-emerald-700">သွင်းပြီးငွေ ပမာဏ (Paid Ks)</label>
+          <input type="number" id="leadPaidAmount" value="0" class="w-full border rounded-xl px-3.5 py-2.5 font-extrabold text-emerald-700" />
+        </div>
+        <div>
+          <label class="font-bold block mb-1 text-rose-600">ရရန်ကျန်ငွေ (Remaining Balance Ks)</label>
+          <input type="number" id="leadBalanceAmount" value="0" class="w-full border rounded-xl px-3.5 py-2.5 font-extrabold text-rose-600" />
+        </div>
+      </div>
 
-    document.getElementById('courseManageList').innerHTML = state.courses.map(c => `
-      <div class="flex items-center justify-between bg-slate-50 border rounded-xl px-3 py-2 text-xs">
-        <div><strong>${c.name}</strong> (${Number(c.fee).toLocaleString()} Ks)</div>
-        <button onclick="window.removeCourse('${c.id}')" class="text-rose-600">ဖျက်မည်</button>
-      </div>`).join('');
+      <!-- Screenshot Upload inside Modal -->
+      <div class="bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-3 text-xs flex items-center justify-between">
+        <div>
+          <strong class="text-micro-navy"><i class="fa-solid fa-camera text-micro-blue mr-1"></i>Chat / ငွေလွှဲ Screenshot ပုံတွဲရန် (Optional):</strong>
+          <span id="modalScreenshotStatus" class="text-slate-400 ml-1">ပုံမရွေးရသေးပါ</span>
+        </div>
+        <label class="cursor-pointer bg-white border border-slate-300 hover:bg-slate-100 text-micro-navy font-bold px-3 py-1.5 rounded-xl">
+          ပုံရွေးရန်
+          <input type="file" accept="image/*" class="hidden" onchange="window.handleModalImageAttach(event)" />
+        </label>
+      </div>
 
-    document.getElementById('payManageList').innerHTML = state.paymentMethods.map((p, idx) => `
-      <span class="inline-flex items-center gap-1.5 bg-brand-sky border text-brand-blue px-2.5 py-1 rounded-xl text-xs font-semibold">
-        ${p} <button onclick="window.removePayment(${idx})" class="text-rose-500 font-bold">×</button>
-      </span>`).join('');
+      <!-- Group Checklist -->
+      <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-3.5 space-y-2">
+        <div class="text-xs font-extrabold text-micro-navy">သင်တန်းသား Group သွင်းပြီး/မပြီး စစ်ဆေးရန်</div>
+        <div class="grid grid-cols-2 gap-2.5 text-xs">
+          <label class="flex items-center gap-2 bg-white p-2.5 rounded-xl border cursor-pointer">
+            <input type="checkbox" id="chkFbGroup" class="w-4 h-4 accent-micro-navy" />
+            <span class="font-semibold">FB Group သွင်းပြီး</span>
+          </label>
+          <label class="flex items-center gap-2 bg-white p-2.5 rounded-xl border cursor-pointer">
+            <input type="checkbox" id="chkTgGroup" class="w-4 h-4 accent-micro-navy" />
+            <span class="font-semibold">Telegram Group သွင်းပြီး</span>
+          </label>
+        </div>
+      </div>
 
-    document.getElementById('sourceManageList').innerHTML = state.leadSources.map((s, idx) => `
-      <span class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 px-2.5 py-1 rounded-xl text-xs font-semibold">
-        ${s} <button onclick="window.removeSource(${idx})" class="text-rose-500 font-bold">×</button>
-      </span>`).join('');
-  }
+      <div class="text-xs">
+        <label class="font-bold block mb-1 text-micro-navy">မှတ်ချက် (Remarks / မေးမြန်းချက်အသေးစိတ်)</label>
+        <textarea id="leadNote" rows="2" placeholder="ဥပမာ - ဈေးနှုန်းမေးထားသည်၊ လကုန်ရက် ငွေလွှဲမည်..." class="w-full border rounded-xl px-3.5 py-2"></textarea>
+      </div>
 
-  window.openStaffModal = () => window.openModal('staffModal');
-  window.saveStaffMember = async () => {
-    const name = document.getElementById('staffNameInput').value.trim();
-    const email = document.getElementById('staffEmailInput').value.trim();
-    const role = document.getElementById('staffRoleInput').value;
-    if (!name || !email) return alert('အမည်နှင့် Gmail ထည့်ပါ။');
-    state.users.push({ id: 'u_' + Date.now(), name, email, role, approved: true });
-    window.closeModal('staffModal');
-    await syncToCloud();
-  };
-  window.toggleApprove = async (uid) => {
-    const u = state.users.find(x => x.id === uid);
-    if (u) { u.approved = !u.approved; await syncToCloud(); }
-  };
-  window.changeRole = async (uid, r) => {
-    const u = state.users.find(x => x.id === uid);
-    if (u) { u.role = r; await syncToCloud(); }
-  };
-  window.deleteStaff = async (uid) => {
-    state.users = state.users.filter(x => x.id !== uid);
-    await syncToCloud();
-  };
+      <button onclick="window.saveLead()" class="w-full py-3.5 bg-micro-navy hover:bg-micro-blue text-micro-yellow rounded-2xl font-extrabold shadow-lg ios-btn">
+        💾 စာရင်းသိမ်းဆည်းမည်
+      </button>
+    </div>
+  </div>
 
-  window.addCourse = async () => {
-    const name = document.getElementById('newCourseName').value.trim();
-    const fee = Number(document.getElementById('newCourseFee').value || 0);
-    if (!name) return;
-    state.courses.push({ id: 'c_' + Date.now(), name, fee });
-    document.getElementById('newCourseName').value = '';
-    document.getElementById('newCourseFee').value = '';
-    await syncToCloud();
-  };
-  window.removeCourse = async (cid) => {
-    state.courses = state.courses.filter(x => x.id !== cid);
-    await syncToCloud();
-  };
+  <!-- ================= MODAL 2: ADD / EDIT EXPENSE (PURCHASE) ================= -->
+  <div id="expenseModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-extrabold text-micro-navy text-base" id="expenseModalTitle">Purchase / အသုံးစရိတ် သွင်းရန်</h3>
+        <button onclick="window.closeModal('expenseModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+      </div>
+      <input type="hidden" id="editExpenseId" />
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold block mb-1">အကြောင်းအရာ *</label>
+          <input type="text" id="expTitle" placeholder="ဥပမာ - Facebook Boost ကြော်ငြာခ / ရုံးသုံးပစ္စည်း" class="w-full border rounded-xl px-3.5 py-2.5" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold block mb-1">ကုန်ကျငွေ (Ks) *</label>
+            <input type="number" id="expAmount" placeholder="50000" class="w-full border rounded-xl px-3.5 py-2.5 font-extrabold text-rose-600" />
+          </div>
+          <div>
+            <label class="font-bold block mb-1">ရက်စွဲ (စိတ်ကြိုက်ရွေးရန်) *</label>
+            <input type="date" id="expDate" class="w-full border rounded-xl px-3 py-2.5 font-semibold bg-slate-50" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold block mb-1">ပေးချေသည့် Pay / Bank</label>
+            <select id="expPaymentMethod" class="w-full border rounded-xl px-3 py-2.5 bg-white"></select>
+          </div>
+          <div>
+            <label class="font-bold block mb-1">တာဝန်ခံအမည်</label>
+            <input type="text" id="expBy" class="w-full border rounded-xl px-3 py-2.5" />
+          </div>
+        </div>
+        <div>
+          <label class="font-bold block mb-1">မှတ်ချက် (Optional)</label>
+          <input type="text" id="expNote" placeholder="ဘောက်ချာအမှတ် သို့မဟုတ် အသေးစိတ်..." class="w-full border rounded-xl px-3.5 py-2" />
+        </div>
+      </div>
+      <button onclick="window.saveExpense()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+        💾 သိမ်းဆည်းမည်
+      </button>
+    </div>
+  </div>
 
-  window.addPaymentMethod = async () => {
-    const val = document.getElementById('newPayName').value.trim();
-    if (!val) return;
-    state.paymentMethods.push(val);
-    document.getElementById('newPayName').value = '';
-    await syncToCloud();
-  };
-  window.removePayment = async (idx) => {
-    state.paymentMethods.splice(idx, 1);
-    await syncToCloud();
-  };
+  <!-- ================= MODAL 3: STAFF & MULTI-DEPARTMENT ROLES ================= -->
+  <div id="staffModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-extrabold text-micro-navy text-base" id="staffModalTitle">ဝန်ထမ်းနှင့် ဌာနတာဝန်များ သတ်မှတ်ရန်</h3>
+        <button onclick="window.closeModal('staffModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+      </div>
+      <input type="hidden" id="editStaffId" />
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold block mb-1">ဝန်ထမ်းအမည် *</label>
+          <input type="text" id="staffNameInput" placeholder="ဥပမာ - မမြတ်ဟေမာ" class="w-full border rounded-xl px-3.5 py-2.5" />
+        </div>
+        <div>
+          <label class="font-bold block mb-1">Gmail လိပ်စာ *</label>
+          <input type="email" id="staffEmailInput" placeholder="staff@gmail.com" class="w-full border rounded-xl px-3.5 py-2.5" />
+        </div>
+        <div>
+          <label class="font-bold block mb-1.5 text-micro-navy">ကိုင်တွယ်ခွင့်ပြုမည့် ဌာနများ (တစ်ခုထက်မက အမှန်ခြစ်ပေးနိုင်သည်) *</label>
+          <div class="space-y-2 bg-slate-50 p-3 rounded-2xl border">
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" value="ADMIN" class="staff-role-chk w-4 h-4 accent-micro-navy" />
+              <span>🛡️ <strong>Admin</strong> (အရာအားလုံး စီမံခန့်ခွဲနိုင်သည်)</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" value="MANAGER" class="staff-role-chk w-4 h-4 accent-micro-navy" />
+              <span>🎯 <strong>Manager</strong> (ဝန်ထမ်းနှင့် အလားအလာ စစ်ဆေးရန်)</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" value="FINANCE" class="staff-role-chk w-4 h-4 accent-micro-navy" />
+              <span>💰 <strong>Finance</strong> (အရှုံးအမြတ် P&L နှင့် ငွေစာရင်းမြင်ရ)</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" value="SALES" class="staff-role-chk w-4 h-4 accent-micro-navy" />
+              <span>📈 <strong>Sales</strong> (အရောင်းနှင့် Invoice ထုတ်ရန်)</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" value="PURCHASE" class="staff-role-chk w-4 h-4 accent-micro-navy" />
+              <span>🛒 <strong>Purchase</strong> (အသုံးစရိတ်/အဝယ်စာရင်း သွင်းရန်)</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" value="ACADEMIC" class="staff-role-chk w-4 h-4 accent-micro-navy" />
+              <span>📚 <strong>Academic</strong> (အတန်းခွဲနှင့် Attendance မှတ်ရန်)</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" value="PAGE_ADMIN" class="staff-role-chk w-4 h-4 accent-micro-navy" checked />
+              <span>💬 <strong>Page Admin</strong> (လာမေးသူစာရင်းသွင်း & AI Scan)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <button onclick="window.saveStaffMember()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+        💾 ဝန်ထမ်းစာရင်း သိမ်းဆည်းမည်
+      </button>
+    </div>
+  </div>
 
-  window.addLeadSource = async () => {
-    const val = document.getElementById('newSourceInput').value.trim();
-    if (!val) return;
-    state.leadSources.push(val);
-    document.getElementById('newSourceInput').value = '';
-    await syncToCloud();
-  };
-  window.removeSource = async (idx) => {
-    state.leadSources.splice(idx, 1);
-    await syncToCloud();
-  };
+  <!-- ================= MODAL 4: MANAGER FOLLOW-UP SCRIPT ================= -->
+  <div id="scriptModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-extrabold text-micro-navy text-base">Follow-up Content / Script အသစ်ပို့ရန်</h3>
+        <button onclick="window.closeModal('scriptModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold block mb-1">ခေါင်းစဉ် (Title) *</label>
+          <input type="text" id="scriptTitleInput" placeholder="ဥပမာ - သင်တန်းကြေး အရစ်ကျရှင်းပြရန် စာသား" class="w-full border rounded-xl px-3.5 py-2.5" />
+        </div>
+        <div>
+          <label class="font-bold block mb-1">Page Admin များ Copy ကူးပို့ရမည့် Content စာသား *</label>
+          <textarea id="scriptBodyInput" rows="4" placeholder="မင်္ဂလာပါရှင့်... Micro Training Center မှ..." class="w-full border rounded-xl px-3.5 py-2.5"></textarea>
+        </div>
+      </div>
+      <button onclick="window.saveManagerScript()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+        📢 Page Admin များထံ ပို့မည်
+      </button>
+    </div>
+  </div>
 
-  // PDF Report Generator using html2pdf
-  window.exportReportPDF = () => {
-    const showMoney = canViewFinance();
-    const element = document.createElement('div');
-    element.innerHTML = `
-      <div style="padding: 20px; font-family: 'Pyidaungsu', sans-serif; color: #1E3A8A;">
-        <h2 style="text-align: center; margin-bottom: 5px;">Micro Training Center</h2>
-        <p style="text-align: center; font-size: 12px; color: #64748B; margin-bottom: 20px;">Management Report (${new Date().toISOString().slice(0, 10)})</p>
-        <hr style="border: 1px solid #E2E8F0; margin-bottom: 15px;" />
-        <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
-          <thead>
-            <tr style="background: #1E3A8A; color: white;">
-              <th style="padding: 8px; border: 1px solid #CBD5E1;">ရက်စွဲ</th>
-              <th style="padding: 8px; border: 1px solid #CBD5E1;">အမည်</th>
-              <th style="padding: 8px; border: 1px solid #CBD5E1;">ဖုန်း</th>
-              <th style="padding: 8px; border: 1px solid #CBD5E1;">သင်တန်း</th>
-              <th style="padding: 8px; border: 1px solid #CBD5E1;">Source</th>
-              <th style="padding: 8px; border: 1px solid #CBD5E1;">အလားအလာ</th>
-              <th style="padding: 8px; border: 1px solid #CBD5E1;">အခြေအနေ</th>
-              ${showMoney ? '<th style="padding: 8px; border: 1px solid #CBD5E1;">ငွေပမာဏ</th>' : ''}
-            </tr>
-          </thead>
-          <tbody>
-            ${state.leads.map(l => `
-              <tr>
-                <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.date}</td>
-                <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.name}</td>
-                <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.phone}</td>
-                <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.course}</td>
-                <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.source}</td>
-                <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.leadStage}</td>
-                <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.paymentStatus}</td>${showMoney ? `<td style="padding: 6px; border: 1px solid #CBD5E1; text-align: right;">${Number(l.paidAmount || 0).toLocaleString()} Ks</td>` : ''}
-              </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>`;
+  <!-- ================= MODAL 5: ACADEMIC BATCH ================= -->
+  <div id="batchModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-extrabold text-micro-navy text-base">အတန်းခွဲ (Batch) အသစ်ဖွင့်ရန်</h3>
+        <button onclick="window.closeModal('batchModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold block mb-1">Batch အမည် *</label>
+          <input type="text" id="batchNameInput" placeholder="ဥပမာ - Advance Excel (Batch 5)" class="w-full border rounded-xl px-3.5 py-2.5" />
+        </div>
+        <div>
+          <label class="font-bold block mb-1">စတင်မည့်ရက်နှင့် အချိန်ဇယား *</label>
+          <input type="text" id="batchScheduleInput" placeholder="Mon, Wed, Fri (8:00 PM - 9:30 PM)" class="w-full border rounded-xl px-3.5 py-2.5" />
+        </div>
+        <div>
+          <label class="font-bold block mb-1">Zoom Link သို့မဟုတ် အတန်းမှတ်ချက်</label>
+          <input type="text" id="batchZoomInput" placeholder="https://zoom.us/j/..." class="w-full border rounded-xl px-3.5 py-2.5" />
+        </div>
+      </div>
+      <button onclick="window.saveBatch()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+        💾 အတန်းခွဲ သိမ်းဆည်းမည်
+      </button>
+    </div>
+  </div>
 
-    const opt = {
-      margin: 10,
-      filename: `MicroTC_Report_${new Date().toISOString().slice(0, 10)}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  <!-- ================= SCRIPTS: FIREBASE + PDF + AI ENGINE ================= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const FOUNDER_GMAIL = "chitkhonpaing03@gmail.com";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA_FVMmgcE11h09sB8nhFpc0C3BSzq2Qek",
+      authDomain: "micro-training-center.firebaseapp.com",
+      projectId: "micro-training-center",
+      storageBucket: "micro-training-center.firebasestorage.app",
+      messagingSenderId: "535516234007",
+      appId: "1:535516234007:web:3c8844c8196c39023f3752",
+      measurementId: "G-35Y4E4BBFE"
     };
 
-    html2pdf().from(element).set(opt).save();
-  };
+    let auth = null;
+    let db = null;
+    let sharedDocRef = null;
+    let currentAuthUser = null;
+    let currentLeadFilter = 'ALL';
+    let currentActiveTab = 'dashboard';
+    let lastAiAnalysis = null;
+    let tempAttachedImageName = '';
 
-  window.openModal = (id) => {
-    const el = document.getElementById(id);
-    if(el) {
-      el.classList.remove('hidden');
-      el.classList.add('flex');
+    const defaultData = {
+      usdRate: 3550,
+      courses: [
+        { id: 'c1', name: 'Advance Excel', fee: 50000 },
+        { id: 'c2', name: 'Excel for Job Training', fee: 35000 }
+      ],
+      paymentMethods: [
+        'KBZPay', 'WavePay', 'CB Pay', 'AYA Pay', 'UAB Pay', 'OK$',
+        'KBZ Bank', 'CB Bank', 'AYA Bank', 'Yoma Bank', 'UAB Bank', 'MAB Bank', 'Cash (ငွေသား)'
+      ],
+      leadSources: ['Facebook Page Messenger', 'Facebook Ads', 'TikTok', 'Telegram', 'Viber', 'Phone Call'],
+      users: [],
+      leads: [],
+      expenses: [],
+      scripts: [
+        {
+          id: 'sc1',
+          title: '🔥 သင်တန်းကြေးနှင့် KPay အကောင့်ပို့ရန် စာသား',
+          body: 'မင်္ဂလာပါရှင့်။ Micro Computer Training Center မှ ကြိုဆိုပါတယ်။ သင်တန်းကြေးကို KBZPay / WavePay ဖြင့် ပေးသွင်းပြီးပါက ပြေစာ Screenshot ပို့ပေးပါရှင့်။ ချက်ချင်း သင်တန်း Group ထဲသို့ ထည့်သွင်းပေးပါမည်။',
+          by: 'Founder',
+          date: new Date().toISOString().slice(0, 10)
+        }
+      ],
+      batches: [
+        {
+          id: 'b1',
+          name: 'Advance Excel - Online Zoom Batch 1',
+          schedule: 'Mon, Wed, Fri (8:00 PM - 9:30 PM)',
+          zoom: 'Zoom ID: 882 9910 3341',
+          attendanceCount: 0
+        }
+      ],
+      auditLogs: []
+    };
+
+    let state = JSON.parse(JSON.stringify(defaultData));
+
+    // Live Clock (Yangon Timezone) & Weather
+    function startLiveWidgets() {
+      const updateClock = () => {
+        try {
+          const now = new Date();
+          const timeStr = now.toLocaleTimeString('en-US', {
+            timeZone: 'Asia/Yangon',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          });
+          const dateStr = now.toLocaleDateString('en-GB', {
+            timeZone: 'Asia/Yangon',
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          });
+          document.getElementById('widgetClock').textContent = `MMT: ${dateStr} • ${timeStr}`;
+        } catch (e) {
+          document.getElementById('widgetClock').textContent = new Date().toLocaleTimeString();
+        }
+      };
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Fetch live Yangon weather (Open-Meteo free no-key API)
+      fetch('https://api.open-meteo.com/v1/forecast?latitude=16.8409&longitude=96.1735&current_weather=true')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.current_weather) {
+            document.getElementById('widgetWeather').textContent = `Yangon: ${Math.round(data.current_weather.temperature)}°C`;
+          }
+        })
+        .catch(() => {});
     }
-  };
-  window.closeModal = (id) => {
-    const el = document.getElementById(id);
-    if(el) {
-      el.classList.remove('flex');
-      el.classList.add('hidden');
+    startLiveWidgets();
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    sharedDocRef = doc(db, "micro_training_center", "shared_state");
+
+    async function addAuditLog(actionText) {
+      const u = getActiveUser();
+      const entry = {
+        id: 'log_' + Date.now(),
+        user: u.name || (currentAuthUser && currentAuthUser.email) || 'Staff',
+        action: actionText,
+        time: new Date().toLocaleString('en-GB', { timeZone: 'Asia/Yangon' })
+      };
+      if (!Array.isArray(state.auditLogs)) state.auditLogs = [];
+      state.auditLogs.unshift(entry);
+      if (state.auditLogs.length > 60) state.auditLogs = state.auditLogs.slice(0, 60);
     }
-  };
-</script>
+
+    async function syncToCloud(logMessage = '') {
+      if (logMessage) await addAuditLog(logMessage);
+      if (!sharedDocRef) return;
+      try {
+        await setDoc(sharedDocRef, state, { merge: true });
+      } catch (err) {
+        console.error("Sync error:", err);
+      }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      currentAuthUser = user;
+      if (!user) {
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('pendingLockScreen').classList.add('hidden');
+        document.getElementById('mainAppContent').classList.add('hidden');
+        document.getElementById('btnLogout').classList.add('hidden');
+        document.getElementById('headerQuickAddBtn').classList.add('hidden');
+        document.getElementById('currentRoleBadge').textContent = 'Not Signed In';
+        return;
+      }
+
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('btnLogout').classList.remove('hidden');
+      document.getElementById('btnLogout').classList.add('flex');
+      document.getElementById('headerQuickAddBtn').classList.remove('hidden');
+      document.getElementById('activeUserEmail').textContent = user.email;
+
+      try {
+        const snap = await getDoc(sharedDocRef);
+        if (!snap.exists()) await setDoc(sharedDocRef, defaultData);
+      } catch (e) {
+        console.warn("Initial doc check:", e);
+      }
+
+      onSnapshot(sharedDocRef, async (docSnap) => {
+        if (docSnap.exists()) {
+          const cloudData = docSnap.data();
+          state = {
+            ...defaultData,
+            ...cloudData,
+            courses: cloudData.courses || defaultData.courses,
+            paymentMethods: cloudData.paymentMethods || defaultData.paymentMethods,
+            leadSources: cloudData.leadSources || defaultData.leadSources,
+            users: cloudData.users || [],
+            leads: cloudData.leads || [],
+            expenses: cloudData.expenses || [],
+            scripts: cloudData.scripts || defaultData.scripts,
+            batches: cloudData.batches || defaultData.batches,
+            auditLogs: cloudData.auditLogs || []
+          };
+        }
+        document.getElementById('syncStatusBadge').innerHTML = `<i class="fa-solid fa-cloud text-micro-yellow mr-1"></i>Live Synced`;
+
+        const email = user.email.toLowerCase();
+        const isFounder = email === FOUNDER_GMAIL.toLowerCase() || state.users.length === 0;
+        let uObj = state.users.find(u => (u.email || '').toLowerCase() === email);
+
+        if (!uObj) {
+          const initialRoles = isFounder ? ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'] : ['PAGE_ADMIN'];
+          uObj = {
+            id: 'u_' + Date.now(),
+            name: user.displayName || email.split('@')[0],
+            email: user.email,
+            role: isFounder ? 'FOUNDER' : 'PAGE_ADMIN',
+            roles: initialRoles,
+            approved: isFounder
+          };
+          state.users.push(uObj);
+          await syncToCloud(`အကောင့်အသစ် ဝင်ရောက်သည် (${uObj.name})`);
+        } else {
+          // Ensure roles array exists for multi-department support
+          if (!Array.isArray(uObj.roles) || uObj.roles.length === 0) {
+            uObj.roles = [uObj.role || 'PAGE_ADMIN'];
+          }
+          if (isFounder && (!uObj.approved || !uObj.roles.includes('FOUNDER'))) {
+            uObj.role = 'FOUNDER';
+            uObj.roles = ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'];
+            uObj.approved = true;
+            await syncToCloud();
+          }
+        }
+        window.renderAll();
+      });
+    });
+
+    window.handleGoogleLogin = async () => {
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+      } catch (e) {
+        alert("Google Login Error: " + e.message);
+      }
+    };
+
+    window.handleLogout = async () => {
+      await signOut(auth);
+    };
+
+    // Helper: Get current user object and check multi-department permissions
+    function getActiveUser() {
+      if (!currentAuthUser) return { approved: false, roles: [] };
+      const u = state.users.find(x => (x.email || '').toLowerCase() === currentAuthUser.email.toLowerCase());
+      if (!u) return { approved: false, roles: [] };
+      const roles = Array.isArray(u.roles) && u.roles.length > 0 ? u.roles : [u.role || 'PAGE_ADMIN'];
+      return { ...u, roles };
+    }
+
+    function hasDeptAccess(deptList) {
+      const u = getActiveUser();
+      if (!u.approved) return false;
+      if (u.roles.includes('FOUNDER') || u.roles.includes('ADMIN')) return true;
+      return deptList.some(d => u.roles.includes(d));
+    }
+
+    function canViewFinance() {
+      return hasDeptAccess(['FINANCE']);
+    }
+
+    // Hamburger Drawer Toggle
+    window.toggleDrawer = (open) => {
+      const overlay = document.getElementById('drawerOverlay');
+      if (open) {
+        overlay.classList.remove('hidden');
+      } else {
+        overlay.classList.add('hidden');
+      }
+    };
+
+    const deptTitles = {
+      dashboard: '၁။ Overview & P&L Report ချုပ်',
+      leads: '၂။ Page Admin & AI Screenshot Scanner',
+      sales: '၃။ Sales & Invoices (သင်တန်းအပ်သူများ)',
+      manager: '၄။ Manager & Follow-up Content Hub',
+      academic: '၅။ Academic & Attendance ဌာန',
+      finance: '၆။ Purchase & Finance ဌာန',
+      admin: '၇။ Founder / Admin Control Settings'
+    };
+
+    window.switchTab = (tab) => {
+      if (tab === 'finance' && !hasDeptAccess(['FINANCE', 'PURCHASE'])) {
+        alert('Finance & Purchase ဌာနသို့ ဝင်ရောက်ခွင့် မရှိပါ။ Admin ထံတွင် Department ခွင့်ပြုချက် တောင်းခံပါ။');
+        return;
+      }
+      if (tab === 'admin' && !hasDeptAccess(['ADMIN'])) {
+        alert('Admin Control Center သို့ တည်ထောင်သူ (Founder) နှင့် Admin များသာ ဝင်ရောက်နိုင်ပါသည်။');
+        return;
+      }
+      if (tab === 'manager' && !hasDeptAccess(['MANAGER', 'SALES', 'PAGE_ADMIN'])) {
+        alert('Manager Hub သို့ ဝင်ရောက်ခွင့် မရှိပါ။');
+        return;
+      }
+
+      currentActiveTab = tab;
+      ['dashboard', 'leads', 'sales', 'manager', 'academic', 'finance', 'admin'].forEach(t => {
+        const sec = document.getElementById('tab-' + t);
+        if (sec) sec.classList.toggle('hidden', t !== tab);
+        const navBtn = document.getElementById('nav-' + t);
+        if (navBtn) {
+          if (t === tab) {
+            navBtn.className = 'drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-extrabold bg-micro-yellow text-micro-navy shadow transition';
+          } else {
+            navBtn.className = 'drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition';
+          }
+        }
+      });
+
+      document.getElementById('currentDeptTitle').textContent = deptTitles[tab] || 'Dashboard';
+      window.toggleDrawer(false);
+      window.renderAll();
+    };
+
+    // Update USD Rate (Admin/Founder)
+    window.promptUpdateUsdRate = async () => {
+      if (!hasDeptAccess(['ADMIN', 'FINANCE'])) {
+        return alert('USD Exchange Rate ကို Admin နှင့် Finance ဌာနမှသာ ပြင်ဆင်နိုင်ပါသည်။');
+      }
+      const nextRate = prompt('လက်ရှိ 1 USD ၏ မြန်မာကျပ်ငွေ ပေါက်ဈေးကို ရိုက်ထည့်ပါ (Ks):', state.usdRate || 3550);
+      if (nextRate && Number(nextRate) > 0) {
+        state.usdRate = Number(nextRate);
+        await syncToCloud(`USD Rate ကို ${state.usdRate} Ks သို့ ပြောင်းလဲခဲ့သည်`);
+      }
+    };
+
+    // Filter helpers
+    function getFilteredLeadsByCourseAndDate() {
+      const courseFilter = document.getElementById('dashboardCourseFilter')?.value || 'ALL';
+      const startDate = document.getElementById('filterStartDate')?.value || '';
+      const endDate = document.getElementById('filterEndDate')?.value || '';
+
+      return state.leads.filter(l => {
+        if (courseFilter !== 'ALL' && l.course !== courseFilter) return false;
+        if (startDate && (l.date || '') < startDate) return false;
+        if (endDate && (l.date || '') > endDate) return false;
+        return true;
+      });
+    }
+
+    function getFilteredExpensesByDate() {
+      const startDate = document.getElementById('filterStartDate')?.value || '';
+      const endDate = document.getElementById('filterEndDate')?.value || '';
+      return state.expenses.filter(e => {
+        if (startDate && (e.date || '') < startDate) return false;
+        if (endDate && (e.date || '') > endDate) return false;
+        return true;
+      });
+    }
+
+    window.clearDateFilter = () => {
+      document.getElementById('filterStartDate').value = '';
+      document.getElementById('filterEndDate').value = '';
+      window.renderAll();
+    };
+
+    window.jumpToLeads = (filter) => {
+      window.setLeadFilter(filter);
+      window.switchTab('leads');
+    };
+
+    window.setLeadFilter = (f) => {
+      currentLeadFilter = f;
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.className = btn.getAttribute('data-filter') === f
+          ? 'filter-pill px-3.5 py-2 rounded-xl text-xs font-extrabold bg-micro-navy text-micro-yellow whitespace-nowrap shadow'
+          : 'filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap';
+      });
+      window.renderLeads();
+    };
+
+    // ================= MAIN RENDER FUNCTION =================
+    window.renderAll = () => {
+      const user = getActiveUser();
+      const usdRate = Number(state.usdRate || 3550);
+      document.getElementById('widgetUsdRate').textContent = `${usdRate.toLocaleString()} Ks`;
+
+      const rolesStr = (user.roles || []).join(', ');
+      document.getElementById('currentRoleBadge').textContent = `${user.name || ''} (${rolesStr})`;
+      document.getElementById('drawerUserName').textContent = user.name || 'Staff Member';
+      document.getElementById('drawerUserEmail').textContent = user.email || '';
+      document.getElementById('drawerUserRoles').innerHTML = (user.roles || []).map(r =>
+        `<span class="px-2 py-0.5 rounded-md bg-micro-yellow/20 text-micro-yellow font-bold text-[10px]">${r}</span>`
+      ).join('');
+
+      if (!user.approved) {
+        document.getElementById('pendingLockScreen').classList.remove('hidden');
+        document.getElementById('mainAppContent').classList.add('hidden');
+        document.getElementById('pendingUserName').textContent = user.name;
+        document.getElementById('pendingUserEmail').textContent = user.email;
+        return;
+      }
+
+      document.getElementById('pendingLockScreen').classList.add('hidden');
+      document.getElementById('mainAppContent').classList.remove('hidden');
+
+      // Populate Course Filter Dropdown preserving selection
+      const courseSelect = document.getElementById('dashboardCourseFilter');
+      const currentSelectedCourse = courseSelect.value || 'ALL';
+      courseSelect.innerHTML = `<option value="ALL">သင်တန်းအားလုံး (All Courses)</option>` +
+        state.courses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      courseSelect.value = state.courses.some(c => c.name === currentSelectedCourse) ? currentSelectedCourse : 'ALL';
+
+      // Filtered Data for KPIs
+      const filteredLeads = getFilteredLeadsByCourseAndDate();
+      const filteredExpenses = getFilteredExpensesByDate();
+
+      const hotLeads = filteredLeads.filter(l => l.leadStage === 'HOT' && l.paymentStatus !== 'PAID');
+      const paidLeads = filteredLeads.filter(l => l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL');
+      const groupPending = filteredLeads.filter(l => (l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL') && (!l.fbGroup || !l.tgGroup));
+
+      document.getElementById('kpiTotalLeads').textContent = filteredLeads.length;
+      document.getElementById('kpiHotLeads').textContent = hotLeads.length;
+      document.getElementById('kpiPaidCount').textContent = paidLeads.length;
+      document.getElementById('kpiGroupPendingCount').textContent = groupPending.length;
+
+      const convRate = filteredLeads.length > 0 ? Math.round((paidLeads.length / filteredLeads.length) * 100) : 0;
+      document.getElementById('kpiConversionRate').textContent = `Conversion Rate: ${convRate}%`;
+
+      document.getElementById('badgeLeadsCount').textContent = state.leads.length;
+      document.getElementById('badgeSalesCount').textContent = state.leads.filter(l => l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL').length;
+
+      // Financial Block
+      const finBlock = document.getElementById('financeDashboardBlock');
+      if (canViewFinance()) {
+        finBlock.classList.remove('hidden');
+        const rev = filteredLeads.reduce((s, l) => s + Number(l.paidAmount || 0), 0);
+        const rec = filteredLeads.reduce((s, l) => s + Number(l.balanceAmount || 0), 0);
+        const exp = filteredExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+        const net = rev - exp;
+
+        document.getElementById('finTotalRevenue').textContent = rev.toLocaleString() + ' Ks';
+        document.getElementById('finTotalRevenueUsd').textContent = `≈ $${(rev / usdRate).toFixed(2)} USD`;
+        document.getElementById('finTotalReceivable').textContent = rec.toLocaleString() + ' Ks';
+        document.getElementById('finTotalExpense').textContent = exp.toLocaleString() + ' Ks';
+        document.getElementById('finTotalExpenseUsd').textContent = `≈ $${(exp / usdRate).toFixed(2)} USD`;
+        document.getElementById('finNetProfit').textContent = net.toLocaleString() + ' Ks';
+        document.getElementById('finNetProfitUsd').textContent = `≈ $${(net / usdRate).toFixed(2)} USD`;
+      } else {
+        finBlock.classList.add('hidden');
+      }
+
+      renderDashboardBreakdowns(filteredLeads);
+      window.renderLeads();
+      renderSalesTab(filteredLeads);
+      renderManagerTab();
+      renderAcademicTab();
+      renderFinanceTab(filteredExpenses);
+      renderAdminPanel();
+    };
+
+    function renderDashboardBreakdowns(filteredLeads) {
+      const showMoney = canViewFinance();
+      // Course Summary
+      const cContainer = document.getElementById('dashboardCourseBreakdown');
+      cContainer.innerHTML = state.courses.map(c => {
+        const cLeads = filteredLeads.filter(l => l.course === c.name);
+        const cPaid = cLeads.filter(l => l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL');
+        const cRev = cLeads.reduce((s, l) => s + Number(l.paidAmount || 0), 0);
+        return `
+          <div class="p-3 rounded-2xl bg-slate-50 border flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-micro-navy">${c.name}</div>
+              <div class="text-[11px] text-slate-500">လာမေးသူ: <strong>${cLeads.length}</strong> ဦး • အပ်နှံသူ: <strong class="text-emerald-600">${cPaid.length}</strong> ဦး</div>
+            </div>
+            ${showMoney ? `<div class="font-extrabold text-micro-blue">${cRev.toLocaleString()} Ks</div>` : `<span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-700 font-bold">${cPaid.length} Sales</span>`}
+          </div>
+        `;
+      }).join('');
+
+      // Staff Performance Summary (How many leads & sales each Page Admin got)
+      const sContainer = document.getElementById('dashboardStaffPerformance');
+      const staffMap = {};
+      filteredLeads.forEach(l => {
+        const staffName = l.recordedBy || 'Admin';
+        if (!staffMap[staffName]) staffMap[staffName] = { total: 0, hot: 0, sales: 0 };
+        staffMap[staffName].total++;
+        if (l.leadStage === 'HOT') staffMap[staffName].hot++;
+        if (l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL') staffMap[staffName].sales++;
+      });
+
+      const entries = Object.entries(staffMap);
+      sContainer.innerHTML = entries.length === 0
+        ? `<div class="text-slate-400 text-center py-4">မှတ်တမ်း မရှိသေးပါ။</div>`
+        : entries.map(([name, st]) => `
+          <div class="p-3 rounded-2xl bg-slate-50 border flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-micro-navy"><i class="fa-solid fa-user-check text-micro-blue mr-1"></i>${name}</div>
+              <div class="text-[11px] text-slate-500">စာရင်းသွင်းမှု: <strong>${st.total}</strong> ဦး • 🔥 Hot: <strong>${st.hot}</strong> ဦး</div>
+            </div>
+            <span class="px-3 py-1 rounded-xl bg-micro-navy text-micro-yellow font-extrabold">အရောင်းရရှိမှု: ${st.sales} ဦး</span>
+          </div>
+        `).join('');
+    }
+
+    // ================= RENDER LEADS (WITH EDIT & CUSTOM DATE) =================
+    window.renderLeads = () => {
+      const q = (document.getElementById('leadSearchInput')?.value || '').toLowerCase().trim();
+      const baseLeads = getFilteredLeadsByCourseAndDate();
+
+      const list = baseLeads.filter(l => {
+        if (currentLeadFilter === 'HOT' && l.leadStage !== 'HOT') return false;
+        if (currentLeadFilter === 'MEDIUM' && l.leadStage !== 'MEDIUM') return false;
+        if (currentLeadFilter === 'INTERESTED' && l.leadStage !== 'INTERESTED') return false;
+        if (currentLeadFilter === 'PAID' && l.paymentStatus !== 'PAID' && l.paymentStatus !== 'PARTIAL') return false;
+        if (currentLeadFilter === 'NOGROUP' && !((l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL') && (!l.fbGroup || !l.tgGroup))) return false;
+        if (q) {
+          return `${l.name} ${l.phone} ${l.source} ${l.note || ''} ${l.course} ${l.recordedBy || ''}`.toLowerCase().includes(q);
+        }
+        return true;
+      });
+
+      const container = document.getElementById('leadsContainer');
+      if (list.length === 0) {
+        container.innerHTML = `<div class="ios-card p-8 text-center text-xs text-slate-400">ရွေးချယ်ထားသော စာရင်း မရှိသေးပါ။</div>`;
+        return;
+      }
+
+      const showMoney = canViewFinance();
+
+      container.innerHTML = list.map(l => {
+        const stageBadge = l.leadStage === 'HOT'
+          ? '<span class="px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 font-extrabold text-[10px]">🔥 အပ်ရန်အလားအလာရှိ (Hot)</span>'
+          : l.leadStage === 'MEDIUM'
+          ? '<span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 font-extrabold text-[10px]">💡 အလယ်အလတ် (Medium)</span>'
+          : l.leadStage === 'ENROLLED'
+          ? '<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 font-extrabold text-[10px]">🎓 အပ်နှံပြီး (Enrolled)</span>'
+          : '<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 font-extrabold text-[10px]">⭐ စိတ်ဝင်စားသူ</span>';
+
+        const payBadge = l.paymentStatus === 'PAID'
+          ? '<span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-[10px]">✅ ငွေအကြေသွင်းပြီး</span>'
+          : l.paymentStatus === 'PARTIAL'
+          ? '<span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 font-extrabold text-[10px]">🌗 အရစ်ကျသွင်းထားသူ</span>'
+          : '<span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px]">⏳ ငွေမသွင်းရသေး</span>';
+
+        return `
+          <div class="ios-card p-4 space-y-3">
+            <div class="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h4 class="font-extrabold text-sm text-micro-navy">${l.name}</h4>
+                  <span class="text-[11px] px-2.5 py-0.5 rounded-lg bg-micro-navy text-micro-yellow font-bold">${l.course}</span>
+                  ${l.attachedImage ? `<span class="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-micro-blue font-semibold"><i class="fa-solid fa-image mr-1"></i>${l.attachedImage}</span>` : ''}
+                </div>
+                <div class="text-xs text-slate-600 mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <a href="tel:${l.phone}" class="text-micro-blue font-extrabold hover:underline"><i class="fa-solid fa-phone mr-1"></i>${l.phone}</a>
+                  <span>• 📍 Source: <strong>${l.source}</strong></span>
+                  <span>• 📅 ရက်စွဲ: <strong>${l.date}</strong></span>
+                  <span>• 👤 သွင်းသူ: <strong>${l.recordedBy || 'Admin'}</strong></span>
+                </div>
+                ${showMoney && (Number(l.paidAmount) > 0 || Number(l.balanceAmount) > 0) ? `
+                  <div class="text-xs mt-1.5 flex items-center gap-3">
+                    <span class="text-emerald-700 font-extrabold">သွင်းပြီး: ${Number(l.paidAmount || 0).toLocaleString()} Ks (${l.paymentMethod || '-'})</span>
+                    ${Number(l.balanceAmount || 0) > 0 ? `<span class="text-rose-600 font-extrabold">ရရန်ကျန်: ${Number(l.balanceAmount).toLocaleString()} Ks</span>` : ''}
+                  </div>
+                ` : ''}
+              </div>
+              <div class="flex flex-col items-end gap-1.5">
+                ${stageBadge}
+                ${payBadge}
+              </div>
+            </div>
+
+            ${l.note ? `<div class="text-xs text-slate-700 bg-amber-50/80 p-2.5 rounded-xl border border-amber-200"><i class="fa-regular fa-comment-dots text-micro-blue mr-1.5"></i><strong>မှတ်ချက်:</strong> ${l.note}</div>` : ''}
+
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${l.fbGroup ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400'}">
+                  <i class="fa-brands fa-facebook mr-1"></i>FB Group ${l.fbGroup ? '✓' : '✗'}
+                </span>
+                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${l.tgGroup ? 'bg-sky-50 text-sky-700' : 'bg-slate-100 text-slate-400'}">
+                  <i class="fa-brands fa-telegram mr-1"></i>Telegram ${l.tgGroup ? '✓' : '✗'}
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                ${(l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL') ? `
+                  <button onclick="window.printStudentInvoice('${l.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-extrabold">
+                    <i class="fa-solid fa-receipt mr-1"></i>Invoice ထုတ်ရန်
+                  </button>
+                ` : ''}
+                <button onclick="window.openLeadModal('${l.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-micro-blue font-extrabold">
+                  <i class="fa-solid fa-pen-to-square mr-1"></i>Edit ပြင်ရန်
+                </button>
+                <button onclick="window.deleteLead('${l.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // ================= AI SCREENSHOT & CHAT SCANNER ENGINE =================
+    window.handleScreenshotUpload = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.getElementById('aiScreenshotPreview');
+        img.src = e.target.result;
+        img.classList.remove('hidden');
+        window.runAiLeadAnalysis(file.name);
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.handleModalImageAttach = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      tempAttachedImageName = file.name;
+      document.getElementById('modalScreenshotStatus').textContent = `✓ ${file.name} တွဲထားပြီး`;
+    };
+
+    window.runAiLeadAnalysis = (fileName = '') => {
+      const rawText = (document.getElementById('aiChatTextInput').value || '').trim();
+      const lower = (rawText + ' ' + fileName).toLowerCase();
+
+      // Extract phone number if present in pasted text
+      const phoneMatch = rawText.match(/(09\d{7,9})/);
+      const detectedPhone = phoneMatch ? phoneMatch[1] : '';
+
+      // Detect course
+      let detectedCourse = state.courses[0]?.name || 'Advance Excel';
+      state.courses.forEach(c => {
+        if (lower.includes(c.name.toLowerCase()) || (lower.includes('job') && c.name.toLowerCase().includes('job'))) {
+          detectedCourse = c.name;
+        }
+      });
+
+      // Determine Lead Potential Score
+      let stage = 'HOT';
+      let score = '94%';
+      let badgeClass = 'bg-rose-100 text-rose-700';
+      let advice = '';
+      let reply = '';
+
+      if (lower.includes('စဉ်းစား') || lower.includes('နောက်မှ') || lower.includes('แพง') || lower.includes('busy')) {
+        stage = 'MEDIUM';
+        score = '68%';
+        badgeClass = 'bg-blue-100 text-blue-700';
+        advice = 'ဤ Customer သည် သင်တန်းကို စိတ်ဝင်စားသော်လည်း အချိန် သို့မဟုတ် သင်တန်းကြေးကို စဉ်းစားနေဆဲ (Medium Potential) ဖြစ်ပါသည်။ အရစ်ကျ ပေးသွင်းနိုင်ကြောင်းနှင့် သင်တန်းပြီးပါက Certificate ပေးမည့်အကြောင်း ရှင်းပြပေးသင့်ပါသည်။';
+        reply = `မင်္ဂလာပါရှင့်... Micro Computer Training Center မှ ${detectedCourse} သင်တန်းလေးကို သင်တန်းကြေး အရစ်ကျ (၂) ကြိမ်ခွဲသွင်းပြီးလည်း တက်ရောက်နိုင်ပါတယ်ရှင့်။ Video Record ဖိုင်များလည်း ပြန်ကြည့်နိုင်တာမို့ အဆင်ပြေတဲ့အချိန် လေ့လာနိုင်ပါတယ်ရှင့်။`;
+      } else {
+        stage = 'HOT';
+        score = '94%';
+        badgeClass = 'bg-rose-100 text-rose-700';
+        advice = `🔥 အလားအလာ အလွန်ကောင်းသော Customer (Hot Lead) ဖြစ်ပါသည်။ "${detectedCourse}" သင်တန်းအပ်နှံရန် သေချာသလောက်ရှိနေပါပြီ။ KBZPay / WavePay နံပါတ်များကို ချက်ချင်းပို့ပေးပြီး ယနေ့အတွင်း Follow-up လုပ်ပါ။`;
+        reply = `မင်္ဂလာပါရှင့်... Micro Computer Training Center ရဲ့ "${detectedCourse}" သင်တန်းလေးအတွက် လူဦးရေ ကန့်သတ်ထားပါတယ်ရှင့်။ KPay / WavePay တို့ဖြင့် ငွေလွှဲပြီး ပြေစာ Screenshot ပို့ပေးပါက သင်တန်း Group ထဲသို့ ချက်ချင်း ထည့်သွင်းပေးပါမယ်ရှင့်။`;
+      }
+
+      lastAiAnalysis = {
+        phone: detectedPhone,
+        course: detectedCourse,
+        stage,
+        note: rawText || `AI Screenshot Scan (${fileName || 'Chat Image'}) - ${stage} Lead`
+      };
+
+      const badgeEl = document.getElementById('aiDetectedBadge');
+      badgeEl.className = `px-3 py-1 rounded-full font-extrabold text-xs ${badgeClass}`;
+      badgeEl.textContent = `🔥 AI သုံးသပ်ချက်: ${stage} LEAD (${score})`;
+
+      document.getElementById('aiAdviceText').textContent = advice;
+      document.getElementById('aiSuggestedReply').textContent = reply;
+      document.getElementById('aiScanResultContainer').classList.remove('hidden');
+    };
+
+    window.copyAiReply = () => {
+      const txt = document.getElementById('aiSuggestedReply').textContent;
+      navigator.clipboard.writeText(txt);
+      alert('AI ပြန်စာကို Copy ကူးယူပြီးပါပြီ။ Messenger/Viber တွင် တိုက်ရိုက် Paste ချပို့နိုင်ပါပြီ။');
+    };
+
+    window.openLeadModalFromAi = () => {
+      window.openLeadModal();
+      if (lastAiAnalysis) {
+        document.getElementById('leadPhone').value = lastAiAnalysis.phone || '';
+        document.getElementById('leadCourse').value = lastAiAnalysis.course;
+        document.getElementById('leadStage').value = lastAiAnalysis.stage;
+        document.getElementById('leadNote').value = lastAiAnalysis.note;
+      }
+    };
+
+    // ================= LEAD MODAL (ADD & EDIT) =================
+    window.autoFillCourseFee = () => {
+      const cName = document.getElementById('leadCourse').value;
+      const found = state.courses.find(c => c.name === cName);
+      const editId = document.getElementById('editLeadId').value;
+      if (found && !editId && document.getElementById('leadPaymentStatus').value === 'PAID') {
+        document.getElementById('leadPaidAmount').value = found.fee;
+      }
+    };
+
+    window.openLeadModal = (editId = '') => {
+      document.getElementById('leadCourse').innerHTML = state.courses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      document.getElementById('leadSource').innerHTML = state.leadSources.map(s => `<option value="${s}">${s}</option>`).join('');
+      document.getElementById('leadPaymentMethod').innerHTML = state.paymentMethods.map(p => `<option value="${p}">${p}</option>`).join('');
+
+      tempAttachedImageName = '';
+      document.getElementById('modalScreenshotStatus').textContent = 'ပုံမရွေးရသေးပါ';
+
+      if (editId) {
+        const item = state.leads.find(x => x.id === editId);
+        if (!item) return;
+        document.getElementById('leadModalTitle').textContent = '✏️ စာရင်း ပြန်လည်ပြင်ဆင်ရန် (Edit Lead / Student)';
+        document.getElementById('editLeadId').value = item.id;
+        document.getElementById('leadName').value = item.name || '';
+        document.getElementById('leadPhone').value = item.phone || '';
+        document.getElementById('leadDate').value = item.date || new Date().toISOString().slice(0, 10);
+        document.getElementById('leadCourse').value = item.course || state.courses[0]?.name || '';
+        document.getElementById('leadSource').value = item.source || state.leadSources[0] || '';
+        document.getElementById('leadStage').value = item.leadStage || 'INTERESTED';
+        document.getElementById('leadPaymentStatus').value = item.paymentStatus || 'UNPAID';
+        document.getElementById('leadPaidAmount').value = Number(item.paidAmount || 0);
+        document.getElementById('leadBalanceAmount').value = Number(item.balanceAmount || 0);
+        document.getElementById('leadPaymentMethod').value = item.paymentMethod || state.paymentMethods[0] || '';
+        document.getElementById('chkFbGroup').checked = !!item.fbGroup;
+        document.getElementById('chkTgGroup').checked = !!item.tgGroup;
+        document.getElementById('leadNote').value = item.note || '';
+        if (item.attachedImage) {
+          tempAttachedImageName = item.attachedImage;
+          document.getElementById('modalScreenshotStatus').textContent = `✓ ${item.attachedImage}`;
+        }
+      } else {
+        document.getElementById('leadModalTitle').textContent = 'သင်တန်းလာမေးသူ / သင်တန်းသား စာရင်းသွင်းရန်';
+        document.getElementById('editLeadId').value = '';
+        document.getElementById('leadName').value = '';
+        document.getElementById('leadPhone').value = '';
+        document.getElementById('leadDate').value = new Date().toISOString().slice(0, 10);
+        document.getElementById('leadStage').value = 'INTERESTED';
+        document.getElementById('leadPaymentStatus').value = 'UNPAID';
+        document.getElementById('leadPaidAmount').value = 0;
+        document.getElementById('leadBalanceAmount').value = 0;
+        document.getElementById('chkFbGroup').checked = false;
+        document.getElementById('chkTgGroup').checked = false;
+        document.getElementById('leadNote').value = '';
+      }
+
+      window.openModal('leadModal');
+    };
+
+    window.saveLead = async () => {
+      const editId = document.getElementById('editLeadId').value;
+      const name = document.getElementById('leadName').value.trim();
+      const phone = document.getElementById('leadPhone').value.trim();
+      const chosenDate = document.getElementById('leadDate').value || new Date().toISOString().slice(0, 10);
+
+      if (!name || !phone) return alert('အမည်နှင့် ဖုန်းနံပါတ် ထည့်သွင်းပါ။');
+
+      const u = getActiveUser();
+      const payload = {
+        name,
+        phone,
+        date: chosenDate,
+        course: document.getElementById('leadCourse').value,
+        source: document.getElementById('leadSource').value,
+        leadStage: document.getElementById('leadStage').value,
+        paymentStatus: document.getElementById('leadPaymentStatus').value,
+        paidAmount: Number(document.getElementById('leadPaidAmount').value || 0),
+        balanceAmount: Number(document.getElementById('leadBalanceAmount').value || 0),
+        paymentMethod: document.getElementById('leadPaymentMethod').value,
+        fbGroup: document.getElementById('chkFbGroup').checked,
+        tgGroup: document.getElementById('chkTgGroup').checked,
+        note: document.getElementById('leadNote').value.trim(),
+        attachedImage: tempAttachedImageName || ''
+      };
+
+      if (editId) {
+        const idx = state.leads.findIndex(x => x.id === editId);
+        if (idx > -1) {
+          state.leads[idx] = { ...state.leads[idx], ...payload, lastEditedBy: u.name };
+        }
+        window.closeModal('leadModal');
+        await syncToCloud(`Lead/ကျောင်းသား "${name}" စာရင်းကို ပြင်ဆင်ခဲ့သည် (ရက်စွဲ: ${chosenDate})`);
+      } else {
+        state.leads.unshift({
+          id: 'L' + Date.now(),
+          ...payload,
+          recordedBy: u.name || 'Admin'
+        });
+        window.closeModal('leadModal');
+        await syncToCloud(`Lead/ကျောင်းသားအသစ် "${name}" ကို စာရင်းသွင်းခဲ့သည်`);
+      }
+    };
+
+    window.deleteLead = async (id) => {
+      const target = state.leads.find(x => x.id === id);
+      if (!confirm(`"${target?.name || ''}" ၏ စာရင်းကို ဖျက်သိမ်းမှာ သေချာပါသလား?`)) return;
+      state.leads = state.leads.filter(x => x.id !== id);
+      await syncToCloud(`Lead "${target?.name || id}" ကို ဖျက်သိမ်းခဲ့သည်`);
+    };
+
+    // ================= SALES & INVOICES TAB =================
+    function renderSalesTab(filteredLeads) {
+      const container = document.getElementById('salesInvoicesContainer');
+      const salesList = filteredLeads.filter(l => l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL');
+
+      if (salesList.length === 0) {
+        container.innerHTML = `<div class="ios-card p-8 text-center text-xs text-slate-400">ငွေသွင်းပြီးသော အရောင်းဘောက်ချာ စာရင်း မရှိသေးပါ။</div>`;
+        return;
+      }
+
+      container.innerHTML = salesList.map((l, idx) => `
+        <div class="ios-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-emerald-500">
+          <div class="space-y-1 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="font-black text-micro-blue">INV-${l.id.slice(-5)}</span>
+              <h4 class="font-extrabold text-sm text-micro-navy">${l.name}</h4>
+              <span class="px-2 py-0.5 rounded bg-micro-navy text-micro-yellow font-bold text-[10px]">${l.course}</span>
+            </div>
+            <div class="text-slate-500">
+              ဖုန်း: <strong>${l.phone}</strong> • Pay: <strong>${l.paymentMethod}</strong> • ရက်စွဲ: <strong>${l.date}</strong>
+            </div>
+            <div class="flex items-center gap-3 pt-1">
+              <span class="font-extrabold text-emerald-700">သွင်းပြီးငွေ: ${Number(l.paidAmount || 0).toLocaleString()} Ks</span>
+              ${Number(l.balanceAmount || 0) > 0 ? `<span class="font-extrabold text-rose-600">ရရန်ကျန်: ${Number(l.balanceAmount).toLocaleString()} Ks</span>` : '<span class="text-emerald-600 font-bold">✓ အကြေပေးချေပြီး</span>'}
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="window.printStudentInvoice('${l.id}')" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow text-xs font-extrabold px-3.5 py-2 rounded-xl shadow ios-btn">
+              <i class="fa-solid fa-file-pdf mr-1"></i> Invoice PDF ထုတ်ရန်
+            </button>
+            <button onclick="window.openLeadModal('${l.id}')" class="bg-slate-100 hover:bg-slate-200 text-micro-navy text-xs font-bold px-3 py-2 rounded-xl">
+              Edit
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Print Individual Official Student Invoice PDF
+    window.printStudentInvoice = (leadId) => {
+      const l = state.leads.find(x => x.id === leadId);
+      if (!l) return;
+      const el = document.createElement('div');
+      el.innerHTML = `
+        <div style="padding: 32px; font-family: 'Inter', 'Padauk', sans-serif; color: #142143; border: 3px solid #142143; border-radius: 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 3px solid #ffaf00; padding-bottom: 16px; margin-bottom: 20px;">
+            <div>
+              <h1 style="font-size: 22px; font-weight: 900; color: #142143; margin:0;">MICRO COMPUTER TRAINING CENTER</h1>
+              <p style="font-size: 12px; color: #1a5d94; margin:4px 0 0 0; font-weight:bold;">Official Enrollment Receipt / Sales Invoice</p>
+            </div>
+            <div style="text-align:right; font-size: 12px;">
+              <div><strong>Invoice No:</strong> INV-${l.id.slice(-6)}</div>
+              <div><strong>Date:</strong> ${l.date}</div>
+            </div>
+          </div>
+          <div style="margin-bottom: 20px; font-size: 13px; line-height: 1.8;">
+            <div><strong>Student Name:</strong> ${l.name}</div>
+            <div><strong>Phone Number:</strong> ${l.phone}</div>
+            <div><strong>Course Enrolled:</strong> ${l.course}</div>
+            <div><strong>Payment Method:</strong> ${l.paymentMethod}</div>
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom: 24px;">
+            <thead>
+              <tr style="background:#142143; color:#ffaf00;">
+                <th style="padding:10px; text-align:left;">Description</th>
+                <th style="padding:10px; text-align:right;">Paid Amount</th>
+                <th style="padding:10px; text-align:right;">Remaining Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:12px; border:1px solid #cbd5e1; font-weight:bold;">${l.course} Training Fee</td>
+                <td style="padding:12px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#047857;">${Number(l.paidAmount || 0).toLocaleString()} Ks</td>
+                <td style="padding:12px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#e11d48;">${Number(l.balanceAmount || 0).toLocaleString()} Ks</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="text-align:center; font-size:11px; color:#64748b; margin-top:30px;">
+            Thank you for choosing Micro Computer Training Center!
+          </div>
+        </div>
+      `;
+      html2pdf().from(el).set({
+        margin: 12,
+        filename: `Invoice_${l.name}_${l.date}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a5', orientation: 'landscape' }
+      }).save();
+    };
+
+    // ================= MANAGER HUB & FOLLOW-UP SCRIPTS =================
+    function renderManagerTab() {
+      const sContainer = document.getElementById('managerScriptsList');
+      const scripts = state.scripts || [];
+      sContainer.innerHTML = scripts.map(sc => `
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <h4 class="font-extrabold text-micro-navy">${sc.title}</h4>
+            <div class="flex items-center gap-1.5">
+              <button onclick="window.copyScriptText('${sc.id}')" class="px-2.5 py-1 rounded-lg bg-micro-navy text-micro-yellow font-bold text-[11px]">
+                <i class="fa-regular fa-copy mr-1"></i>Copy ကူးရန်
+              </button>
+              <button onclick="window.deleteScript('${sc.id}')" class="text-rose-500 px-1.5 font-bold">✕</button>
+            </div>
+          </div>
+          <p class="text-slate-600 leading-relaxed bg-white p-2.5 rounded-xl border">${sc.body}</p>
+          <div class="text-[10px] text-slate-400">ပေးပို့သူ: ${sc.by || 'Manager'} • ${sc.date || ''}</div>
+        </div>
+      `).join('');
+
+      const hotContainer = document.getElementById('managerHotLeadsList');
+      const potentialLeads = state.leads.filter(l => (l.leadStage === 'HOT' || l.leadStage === 'MEDIUM') && l.paymentStatus !== 'PAID');
+      hotContainer.innerHTML = potentialLeads.length === 0
+        ? `<div class="text-xs text-slate-400 py-4 text-center">လက်ရှိ Follow-up လုပ်ရန် ကျန်ရှိသော Hot/Medium Lead မရှိပါ။</div>`
+        : potentialLeads.map(l => `
+          <div class="p-3.5 rounded-2xl bg-slate-50 border flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div>
+              <div class="font-extrabold text-micro-navy">${l.name} (${l.phone}) - <span class="text-micro-blue">${l.course}</span></div>
+              <div class="text-slate-500 mt-0.5">မှတ်ချက်: ${l.note || '-'} • တာဝန်ခံ: <strong>${l.recordedBy || 'Admin'}</strong></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-full font-extrabold text-[10px] ${l.leadStage === 'HOT' ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}">${l.leadStage}</span>
+              <button onclick="window.openLeadModal('${l.id}')" class="px-3 py-1.5 rounded-xl bg-micro-navy text-micro-yellow font-bold">စစ်ဆေး/ပြင်ရန်</button>
+            </div>
+          </div>
+        `).join('');
+    }
+
+    window.openScriptModal = () => {
+      document.getElementById('scriptTitleInput').value = '';
+      document.getElementById('scriptBodyInput').value = '';
+      window.openModal('scriptModal');
+    };
+
+    window.saveManagerScript = async () => {
+      const title = document.getElementById('scriptTitleInput').value.trim();
+      const body = document.getElementById('scriptBodyInput').value.trim();
+      if (!title || !body) return alert('ခေါင်းစဉ်နှင့် စာသား ထည့်သွင်းပါ။');
+      if (!Array.isArray(state.scripts)) state.scripts = [];
+      state.scripts.unshift({
+        id: 'sc_' + Date.now(),
+        title,
+        body,
+        by: getActiveUser().name,
+        date: new Date().toISOString().slice(0, 10)
+      });
+      window.closeModal('scriptModal');
+      await syncToCloud(`Follow-up Content "${title}" အသစ်ထည့်သွင်းခဲ့သည်`);
+    };
+
+    window.copyScriptText = (id) => {
+      const sc = (state.scripts || []).find(x => x.id === id);
+      if (!sc) return;
+      navigator.clipboard.writeText(sc.body);
+      alert('Follow-up Content စာသားကို Copy ကူးပြီးပါပြီ။');
+    };
+
+    window.deleteScript = async (id) => {
+      state.scripts = (state.scripts || []).filter(x => x.id !== id);
+      await syncToCloud();
+    };
+
+    // ================= ACADEMIC & ATTENDANCE TAB =================
+    function renderAcademicTab() {
+      const container = document.getElementById('academicBatchesContainer');
+      const batches = state.batches || [];
+      container.innerHTML = batches.map(b => `
+        <div class="ios-card p-5 space-y-3 border-t-4 border-micro-blue">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-extrabold text-sm text-micro-navy">${b.name}</h4>
+              <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${b.schedule}</p>
+            </div>
+            <button onclick="window.deleteBatch('${b.id}')" class="text-rose-500 text-xs font-bold">✕</button>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded-xl border text-xs text-micro-blue font-semibold break-all">
+            <i class="fa-solid fa-video mr-1"></i> ${b.zoom || 'Zoom Link မထည့်ရသေးပါ'}
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t text-xs">
+            <span class="font-bold text-slate-600">Attendance မှတ်တမ်းတင်ပြီး: <strong class="text-emerald-600">${b.attendanceCount || 0} ကြိမ်</strong></span>
+            <button onclick="window.markBatchAttendance('${b.id}')" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow font-bold px-3.5 py-1.5 rounded-xl ios-btn">
+              ✓ ယနေ့ Attendance မှတ်မည်
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.openBatchModal = () => {
+      document.getElementById('batchNameInput').value = '';
+      document.getElementById('batchScheduleInput').value = '';
+      document.getElementById('batchZoomInput').value = '';
+      window.openModal('batchModal');
+    };
+
+    window.saveBatch = async () => {
+      const name = document.getElementById('batchNameInput').value.trim();
+      const schedule = document.getElementById('batchScheduleInput').value.trim();
+      const zoom = document.getElementById('batchZoomInput').value.trim();
+      if (!name) return alert('Batch အမည် ထည့်ပါ။');
+      if (!Array.isArray(state.batches)) state.batches = [];
+      state.batches.push({ id: 'b_' + Date.now(), name, schedule, zoom, attendanceCount: 0 });
+      window.closeModal('batchModal');
+      await syncToCloud(`အတန်းခွဲသစ် "${name}" ဖွင့်လှစ်ခဲ့သည်`);
+    };
+
+    window.markBatchAttendance = async (bid) => {
+      const b = (state.batches || []).find(x => x.id === bid);
+      if (!b) return;
+      b.attendanceCount = Number(b.attendanceCount || 0) + 1;
+      await syncToCloud(`"${b.name}" အတွက် Attendance မှတ်တမ်းတင်ခဲ့သည်`);
+      alert(`${b.name} အတွက် ယနေ့ Attendance မှတ်တမ်းတင်ပြီးပါပြီ။`);
+    };
+
+    window.deleteBatch = async (bid) => {
+      if (!confirm('ဤအတန်းခွဲကို ဖျက်မည်မှာ သေချာပါသလား?')) return;
+      state.batches = (state.batches || []).filter(x => x.id !== bid);
+      await syncToCloud();
+    };
+
+    // ================= FINANCE & PURCHASE TAB (WITH EDIT & CUSTOM DATE) =================
+    function renderFinanceTab(filteredExpenses) {
+      const pContainer = document.getElementById('purchaseListSection');
+      const list = filteredExpenses || state.expenses;
+      pContainer.innerHTML = list.length === 0
+        ? `<div class="ios-card p-8 text-center text-xs text-slate-400">Purchase / အသုံးစရိတ် စာရင်း မရှိသေးပါ။</div>`
+        : list.map(e => `
+          <div class="ios-card p-4 flex flex-wrap items-center justify-between gap-3 text-xs border-l-4 border-rose-500">
+            <div>
+              <div class="font-extrabold text-sm text-micro-navy">${e.title}</div>
+              <div class="text-slate-500 mt-1">
+                💳 Pay: <strong>${e.paymentMethod}</strong> • 👤 တာဝန်ခံ: <strong>${e.by}</strong> • 📅 ရက်စွဲ: <strong>${e.date}</strong>
+              </div>
+              ${e.note ? `<div class="text-slate-600 mt-1">မှတ်ချက်: ${e.note}</div>` : ''}
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="font-black text-sm text-rose-600">-${Number(e.amount).toLocaleString()} Ks</div>
+              <button onclick="window.openExpenseModal('${e.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 text-micro-blue font-extrabold">
+                Edit ပြင်ရန်
+              </button>
+              <button onclick="window.deleteExpense('${e.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>`).join('');
+    }
+
+    window.openExpenseModal = (editId = '') => {
+      document.getElementById('expPaymentMethod').innerHTML = state.paymentMethods.map(p => `<option value="${p}">${p}</option>`).join('');
+      if (editId) {
+        const item = state.expenses.find(x => x.id === editId);
+        if (!item) return;
+        document.getElementById('expenseModalTitle').textContent = '✏️ Purchase / အသုံးစရိတ် ပြန်လည်ပြင်ဆင်ရန်';
+        document.getElementById('editExpenseId').value = item.id;
+        document.getElementById('expTitle').value = item.title || '';
+        document.getElementById('expAmount').value = Number(item.amount || 0);
+        document.getElementById('expDate').value = item.date || new Date().toISOString().slice(0, 10);
+        document.getElementById('expPaymentMethod').value = item.paymentMethod || state.paymentMethods[0] || '';
+        document.getElementById('expBy').value = item.by || getActiveUser().name;
+        document.getElementById('expNote').value = item.note || '';
+      } else {
+        document.getElementById('expenseModalTitle').textContent = 'Purchase / အသုံးစရိတ် အသစ်သွင်းရန်';
+        document.getElementById('editExpenseId').value = '';
+        document.getElementById('expTitle').value = '';
+        document.getElementById('expAmount').value = '';
+        document.getElementById('expDate').value = new Date().toISOString().slice(0, 10);
+        document.getElementById('expBy').value = getActiveUser().name;
+        document.getElementById('expNote').value = '';
+      }
+      window.openModal('expenseModal');
+    };
+
+    window.saveExpense = async () => {
+      const editId = document.getElementById('editExpenseId').value;
+      const title = document.getElementById('expTitle').value.trim();
+      const amount = Number(document.getElementById('expAmount').value || 0);
+      const chosenDate = document.getElementById('expDate').value || new Date().toISOString().slice(0, 10);
+      if (!title || amount <= 0) return alert('အကြောင်းအရာနှင့် ငွေပမာဏ ထည့်ပါ။');
+
+      const payload = {
+        title,
+        amount,
+        date: chosenDate,
+        paymentMethod: document.getElementById('expPaymentMethod').value,
+        by: document.getElementById('expBy').value.trim() || getActiveUser().name,
+        note: document.getElementById('expNote').value.trim()
+      };
+
+      if (editId) {
+        const idx = state.expenses.findIndex(x => x.id === editId);
+        if (idx > -1) state.expenses[idx] = { ...state.expenses[idx], ...payload };
+        window.closeModal('expenseModal');
+        await syncToCloud(`အသုံးစရိတ် "${title}" (${amount.toLocaleString()} Ks) ကို ပြင်ဆင်ခဲ့သည်`);
+      } else {
+        state.expenses.unshift({ id: 'E' + Date.now(), ...payload });
+        window.closeModal('expenseModal');
+        await syncToCloud(`အသုံးစရိတ်သစ် "${title}" (${amount.toLocaleString()} Ks) သွင်းခဲ့သည်`);
+      }
+    };
+
+    window.deleteExpense = async (id) => {
+      const target = state.expenses.find(x => x.id === id);
+      if (!confirm('ဤအသုံးစရိတ်ကို ဖျက်သိမ်းမှာ သေချာပါသလား?')) return;
+      state.expenses = state.expenses.filter(x => x.id !== id);
+      await syncToCloud(`အသုံးစရိတ် "${target?.title || id}" ကို ဖျက်သိမ်းခဲ့သည်`);
+    };
+
+    // ================= ADMIN PANEL: MULTI-DEPARTMENT APPROVALS & SETTINGS =================
+    function renderAdminPanel() {
+      const allDepts = ['ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'];
+
+      document.getElementById('staffListContainer').innerHTML = state.users.map(u => {
+        const uRoles = Array.isArray(u.roles) && u.roles.length > 0 ? u.roles : [u.role || 'PAGE_ADMIN'];
+        return `
+          <div class="p-4 rounded-2xl border bg-slate-50 space-y-3 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <strong class="text-sm text-micro-navy">${u.name}</strong>
+                <span class="text-slate-500 ml-1">(${u.email})</span>
+                ${!u.approved ? '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-extrabold ml-2">⏳ Pending Approval</span>' : '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-extrabold ml-2">✓ Approved</span>'}
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="window.toggleApprove('${u.id}')" class="px-3 py-1.5 rounded-xl font-extrabold ${u.approved ? 'bg-amber-500 text-white' : 'bg-micro-navy text-micro-yellow'}">
+                  ${u.approved ? 'Lock ပြန်ချမည်' : '✓ Approve ပေးမည်'}
+                </button>
+                <button onclick="window.openStaffModal('${u.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 text-micro-blue font-extrabold">
+                  Edit
+                </button>
+                <button onclick="window.deleteStaff('${u.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold">✕</button>
+              </div>
+            </div>
+
+            <!-- Multi-Department Quick Checkboxes -->
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200">
+              <span class="text-[11px] font-bold text-slate-500 mr-1">ဌာနတာဝန်များ (နှိပ်၍ တိုး/လျှော့နိုင်သည်):</span>
+              ${allDepts.map(dept => {
+                const active = uRoles.includes(dept) || uRoles.includes('FOUNDER');
+                return `
+                  <button onclick="window.toggleUserDept('${u.id}', '${dept}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${active ? 'bg-micro-navy text-micro-yellow border-micro-navy' : 'bg-white text-slate-500 border-slate-200'}">
+                    ${active ? '✓ ' : '+ '}${dept}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('courseManageList').innerHTML = state.courses.map(c => `
+        <div class="flex items-center justify-between bg-slate-50 border rounded-xl px-3.5 py-2.5 text-xs">
+          <div><strong class="text-micro-navy">${c.name}</strong> — <span class="font-bold text-micro-blue">${Number(c.fee).toLocaleString()} Ks</span></div>
+          <div class="flex items-center gap-2">
+            <button onclick="window.editCoursePrompt('${c.id}')" class="text-micro-blue font-bold">ပြင်မည်</button>
+            <button onclick="window.removeCourse('${c.id}')" class="text-rose-600 font-bold">ဖျက်မည်</button>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('payManageList').innerHTML = state.paymentMethods.map((p, idx) => `
+        <span class="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-micro-navy px-3 py-1 rounded-xl text-xs font-bold">
+          ${p} <button onclick="window.removePayment(${idx})" class="text-rose-500 font-bold ml-1">×</button>
+        </span>`).join('');
+
+      document.getElementById('sourceManageList').innerHTML = state.leadSources.map((s, idx) => `
+        <span class="inline-flex items-center gap-1.5 bg-slate-100 border text-slate-700 px-3 py-1 rounded-xl text-xs font-bold">
+          ${s} <button onclick="window.removeSource(${idx})" class="text-rose-500 font-bold ml-1">×</button>
+        </span>`).join('');
+
+      // Audit Logs
+      const logs = state.auditLogs || [];
+      document.getElementById('auditLogsContainer').innerHTML = logs.length === 0
+        ? `<div class="text-slate-400 py-3">မှတ်တမ်း မရှိသေးပါ။</div>`
+        : logs.map(lg => `
+          <div class="p-2 rounded-xl bg-slate-50 border flex items-center justify-between">
+            <span><strong class="text-micro-navy">${lg.user}:</strong> ${lg.action}</span>
+            <span class="text-[10px] text-slate-400 shrink-0 ml-2">${lg.time}</span>
+          </div>
+        `).join('');
+    }
+
+    window.openStaffModal = (editId = '') => {
+      const chks = document.querySelectorAll('.staff-role-chk');
+      if (editId) {
+        const u = state.users.find(x => x.id === editId);
+        if (!u) return;
+        document.getElementById('editStaffId').value = u.id;
+        document.getElementById('staffNameInput').value = u.name || '';
+        document.getElementById('staffEmailInput').value = u.email || '';
+        const uRoles = Array.isArray(u.roles) ? u.roles : [u.role || 'PAGE_ADMIN'];
+        chks.forEach(chk => { chk.checked = uRoles.includes(chk.value); });
+      } else {
+        document.getElementById('editStaffId').value = '';
+        document.getElementById('staffNameInput').value = '';
+        document.getElementById('staffEmailInput').value = '';
+        chks.forEach(chk => { chk.checked = chk.value === 'PAGE_ADMIN'; });
+      }
+      window.openModal('staffModal');
+    };
+
+    window.saveStaffMember = async () => {
+      const editId = document.getElementById('editStaffId').value;
+      const name = document.getElementById('staffNameInput').value.trim();
+      const email = document.getElementById('staffEmailInput').value.trim();
+      const selectedRoles = Array.from(document.querySelectorAll('.staff-role-chk:checked')).map(c => c.value);
+
+      if (!name || !email) return alert('ဝန်ထမ်းအမည်နှင့် Gmail ထည့်သွင်းပါ။');
+      if (selectedRoles.length === 0) selectedRoles.push('PAGE_ADMIN');
+
+      if (editId) {
+        const u = state.users.find(x => x.id === editId);
+        if (u) {
+          u.name = name;
+          u.email = email;
+          u.roles = selectedRoles;
+          u.role = selectedRoles[0];
+        }
+        window.closeModal('staffModal');
+        await syncToCloud(`ဝန်ထမ်း "${name}" ၏ ဌာနတာဝန်များကို ပြင်ဆင်ခဲ့သည်`);
+      } else {
+        state.users.push({
+          id: 'u_' + Date.now(),
+          name,
+          email,
+          role: selectedRoles[0],
+          roles: selectedRoles,
+          approved: true
+        });
+        window.closeModal('staffModal');
+        await syncToCloud(`ဝန်ထမ်းအသစ် "${name}" ကို ထည့်သွင်းခဲ့သည်`);
+      }
+    };
+
+    window.toggleUserDept = async (uid, dept) => {
+      const u = state.users.find(x => x.id === uid);
+      if (!u) return;
+      if (!Array.isArray(u.roles)) u.roles = [u.role || 'PAGE_ADMIN'];
+      if (u.roles.includes(dept)) {
+        if (u.roles.length === 1) return alert('အနည်းဆုံး ဌာန ၁ ခု ရှိရပါမည်။');
+        u.roles = u.roles.filter(r => r !== dept);
+      } else {
+        u.roles.push(dept);
+      }
+      u.role = u.roles[0];
+      await syncToCloud(`${u.name} ၏ ဌာနခွင့်ပြုချက် (${dept}) ပြောင်းလဲခဲ့သည်`);
+    };
+
+    window.toggleApprove = async (uid) => {
+      const u = state.users.find(x => x.id === uid);
+      if (u) {
+        u.approved = !u.approved;
+        await syncToCloud(`${u.name} အား ${u.approved ? 'Approve ပေးခဲ့သည်' : 'Lock ချခဲ့သည်'}`);
+      }
+    };
+
+    window.deleteStaff = async (uid) => {
+      const u = state.users.find(x => x.id === uid);
+      if (!confirm(`"${u?.name || ''}" ကို ဝန်ထမ်းစာရင်းမှ ဖျက်မည်မှာ သေချာပါသလား?`)) return;
+      state.users = state.users.filter(x => x.id !== uid);
+      await syncToCloud();
+    };
+
+    window.addCourse = async () => {
+      const name = document.getElementById('newCourseName').value.trim();
+      const fee = Number(document.getElementById('newCourseFee').value || 0);
+      if (!name) return;
+      state.courses.push({ id: 'c_' + Date.now(), name, fee });
+      document.getElementById('newCourseName').value = '';
+      document.getElementById('newCourseFee').value = '';
+      await syncToCloud(`သင်တန်းအသစ် "${name}" ထည့်သွင်းခဲ့သည်`);
+    };
+
+    window.editCoursePrompt = async (cid) => {
+      const c = state.courses.find(x => x.id === cid);
+      if (!c) return;
+      const newName = prompt('သင်တန်းအမည် ပြင်ဆင်ရန်:', c.name);
+      if (!newName) return;
+      const newFee = prompt('သင်တန်းကြေး (Ks) ပြင်ဆင်ရန်:', c.fee);
+      c.name = newName.trim();
+      c.fee = Number(newFee || 0);
+      await syncToCloud(`သင်တန်း "${c.name}" အချက်အလက် ပြင်ဆင်ခဲ့သည်`);
+    };
+
+    window.removeCourse = async (cid) => {
+      state.courses = state.courses.filter(x => x.id !== cid);
+      await syncToCloud();
+    };
+
+    window.addPaymentMethod = async () => {
+      const val = document.getElementById('newPayName').value.trim();
+      if (!val) return;
+      state.paymentMethods.push(val);
+      document.getElementById('newPayName').value = '';
+      await syncToCloud();
+    };
+
+    window.removePayment = async (idx) => {
+      state.paymentMethods.splice(idx, 1);
+      await syncToCloud();
+    };
+
+    window.addLeadSource = async () => {
+      const val = document.getElementById('newSourceInput').value.trim();
+      if (!val) return;
+      state.leadSources.push(val);
+      document.getElementById('newSourceInput').value = '';
+      await syncToCloud();
+    };
+
+    window.removeSource = async (idx) => {
+      state.leadSources.splice(idx, 1);
+      await syncToCloud();
+    };
+
+    // ================= EXPORT TO EXCEL (CSV) & PDF REPORT =================
+    window.exportCSV = () => {
+      const filtered = getFilteredLeadsByCourseAndDate();
+      const headers = ['Date', 'Name', 'Phone', 'Course', 'Source', 'LeadStage', 'PaymentStatus', 'PaidAmount', 'BalanceAmount', 'PaymentMethod', 'RecordedBy', 'Note'];
+      const rows = filtered.map(l => [
+        l.date,
+        `"${(l.name || '').replace(/"/g, '""')}"`,
+        `"${l.phone || ''}"`,
+        `"${l.course || ''}"`,
+        `"${l.source || ''}"`,
+        l.leadStage,
+        l.paymentStatus,
+        l.paidAmount || 0,
+        l.balanceAmount || 0,
+        `"${l.paymentMethod || ''}"`,
+        `"${l.recordedBy || ''}"`,
+        `"${(l.note || '').replace(/"/g, '""')}"`
+      ]);
+      const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `MicroTC_Report_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    };
+
+    window.exportReportPDF = () => {
+      const showMoney = canViewFinance();
+      const filteredLeads = getFilteredLeadsByCourseAndDate();
+      const filteredExpenses = getFilteredExpensesByDate();
+      const rev = filteredLeads.reduce((s, l) => s + Number(l.paidAmount || 0), 0);
+      const exp = filteredExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+
+      const element = document.createElement('div');
+      element.innerHTML = `
+        <div style="padding: 20px; font-family: 'Inter', 'Padauk', sans-serif; color: #142143;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 3px solid #ffaf00; padding-bottom: 10px; margin-bottom: 15px;">
+            <div>
+              <h2 style="margin: 0; color: #142143; font-weight: 900;">Micro Computer Training Center</h2>
+              <p style="font-size: 11px; color: #1a5d94; margin: 2px 0 0 0;">Management & Department Summary Report (${new Date().toISOString().slice(0, 10)})</p>
+            </div>
+            ${showMoney ? `
+              <div style="text-align:right; font-size: 11px;">
+                <div><strong>Total Revenue:</strong> ${rev.toLocaleString()} Ks</div>
+                <div><strong>Total Expenses:</strong> ${exp.toLocaleString()} Ks</div>
+                <div style="color:#047857;"><strong>Net Profit:</strong> ${(rev - exp).toLocaleString()} Ks</div>
+              </div>
+            ` : ''}
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
+            <thead>
+              <tr style="background: #142143; color: #ffaf00;">
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">ရက်စွဲ</th>
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">အမည်</th>
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">ဖုန်း</th>
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">သင်တန်း</th>
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">Source</th>
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">အလားအလာ</th>
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">အခြေအနေ</th>
+                <th style="padding: 7px; border: 1px solid #CBD5E1;">သွင်းသူ</th>
+                ${showMoney ? '<th style="padding: 7px; border: 1px solid #CBD5E1;">သွင်းပြီးငွေ</th>' : ''}
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredLeads.map(l => `
+                <tr>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.date}</td>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1; font-weight:bold;">${l.name}</td>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.phone}</td>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.course}</td>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.source}</td>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.leadStage}</td>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.paymentStatus}</td>
+                  <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.recordedBy \vert{}\vert{} '-'}</td>${showMoney ? `<td style="padding: 6px; border: 1px solid #CBD5E1; text-align: right; font-weight:bold;">${Number(l.paidAmount || 0).toLocaleString()} Ks</td>` : ''}
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+
+      html2pdf().from(element).set({
+        margin: 10,
+        filename: `MicroTC_Report_${new Date().toISOString().slice(0, 10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      }).save();
+    };
+
+    window.openModal = (id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      }
+    };
+    window.closeModal = (id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('flex');
+        el.classList.add('hidden');
+      }
+    };
+  </script>
 </body>
 </html>
