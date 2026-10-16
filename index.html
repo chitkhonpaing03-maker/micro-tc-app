@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Micro Computer Training Center - Enterprise OS</title>
+  <title>Micro Training Center - Enterprise OS</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
@@ -362,7 +362,7 @@
           သို့မဟုတ် ဖုန်း Browser တွင် Google Popup ပိတ်နေပါက Gmail ရိုက်ထည့်၍ ဝင်ပါ
         </label>
         <div class="flex gap-2">
-          <input type="email" id="quickEmailInput" placeholder="သင့် Gmail လိပ်စာ ရိုက်ထည့်ပါ..." class="flex-1 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-micro-blue" />
+          <input type="email" id="quickEmailInput" placeholder="သင့် Gmail လိပ်စာ ရိုက်ထည့်ပါ..." value="chitkhonpaing03@gmail.com" class="flex-1 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-micro-blue" />
           <button type="button" onclick="window.handleQuickEmailLogin()" class="bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-4 py-2.5 rounded-xl shadow ios-btn shrink-0">
             ဝင်မည် <i class="fa-solid fa-arrow-right ml-1"></i>
           </button>
@@ -415,11 +415,8 @@
         <button type="button" onclick="window.toggleDrawer(true)" class="bg-micro-navy/10 hover:bg-micro-navy/20 text-micro-navy text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 ios-btn">
           <i class="fa-solid fa-bars"></i> ဌာနများ ပြောင်းရန်
         </button>
-        <button type="button" onclick="window.exportExcelReport()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
-          <i class="fa-solid fa-file-excel text-white"></i> Excel (.xlsx)
-        </button>
         <button type="button" onclick="window.exportCSV()" class="bg-micro-blue hover:bg-micro-navy text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
-          <i class="fa-solid fa-file-csv text-micro-yellow"></i> CSV
+          <i class="fa-solid fa-file-csv text-micro-yellow"></i> Excel (CSV)
         </button>
         <button type="button" onclick="window.exportReportPDF()" class="bg-micro-navy hover:bg-micro-blue text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
           <i class="fa-solid fa-file-pdf text-micro-yellow"></i> PDF Report ထုတ်ရန်
@@ -824,7 +821,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
         <div>
           <label class="font-bold block mb-1 text-micro-navy">အမည် (Student / Customer Name) *</label>
-          <input type="text" id="leadName" placeholder="ဥပမာ - မောင်အောင်" class="w-full border rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-micro-blue" />
+          <input type="text" id="leadName" placeholder="ဥပမာ - Shwe Moe Thae" class="w-full border rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-micro-blue" />
         </div>
         <div>
           <label class="font-bold block mb-1 text-micro-navy">ဖုန်းနံပါတ် *</label>
@@ -966,7 +963,7 @@
       <div class="space-y-3 text-xs">
         <div>
           <label class="font-bold block mb-1">ဝန်ထမ်းအမည် *</label>
-          <input type="text" id="staffNameInput" placeholder="ဥပမာ - မမြတ်ဟေမာ" class="w-full border rounded-xl px-3.5 py-2.5" />
+          <input type="text" id="staffNameInput" placeholder="ဥပမာ - မတင်တင်လှိုင်" class="w-full border rounded-xl px-3.5 py-2.5" />
         </div>
         <div>
           <label class="font-bold block mb-1">Gmail လိပ်စာ *</label>
@@ -1064,7 +1061,6 @@
 
   <!-- ================= SCRIPTS: CORE ENGINE + MYANMAR WEATHER + FIREBASE ================= -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script type="module">
     const FOUNDER_GMAIL = "chitkhonpaing03@gmail.com";
     const LOCAL_STORAGE_KEY = "MICRO_TC_ENTERPRISE_STATE_V3";
@@ -1350,29 +1346,12 @@
       syncToCloud();
     }
 
-    // Quick Gmail Login (Fallback if Popup is blocked)
-    window.handleQuickEmailLogin = async () => {
-      const emailInput = document.getElementById('quickEmailInput');
-      const email = (emailInput?.value || '').trim().toLowerCase();
-      if (!email || !email.includes('@')) {
-        window.showToast('ကျေးဇူးပြု၍ မှန်ကန်သော Gmail လိပ်စာ ရိုက်ထည့်ပါ', 'error');
-        return;
-      }
-      // Email-only entry is not authentication and must not grant access.
-      // Use Firebase Google sign-in for a verified identity.
-      if (!auth || !signInPopupFn || !googleProvider) {
-        window.showToast('လုံခြုံသော Google Login ကို မချိတ်ဆက်ရသေးပါ။ Firebase Auth ကို စစ်ဆေးပါ။', 'error');
-        return;
-      }
-      try {
-        await signInPopupFn(auth, googleProvider);
-      } catch (e) {
-        window.showToast('Google Login မအောင်မြင်ပါ။ Browser ခွင့်ပြုချက်နှင့် Firebase Authorized Domains ကို စစ်ဆေးပါ။', 'error');
-      }
+    // SECURITY: Never treat a typed email or localStorage session as authentication.
+    // Only Firebase Authentication can establish a trusted session.
+    window.handleQuickEmailLogin = () => {
+      window.showToast('လုံခြုံရေးအတွက် Google Sign-in ဖြင့်သာ ဝင်ရောက်ပါ။', 'error');
     };
-
-    // Do not auto-login from localStorage: a stored email is not proof of identity.
-    // Firebase onAuthStateChanged below restores only a verified Google session.
+    // Old local-only sessions are untrusted and must not bypass Firebase Authentication.
     localStorage.removeItem('MICRO_TC_ACTIVE_USER');
 
     // ================= 4. FIREBASE CLOUD CONNECTION =================
@@ -1436,10 +1415,12 @@
           window.showToast('Google အကောင့်ဖြင့် ချိတ်ဆက်ပြီးပါပြီ');
           return;
         } catch (e) {
-          console.warn("Popup blocked or domain unauthorized, using direct Gmail login:", e.message);
+          console.error('Google Sign-in failed:', e);
+          window.showToast('Google Login မအောင်မြင်ပါ။ Firebase Authentication နှင့် Authorized Domains ကို စစ်ဆေးပါ။', 'error');
+          return;
         }
       }
-      window.showToast('Google Login ဝန်ဆောင်မှု မရရှိသေးပါ။ Internet နှင့် Firebase Auth ကို စစ်ဆေးပါ။', 'error');
+      window.showToast('Firebase Authentication မချိတ်ဆက်ရသေးပါ။ Setup လမ်းညွှန်ကို ကြည့်ပါ။', 'error');
     };
 
     window.handleLogout = async () => {
@@ -2550,43 +2531,7 @@
       window.showToast('Excel (CSV) ဖိုင် ထုတ်ယူပြီးပါပြီ');
     };
 
-    // Excel workbook with department summary and details sheets.
-    window.exportExcelReport = () => {
-      if (!window.XLSX) { window.showToast('Excel Library မတင်နိုင်ပါ။ Internet ချိတ်ဆက်မှုကို စစ်ဆေးပါ။', 'error'); return; }
-      const wb = XLSX.utils.book_new();
-      const leads = getFilteredLeadsByCourseAndDate();
-      const expenses = getFilteredExpensesByDate();
-      const moneyVisible = canViewFinance();
-      const summary = [
-        ['Micro Training Center - ဌာနအားလုံး အစီရင်ခံစာ'],
-        ['ထုတ်ယူသည့်ရက်', new Date().toLocaleDateString('en-CA')],
-        ['ဌာန', 'အချက်အလက်အရေအတွက်', 'မှတ်ချက်'],
-        ['Sales / သင်တန်းအပ်နှံမှု', leads.length, 'Lead / Enrollment စာရင်း'],
-        ['Academic / သင်တန်း', (state.courses || []).length, 'သင်တန်းများ'],
-        ['Academic / အတန်းခွဲ', (state.batches || []).length, 'အတန်းခွဲများ'],
-        ['Manager / Content', (state.scripts || []).length, 'Content / Script များ'],
-        ['Admin / အသုံးပြုသူ', (state.users || []).length, 'User စာရင်း'],
-        ['Admin / Audit Log', (state.auditLogs || []).length, 'လုပ်ဆောင်မှုမှတ်တမ်း'],
-        ['Finance / Expenses', expenses.length, moneyVisible ? 'အသုံးစရိတ်စာရင်း' : 'ငွေကြေးအချက်အလက်ကို ခွင့်ပြုထားသော Role သာကြည့်နိုင်သည်'],
-        ['Finance / ရရှိငွေ', moneyVisible ? leads.reduce((s,l)=>s+Number(l.paidAmount||0),0) : 'ခွင့်မပြု', 'ကျပ်'],
-        ['Finance / အသုံးစရိတ်', moneyVisible ? expenses.reduce((s,e)=>s+Number(e.amount||0),0) : 'ခွင့်မပြု', 'ကျပ်']
-      ];
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Summary');
-      const leadRows = leads.map(l => ({'ရက်စွဲ':l.date||'', 'အမည်':l.name||'', 'ဖုန်း':l.phone||'', 'သင်တန်း':l.course||'', 'ရင်းမြစ်':l.source||'', 'အလားအလာ':l.leadStage||'', 'ငွေပေးချေမှု':l.paymentStatus||'', ...(moneyVisible ? {'သွင်းပြီးငွေ':Number(l.paidAmount||0),'ကျန်ငွေ':Number(l.balanceAmount||0)} : {}), 'ငွေပေးချေမှုနည်းလမ်း':l.paymentMethod||'', 'စာရင်းသွင်းသူ':l.recordedBy||'', 'မှတ်ချက်':l.note||''}));
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(leadRows.length ? leadRows : [{'အချက်အလက်':'စာရင်းမရှိပါ'}]), 'Sales Details');
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet((state.courses||[]).map(x=>({'သင်တန်း':x.name||'', ...(moneyVisible?{'သင်တန်းကြေး':Number(x.fee||0)}:{}), 'ID':x.id||''}))), 'Courses');
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet((state.batches||[]).map(x=>({'အတန်းခွဲ':x.name||'', 'အချိန်ဇယား':x.schedule||'', 'Zoom':x.zoom||'', 'တက်ရောက်သူ':x.attendanceCount||0}))), 'Academic Details');
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet((state.scripts||[]).map(x=>({'ခေါင်းစဉ်':x.title||'', 'စာသား':x.body||'', 'တာဝန်ရှိသူ':x.by||'', 'ရက်စွဲ':x.date||''}))), 'Manager Details');
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet((state.users||[]).map(x=>({'အမည်':x.name||'', 'Email':x.email||'', 'Role':x.role||'', 'အတည်ပြုထားမှု':x.approved?'Approved':'Pending'}))), 'Users');
-      if (moneyVisible) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(expenses.map(e=>({'ရက်စွဲ':e.date||'', 'အမျိုးအစား':e.category||'', 'အသေးစိတ်':e.description||e.note||'', 'ပမာဏ':Number(e.amount||0)}))), 'Finance Details');
-      XLSX.writeFile(wb, `MicroTC_Department_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
-      window.showToast('ဌာနအလိုက် Summary နှင့် Details ပါသော Excel ဖိုင် ထုတ်ပြီးပါပြီ');
-    };
-
     window.exportReportPDF = () => {
-      const mode = window.prompt('PDF Report အမျိုးအစားရွေးပါ: SUMMARY သို့မဟုတ် DETAILS', 'SUMMARY');
-      if (mode === null) return;
-      const detailsMode = mode.trim().toUpperCase().startsWith('D');
       window.showToast('PDF Report ထုတ်ယူနေပါသည်...');
       const showMoney = canViewFinance();
       const filteredLeads = getFilteredLeadsByCourseAndDate();
@@ -2600,7 +2545,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 3px solid #ffaf00; padding-bottom: 10px; margin-bottom: 15px;">
             <div>
               <h2 style="margin: 0; color: #142143; font-weight: 900;">Micro Computer Training Center</h2>
-              <p style="font-size: 11px; color: #1a5d94; margin: 2px 0 0 0;">Management & Department ${detailsMode ? "Details" : "Summary"} Report (${new Date().toISOString().slice(0, 10)})</p>
+              <p style="font-size: 11px; color: #1a5d94; margin: 2px 0 0 0;">Management & Department Summary Report (${new Date().toISOString().slice(0, 10)})</p>
             </div>
             ${showMoney ? `
               <div style="text-align:right; font-size: 11px;">
@@ -2610,12 +2555,7 @@
               </div>
             ` : ''}
           </div>
-          <div style="margin: 8px 0 14px; padding: 10px; background: #f1f5f9; border-radius: 8px; font-size: 11px;">
-            <strong>ဌာနအနှစ်ချုပ်:</strong> Sales/Enrollment ${filteredLeads.length} ခု | Academic/Courses ${(state.courses||[]).length} ခု | Batches ${(state.batches||[]).length} ခု | Manager/Content ${(state.scripts||[]).length} ခု | Admin/Users ${(state.users||[]).length} ခု | Audit Logs ${(state.auditLogs||[]).length} ခု
-            ${showMoney ? `<div>Finance: ဝင်ငွေ ${rev.toLocaleString()} Ks | အသုံးစရိတ် ${exp.toLocaleString()} Ks | အသားတင် ${(rev-exp).toLocaleString()} Ks</div>` : ''}
-          </div>
-          ${detailsMode ? '' : '<p style="font-size:11px; margin:8px 0;">Summary mode — အသေးစိတ်စာရင်းအတွက် DETAILS ကို ရွေးပါ။</p>'}
-          <table style="width: 100%; border-collapse: collapse; font-size: 10.5px; ${detailsMode ? '' : 'display:none;'}">
+          <table style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
             <thead>
               <tr style="background: #142143; color: #ffaf00;">
                 <th style="padding: 7px; border: 1px solid #CBD5E1;">ရက်စွဲ</th>
@@ -2630,7 +2570,7 @@
               </tr>
             </thead>
             <tbody>
-              ${(detailsMode ? filteredLeads : filteredLeads.slice(0, 0)).map(l => `
+              ${filteredLeads.map(l => `
                 <tr>
                   <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.date}</td>
                   <td style="padding: 6px; border: 1px solid #CBD5E1; font-weight:bold;">${l.name}</td>
@@ -2639,7 +2579,7 @@
                   <td style="padding: 6px; border: 1px solid #CBD5E1;">${l.source}</td>
                   <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.leadStage}</td>
                   <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.paymentStatus}</td>
-                  <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${(l.recordedBy || '-')}</td>${showMoney ? `<td style="padding: 6px; border: 1px solid #CBD5E1; text-align: right; font-weight:bold;">${Number(l.paidAmount || 0).toLocaleString()} Ks</td>` : ''}
+                  <td style="padding: 6px; border: 1px solid #CBD5E1; text-align: center;">${l.recordedBy || '-'}</td>${showMoney ? `<td style="padding: 6px; border: 1px solid #CBD5E1; text-align: right; font-weight:bold;">${Number(l.paidAmount || 0).toLocaleString()} Ks</td>` : ''}
                 </tr>`).join('')}
             </tbody>
           </table>
