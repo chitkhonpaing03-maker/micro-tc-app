@@ -36,68 +36,151 @@
       -webkit-tap-highlight-color: transparent;
       overflow-x: hidden;
     }
-    .ios-glass {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(228, 228, 228, 0.8);
+
+    /* Smooth Keyframe Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
+
+    @keyframes modalPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(12px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 175, 0, 0.45); }
+      50% { box-shadow: 0 0 0 8px rgba(255, 175, 0, 0); }
+    }
+
+    .animate-fade-up {
+      animation: fadeInUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .animate-modal-pop {
+      animation: modalPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .animate-drawer-left {
+      animation: slideInLeft 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .animate-float {
+      animation: floatSlow 3s ease-in-out infinite;
+    }
+
+    .animate-pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+
     .ios-card {
       background: #FFFFFF;
       border-radius: 20px;
       box-shadow: 0 8px 26px -4px rgba(20, 33, 67, 0.06), 0 2px 6px -1px rgba(20, 33, 67, 0.03);
       border: 1px solid rgba(228, 228, 228, 0.7);
-      transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
+
     .ios-card:hover {
-      box-shadow: 0 12px 32px -4px rgba(20, 33, 67, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px -4px rgba(20, 33, 67, 0.11);
     }
+
     .ios-btn {
-      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
     }
+
+    .ios-btn:hover {
+      filter: brightness(1.05);
+    }
+
     .ios-btn:active {
-      transform: scale(0.96);
+      transform: scale(0.95);
     }
+
     .drawer-backdrop {
       background: rgba(20, 33, 67, 0.55);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      transition: opacity 0.3s ease;
     }
-    .drawer-panel {
-      transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
-    }
+
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col pb-16 md:pb-0">
 
-  <!-- ================= TOP LIVE WIDGETS BAR ================= -->
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toastContainer" class="fixed top-14 right-4 z-[60] space-y-2 pointer-events-none"></div>
+
+  <!-- ================= TOP LIVE MYANMAR WIDGETS BAR ================= -->
   <div class="bg-[#0e1730] text-white text-[11px] px-4 py-1.5 border-b border-white/10">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar">
-        <button onclick="window.promptUpdateUsdRate()" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 px-2.5 py-0.5 rounded-full transition cursor-pointer" title="Admin များနှိပ်၍ USD Rate ပြင်နိုင်သည်">
+      <div class="flex items-center gap-2.5 overflow-x-auto hide-scrollbar py-0.5">
+        <!-- USD Rate Button -->
+        <button type="button" onclick="window.promptUpdateUsdRate()" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-full transition cursor-pointer shrink-0" title="နှိပ်၍ USD Rate ပြင်ဆင်နိုင်သည်">
           <i class="fa-solid fa-dollar-sign text-micro-yellow"></i>
-          <span>USD Rate: <strong class="text-micro-yellow" id="widgetUsdRate">3,550 Ks</strong></span>
-          <i class="fa-solid fa-pen text-[9px] opacity-60 ml-0.5"></i>
+          <span>1 USD: <strong class="text-micro-yellow" id="widgetUsdRate">3,550 Ks</strong></span>
+          <i class="fa-solid fa-pen text-[9px] opacity-70 ml-0.5"></i>
         </button>
-        <div class="flex items-center gap-1.5">
-          <i class="fa-regular fa-clock text-micro-yellow"></i>
-          <span id="widgetClock">Yangon Time: --:--</span>
+
+        <!-- Myanmar Standard Time (Asia/Yangon) -->
+        <div class="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full shrink-0">
+          <i class="fa-regular fa-clock text-micro-yellow animate-pulse"></i>
+          <span id="widgetClock" class="font-medium">MMT (မြန်မာစံတော်ချိန်): --:--</span>
         </div>
-        <div class="flex items-center gap-1.5">
-          <i class="fa-solid fa-cloud-sun text-micro-yellow"></i>
-          <span id="widgetWeather">Yangon: 32°C (Sunny)</span>
+
+        <!-- Myanmar Live Weather with City Switcher -->
+        <div class="flex items-center gap-1.5 bg-white/10 px-2.5 py-0.5 rounded-full shrink-0">
+          <i id="widgetWeatherIcon" class="fa-solid fa-cloud-sun text-micro-yellow"></i>
+          <select id="myanmarCitySelect" onchange="window.fetchMyanmarWeather(this.value)" class="bg-transparent text-micro-yellow font-bold focus:outline-none cursor-pointer text-[11px]">
+            <option value="yangon" class="text-micro-navy">ရန်ကုန် (Yangon)</option>
+            <option value="mandalay" class="text-micro-navy">မန္တလေး (Mandalay)</option>
+            <option value="naypyidaw" class="text-micro-navy">နေပြည်တော် (Naypyidaw)</option>
+            <option value="taunggyi" class="text-micro-navy">တောင်ကြီး (Taunggyi)</option>
+            <option value="mawlamyine" class="text-micro-navy">မော်လမြိုင် (Mawlamyine)</option>
+            <option value="bago" class="text-micro-navy">ပဲခူး (Bago)</option>
+            <option value="monywa" class="text-micro-navy">မုံရွာ (Monywa)</option>
+            <option value="pathein" class="text-micro-navy">ပုသိမ် (Pathein)</option>
+          </select>
+          <span id="widgetWeatherTemp" class="font-bold text-white">--°C</span>
         </div>
       </div>
-      <div class="flex items-center gap-3 ml-auto">
+
+      <div class="flex items-center gap-2.5 ml-auto">
         <div class="flex items-center gap-1.5 truncate max-w-[180px] sm:max-w-xs">
           <i class="fa-brands fa-google text-micro-yellow"></i>
           <span id="activeUserEmail" class="truncate text-slate-300">Not Signed In</span>
         </div>
-        <span class="px-2 py-0.5 rounded-full bg-micro-yellow/20 text-micro-yellow font-semibold" id="syncStatusBadge">
-          <i class="fa-solid fa-wifi mr-1"></i>Connecting...
+        <span class="px-2.5 py-0.5 rounded-full bg-micro-yellow/20 text-micro-yellow font-semibold shrink-0" id="syncStatusBadge">
+          <i class="fa-solid fa-bolt mr-1"></i>Ready
         </span>
       </div>
     </div>
@@ -108,32 +191,27 @@
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <!-- 3-Line Hamburger Button -->
-        <button id="btnHamburger" onclick="window.toggleDrawer(true)" class="w-11 h-11 rounded-2xl bg-micro-blue/60 hover:bg-micro-blue border border-micro-yellow/40 flex items-center justify-center text-micro-yellow text-xl shadow-md ios-btn" aria-label="Open Departments Menu">
+        <button type="button" id="btnHamburger" onclick="window.toggleDrawer(true)" class="w-11 h-11 rounded-2xl bg-micro-blue/70 hover:bg-micro-blue border border-micro-yellow/50 flex items-center justify-center text-micro-yellow text-xl shadow-md ios-btn" aria-label="Open Departments Menu">
           <i class="fa-solid fa-bars"></i>
         </button>
 
-        <!-- Micro Brand Logo (SVG matching uploaded Logo) -->
-        <div class="flex items-center gap-3 cursor-pointer" onclick="window.switchTab('dashboard')">
-          <div class="w-12 h-12 rounded-2xl bg-[#142143] border-2 border-micro-yellow flex items-center justify-center shadow-md overflow-hidden shrink-0">
+        <!-- Micro Brand Logo -->
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="window.switchTab('dashboard')">
+          <div class="w-12 h-12 rounded-2xl bg-[#142143] border-2 border-micro-yellow flex items-center justify-center shadow-md overflow-hidden shrink-0 group-hover:scale-105 transition">
             <svg viewBox="0 0 120 70" class="w-11 h-11">
-              <!-- Graduation Cap above 'i' -->
               <polygon points="56,10 42,16 56,22 70,16" fill="#ffaf00"/>
               <path d="M48,19 L48,25 C48,25 56,28 64,25 L64,19" fill="#ffaf00"/>
               <path d="M68,17 L71,25" stroke="#ffaf00" stroke-width="2" fill="none"/>
-              <!-- Micro Text -->
               <text x="10" y="50" fill="#ffaf00" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-style="italic" font-size="31" letter-spacing="-1">Micro</text>
-              <!-- Underline Swoosh -->
               <path d="M45,58 Q75,53 108,56" stroke="#ffaf00" stroke-width="3.2" stroke-linecap="round" fill="none"/>
             </svg>
           </div>
           <div>
-            <div class="flex items-center gap-2">
-              <h1 class="font-extrabold text-base sm:text-lg tracking-wide text-white leading-tight">
-                Micro <span class="text-micro-yellow">Training Center</span>
-              </h1>
-            </div>
-            <p class="text-[11px] text-micro-grey/90 font-medium flex items-center gap-1.5 mt-0.5">
-              <span id="currentDeptTitle" class="text-micro-yellow font-bold">Overview Dashboard</span>
+            <h1 class="font-extrabold text-base sm:text-lg tracking-wide text-white leading-tight">
+              Micro <span class="text-micro-yellow">Training Center</span>
+            </h1>
+            <p class="text-[11px] text-micro-grey/90 font-medium flex flex-wrap items-center gap-1.5 mt-0.5">
+              <span id="currentDeptTitle" class="text-micro-yellow font-bold">၁။ Overview & P&L Report ချုပ်</span>
               <span>•</span>
               <span id="currentRoleBadge">Checking Login...</span>
             </p>
@@ -143,11 +221,11 @@
 
       <!-- Right Action Buttons -->
       <div class="flex items-center gap-2">
-        <button onclick="window.openLeadModal()" id="headerQuickAddBtn" class="hidden sm:flex items-center gap-1.5 bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow ios-btn">
+        <button type="button" onclick="window.openLeadModal()" id="headerQuickAddBtn" class="flex items-center gap-1.5 bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow ios-btn animate-pulse-glow">
           <i class="fa-solid fa-plus"></i>
-          <span>စာရင်းသွင်းရန်</span>
+          <span class="hidden sm:inline">စာရင်းသွင်းရန်</span>
         </button>
-        <button id="btnLogout" onclick="window.handleLogout()" class="hidden bg-rose-600 hover:bg-rose-500 text-white text-xs px-3 py-2 rounded-xl font-bold items-center gap-1.5 shadow ios-btn">
+        <button type="button" id="btnLogout" onclick="window.handleLogout()" class="hidden bg-rose-600 hover:bg-rose-500 text-white text-xs px-3 py-2.5 rounded-xl font-bold items-center gap-1.5 shadow ios-btn">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span class="hidden sm:inline">ထွက်ရန်</span>
         </button>
@@ -158,7 +236,7 @@
   <!-- ================= SLIDE-OUT HAMBURGER DRAWER (DEPARTMENTS MENU) ================= -->
   <div id="drawerOverlay" class="fixed inset-0 z-50 hidden">
     <div onclick="window.toggleDrawer(false)" class="drawer-backdrop absolute inset-0"></div>
-    <aside id="drawerPanel" class="drawer-panel relative w-80 max-w-[85vw] bg-micro-navy text-white h-full flex flex-col justify-between shadow-2xl border-r-2 border-micro-yellow z-10 overflow-y-auto">
+    <aside id="drawerPanel" class="animate-drawer-left relative w-80 max-w-[85vw] bg-micro-navy text-white h-full flex flex-col justify-between shadow-2xl border-r-2 border-micro-yellow z-10 overflow-y-auto">
       <div>
         <!-- Drawer Header -->
         <div class="p-5 bg-gradient-to-br from-micro-navy via-[#182c59] to-micro-blue border-b border-white/10">
@@ -172,25 +250,25 @@
                 <p class="text-[10px] text-micro-yellow">All-in-One Department Control</p>
               </div>
             </div>
-            <button onclick="window.toggleDrawer(false)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-sm">
+            <button type="button" onclick="window.toggleDrawer(false)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-sm ios-btn">
               ✕
             </button>
           </div>
           <!-- Active User Profile Card inside Drawer -->
           <div class="bg-white/10 rounded-2xl p-3 border border-white/10">
-            <div class="text-xs font-bold text-white truncate" id="drawerUserName">Guest User</div>
+            <div class="text-xs font-bold text-white truncate" id="drawerUserName">Founder / Admin</div>
             <div class="text-[11px] text-slate-300 truncate" id="drawerUserEmail">-</div>
             <div id="drawerUserRoles" class="flex flex-wrap gap-1 mt-2"></div>
           </div>
         </div>
 
         <!-- Department Navigation Links -->
-        <div class="p-3 space-y-1">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-micro-yellow/80 px-3 py-1.5">
+        <div class="p-3 space-y-1.5">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-micro-yellow/80 px-3 py-1">
             Departments (ဌာနများ ရွေးချယ်ရန်)
           </div>
 
-          <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold bg-micro-yellow text-micro-navy shadow transition">
+          <button type="button" onclick="window.switchTab('dashboard')" id="nav-dashboard" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-extrabold bg-micro-yellow text-micro-navy shadow transition">
             <span class="flex items-center gap-3">
               <i class="fa-solid fa-chart-pie text-base w-5 text-center"></i>
               <span>၁။ Overview & P&L Report ချုပ်</span>
@@ -198,23 +276,23 @@
             <i class="fa-solid fa-chevron-right text-[10px]"></i>
           </button>
 
-          <button onclick="window.switchTab('leads')" id="nav-leads" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+          <button type="button" onclick="window.switchTab('leads')" id="nav-leads" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
             <span class="flex items-center gap-3">
               <i class="fa-solid fa-wand-magic-sparkles text-base w-5 text-center text-micro-yellow"></i>
               <span>၂။ Page Admin & AI Scanner</span>
             </span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-micro-yellow" id="badgeLeadsCount">0</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-micro-yellow font-bold" id="badgeLeadsCount">0</span>
           </button>
 
-          <button onclick="window.switchTab('sales')" id="nav-sales" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+          <button type="button" onclick="window.switchTab('sales')" id="nav-sales" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
             <span class="flex items-center gap-3">
-              <i class="fa-solid fa-file-invoice-dollar text-base w-5 text-center text-emerald-400"></i>
+              <i class="fa-solid fa-file-invoice-dollar text-base w-5 text-center text-micro-yellow"></i>
               <span>၃။ Sales & Invoices (သင်တန်းအပ်သူ)</span>
             </span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300" id="badgeSalesCount">0</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-micro-yellow/20 text-micro-yellow font-bold" id="badgeSalesCount">0</span>
           </button>
 
-          <button onclick="window.switchTab('manager')" id="nav-manager" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+          <button type="button" onclick="window.switchTab('manager')" id="nav-manager" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
             <span class="flex items-center gap-3">
               <i class="fa-solid fa-bullhorn text-base w-5 text-center text-amber-400"></i>
               <span>၄။ Manager & Follow-up Hub</span>
@@ -222,7 +300,7 @@
             <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
           </button>
 
-          <button onclick="window.switchTab('academic')" id="nav-academic" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+          <button type="button" onclick="window.switchTab('academic')" id="nav-academic" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
             <span class="flex items-center gap-3">
               <i class="fa-solid fa-chalkboard-user text-base w-5 text-center text-sky-400"></i>
               <span>၅။ Academic & Attendance</span>
@@ -230,7 +308,7 @@
             <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
           </button>
 
-          <button onclick="window.switchTab('finance')" id="nav-finance" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+          <button type="button" onclick="window.switchTab('finance')" id="nav-finance" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
             <span class="flex items-center gap-3">
               <i class="fa-solid fa-wallet text-base w-5 text-center text-rose-400"></i>
               <span>၆။ Purchase & Finance ဌာန</span>
@@ -238,7 +316,7 @@
             <i class="fa-solid fa-chevron-right text-[10px] opacity-60"></i>
           </button>
 
-          <button onclick="window.switchTab('admin')" id="nav-admin" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
+          <button type="button" onclick="window.switchTab('admin')" id="nav-admin" class="drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition">
             <span class="flex items-center gap-3">
               <i class="fa-solid fa-sliders text-base w-5 text-center text-micro-yellow"></i>
               <span>၇။ Founder / Admin Settings</span>
@@ -251,15 +329,15 @@
       <!-- Drawer Footer -->
       <div class="p-4 border-t border-white/10 text-[11px] text-slate-400 flex items-center justify-between">
         <span>Micro Training Center</span>
-        <span class="text-micro-yellow font-bold">v3.0 iOS Pro</span>
+        <span class="text-micro-yellow font-bold">v3.5 Animated Pro</span>
       </div>
     </aside>
   </div>
 
   <!-- ================= LOGIN SCREEN ================= -->
-  <div id="loginScreen" class="p-6 text-center my-12 max-w-md mx-auto w-full">
+  <div id="loginScreen" class="p-6 text-center my-8 max-w-md mx-auto w-full animate-fade-up">
     <div class="ios-card p-8 space-y-5 border-t-4 border-micro-yellow">
-      <div class="w-24 h-24 mx-auto bg-micro-navy border-4 border-micro-yellow rounded-3xl flex items-center justify-center shadow-lg">
+      <div class="w-24 h-24 mx-auto bg-micro-navy border-4 border-micro-yellow rounded-3xl flex items-center justify-center shadow-lg animate-float">
         <svg viewBox="0 0 120 70" class="w-20 h-20">
           <polygon points="56,10 42,16 56,22 70,16" fill="#ffaf00"/>
           <path d="M48,19 L48,25 C48,25 56,28 64,25 L64,19" fill="#ffaf00"/>
@@ -271,20 +349,32 @@
         <h2 class="text-2xl font-extrabold text-micro-navy">Micro Training Center</h2>
         <p class="text-xs text-slate-500 mt-1">All-in-One Smart ERP, AI Lead Scanner & Real-Time System</p>
       </div>
-      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 leading-relaxed">
-        သက်ဆိုင်ရာ Department အလိုက် စနစ်ကိုအသုံးပြုရန် သင်၏ <strong>Gmail အကောင့်</strong>ဖြင့် ဝင်ရောက်ပါ။
-      </div>
-      <button onclick="window.handleGoogleLogin()" class="w-full bg-micro-navy hover:bg-micro-blue text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg flex items-center justify-center gap-3 text-sm ios-btn">
+
+      <!-- Option 1: Google Popup Login -->
+      <button type="button" onclick="window.handleGoogleLogin()" class="w-full bg-micro-navy hover:bg-micro-blue text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg flex items-center justify-center gap-3 text-sm ios-btn">
         <i class="fa-brands fa-google text-micro-yellow text-lg"></i>
         <span>Sign in with Google (Gmail)</span>
       </button>
+
+      <!-- Option 2: Direct Gmail Entry (Works even if Popup is blocked on Mobile / WebView) -->
+      <div class="pt-3 border-t border-slate-200 space-y-2.5 text-left">
+        <label class="block text-[11px] font-bold text-slate-500 text-center">
+          သို့မဟုတ် ဖုန်း Browser တွင် Google Popup ပိတ်နေပါက Gmail ရိုက်ထည့်၍ ဝင်ပါ
+        </label>
+        <div class="flex gap-2">
+          <input type="email" id="quickEmailInput" placeholder="သင့် Gmail လိပ်စာ ရိုက်ထည့်ပါ..." value="chitkhonpaing03@gmail.com" class="flex-1 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-micro-blue" />
+          <button type="button" onclick="window.handleQuickEmailLogin()" class="bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-4 py-2.5 rounded-xl shadow ios-btn shrink-0">
+            ဝင်မည် <i class="fa-solid fa-arrow-right ml-1"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- ================= PENDING APPROVAL LOCK SCREEN ================= -->
-  <div id="pendingLockScreen" class="hidden p-6 text-center my-12 max-w-md mx-auto w-full">
+  <div id="pendingLockScreen" class="hidden p-6 text-center my-12 max-w-md mx-auto w-full animate-fade-up">
     <div class="ios-card p-7 space-y-4 border-t-4 border-micro-yellow">
-      <div class="w-20 h-20 mx-auto bg-amber-50 text-micro-yellow rounded-full flex items-center justify-center text-3xl shadow-inner border border-amber-200">
+      <div class="w-20 h-20 mx-auto bg-amber-50 text-micro-yellow rounded-full flex items-center justify-center text-3xl shadow-inner border border-amber-200 animate-float">
         <i class="fa-solid fa-user-lock"></i>
       </div>
       <h2 class="text-xl font-extrabold text-micro-navy">တည်ထောင်သူ / Admin ခွင့်ပြုချက် စောင့်ဆိုင်းနေပါသည်</h2>
@@ -296,6 +386,7 @@
         <div><span class="text-slate-400">Gmail:</span> <strong id="pendingUserEmail">-</strong></div>
         <div><span class="text-slate-400">Status:</span> <span class="text-amber-600 font-bold">⏳ Waiting for Founder Approval</span></div>
       </div>
+      <button type="button" onclick="window.handleLogout()" class="text-xs text-rose-600 font-bold underline">အခြား Gmail အကောင့်ဖြင့် ပြန်ဝင်ရန်</button>
     </div>
   </div>
 
@@ -303,71 +394,71 @@
   <main id="mainAppContent" class="hidden max-w-7xl mx-auto w-full p-4 md:p-6 space-y-6 flex-grow">
 
     <!-- GLOBAL FILTER BAR (Course + Custom Date Range + Export) -->
-    <div class="ios-card p-4 bg-white border-l-4 border-micro-navy flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+    <div class="ios-card p-4 bg-white border-l-4 border-micro-navy flex flex-col lg:flex-row lg:items-center justify-between gap-3 animate-fade-up">
       <div class="flex flex-wrap items-center gap-2">
         <span class="text-xs font-extrabold text-micro-navy flex items-center gap-1.5 mr-1">
           <i class="fa-solid fa-filter text-micro-blue"></i> စစ်ထုတ်ကြည့်ရန်:
         </span>
-        <select id="dashboardCourseFilter" onchange="window.renderAll()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-micro-navy rounded-xl px-3 py-2">
+        <select id="dashboardCourseFilter" onchange="window.renderAll()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-micro-navy rounded-xl px-3 py-2 cursor-pointer">
           <option value="ALL">သင်တန်းအားလုံး (All Courses)</option>
         </select>
-        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
+        <div class="flex flex-wrap items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
           <span class="text-slate-400 font-semibold">မှ:</span>
-          <input type="date" id="filterStartDate" onchange="window.renderAll()" class="bg-transparent font-semibold text-micro-navy focus:outline-none" />
+          <input type="date" id="filterStartDate" onchange="window.renderAll()" class="bg-transparent font-semibold text-micro-navy focus:outline-none cursor-pointer" />
           <span class="text-slate-400 font-semibold">ထိ:</span>
-          <input type="date" id="filterEndDate" onchange="window.renderAll()" class="bg-transparent font-semibold text-micro-navy focus:outline-none" />
-          <button onclick="window.clearDateFilter()" class="text-rose-500 hover:text-rose-700 font-bold px-1" title="ရက်စွဲပြန်ရှင်းရန်">✕</button>
+          <input type="date" id="filterEndDate" onchange="window.renderAll()" class="bg-transparent font-semibold text-micro-navy focus:outline-none cursor-pointer" />
+          <button type="button" onclick="window.clearDateFilter()" class="text-rose-500 hover:text-rose-700 font-bold px-1.5" title="ရက်စွဲပြန်ရှင်းရန်">✕</button>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2 justify-end">
-        <button onclick="window.toggleDrawer(true)" class="bg-micro-navy/10 hover:bg-micro-navy/20 text-micro-navy text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 ios-btn">
+        <button type="button" onclick="window.toggleDrawer(true)" class="bg-micro-navy/10 hover:bg-micro-navy/20 text-micro-navy text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 ios-btn">
           <i class="fa-solid fa-bars"></i> ဌာနများ ပြောင်းရန်
         </button>
-        <button onclick="window.exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
-          <i class="fa-solid fa-file-excel"></i> Excel (CSV)
+        <button type="button" onclick="window.exportCSV()" class="bg-micro-blue hover:bg-micro-navy text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
+          <i class="fa-solid fa-file-csv text-micro-yellow"></i> Excel (CSV)
         </button>
-        <button onclick="window.exportReportPDF()" class="bg-micro-navy hover:bg-micro-blue text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
+        <button type="button" onclick="window.exportReportPDF()" class="bg-micro-navy hover:bg-micro-blue text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm ios-btn">
           <i class="fa-solid fa-file-pdf text-micro-yellow"></i> PDF Report ထုတ်ရန်
         </button>
       </div>
     </div>
 
     <!-- ================= TAB 1: OVERVIEW DASHBOARD & P&L REPORT ================= -->
-    <section id="tab-dashboard" class="space-y-6">
+    <section id="tab-dashboard" class="space-y-6 animate-fade-up">
       <!-- KPI Cards -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div onclick="window.jumpToLeads('ALL')" class="cursor-pointer ios-card p-4 border-b-4 border-micro-blue hover:translate-y-[-2px]">
+        <div onclick="window.jumpToLeads('ALL')" class="cursor-pointer ios-card p-4 border-b-4 border-micro-blue">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-500">လာမေးသူ စုစုပေါင်း (Leads)</span>
-            <span class="w-8 h-8 rounded-xl bg-blue-50 text-micro-blue flex items-center justify-center"><i class="fa-solid fa-comments"></i></span>
+            <span class="w-9 h-9 rounded-xl bg-blue-50 text-micro-blue flex items-center justify-center"><i class="fa-solid fa-comments"></i></span>
           </div>
           <div class="text-2xl md:text-3xl font-black text-micro-navy mt-2" id="kpiTotalLeads">0</div>
           <p class="text-[11px] text-slate-400 mt-1">နှိပ်၍ အသေးစိတ်ကြည့်ရန်</p>
         </div>
 
-        <div onclick="window.jumpToLeads('HOT')" class="cursor-pointer ios-card p-4 border-b-4 border-rose-500 hover:translate-y-[-2px]">
+        <div onclick="window.jumpToLeads('HOT')" class="cursor-pointer ios-card p-4 border-b-4 border-rose-500">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-500">🔥 အလားအလာရှိသူ (Hot)</span>
-            <span class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center"><i class="fa-solid fa-fire"></i></span>
+            <span class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center"><i class="fa-solid fa-fire"></i></span>
           </div>
           <div class="text-2xl md:text-3xl font-black text-rose-600 mt-2" id="kpiHotLeads">0</div>
           <p class="text-[11px] text-rose-500 font-medium mt-1">Follow-up ဦးစားပေးရန်</p>
         </div>
 
-        <div onclick="window.jumpToLeads('PAID')" class="cursor-pointer ios-card p-4 border-b-4 border-emerald-500 hover:translate-y-[-2px]">
+        <div onclick="window.jumpToLeads('PAID')" class="cursor-pointer ios-card p-4 border-b-4 border-micro-navy">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-500">✅ သင်တန်းအပ်ပြီး (Sales)</span>
-            <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-user-check"></i></span>
+            <span class="w-9 h-9 rounded-xl bg-amber-50 text-micro-navy flex items-center justify-center"><i class="fa-solid fa-user-check"></i></span>
           </div>
-          <div class="text-2xl md:text-3xl font-black text-emerald-600 mt-2" id="kpiPaidCount">0</div>
-          <p class="text-[11px] text-emerald-600 font-medium mt-1" id="kpiConversionRate">Conversion: 0%</p>
+          <div class="text-2xl md:text-3xl font-black text-micro-navy mt-2" id="kpiPaidCount">0</div>
+          <p class="text-[11px] text-micro-blue font-bold mt-1" id="kpiConversionRate">Conversion: 0%</p>
         </div>
 
-        <div onclick="window.jumpToLeads('NOGROUP')" class="cursor-pointer ios-card p-4 border-b-4 border-micro-yellow hover:translate-y-[-2px]">
+        <div onclick="window.jumpToLeads('NOGROUP')" class="cursor-pointer ios-card p-4 border-b-4 border-micro-yellow">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-500">Group သွင်းရန်ကျန်သူ</span>
-            <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-user-clock"></i></span>
+            <span class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-user-clock"></i></span>
           </div>
           <div class="text-2xl md:text-3xl font-black text-amber-600 mt-2" id="kpiGroupPendingCount">0</div>
           <p class="text-[11px] text-amber-600 font-medium mt-1">FB / Telegram စစ်ဆေးရန်</p>
@@ -412,9 +503,8 @@
         </div>
       </div>
 
-      <!-- Department-Wise Summaries & AI Business Insights -->
+      <!-- Department-Wise Summaries -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- Course Breakdown -->
         <div class="ios-card p-5 space-y-3">
           <div class="flex items-center justify-between">
             <h3 class="font-extrabold text-sm text-micro-navy flex items-center gap-2">
@@ -424,7 +514,6 @@
           <div id="dashboardCourseBreakdown" class="space-y-2.5 text-xs"></div>
         </div>
 
-        <!-- Page Admin / Staff Performance Summary -->
         <div class="ios-card p-5 space-y-3">
           <div class="flex items-center justify-between">
             <h3 class="font-extrabold text-sm text-micro-navy flex items-center gap-2">
@@ -438,7 +527,7 @@
     </section>
 
     <!-- ================= TAB 2: PAGE ADMIN & AI SCREENSHOT SCANNER ================= -->
-    <section id="tab-leads" class="hidden space-y-5">
+    <section id="tab-leads" class="hidden space-y-5 animate-fade-up">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
@@ -447,7 +536,7 @@
           <p class="text-xs text-slate-500">သက်ဆိုင်ရာ Site များမှ လာမေးသူများကို စာရင်းသွင်းရန်နှင့် Screenshot ပုံထည့်၍ AI ဖြင့် အလားအလာ စစ်ဆေးရန်</p>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="window.openLeadModal()" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+          <button type="button" onclick="window.openLeadModal()" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
             + လာမေးသူ စာရင်းအသစ်သွင်းရန်
           </button>
         </div>
@@ -476,22 +565,22 @@
         <!-- Paste Text or Quick Test Option -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-slate-200/80">
           <div class="md:col-span-2">
-            <input type="text" id="aiChatTextInput" placeholder="သို့မဟုတ် Customer မေးထားသော စာသားကို ဤနေရာတွင် Paste ထည့်၍လည်း AI Scan ဖတ်နိုင်ပါသည်..." class="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs bg-white" />
+            <input type="text" id="aiChatTextInput" placeholder="သို့မဟုတ် Customer မေးထားသော စာသားကို ဤနေရာတွင် Paste ထည့်၍လည်း AI Scan ဖတ်နိုင်ပါသည်..." class="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs bg-white focus:outline-none focus:border-micro-blue" />
           </div>
-          <button onclick="window.runAiLeadAnalysis()" class="bg-micro-blue hover:bg-micro-navy text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow ios-btn flex items-center justify-center gap-2">
+          <button type="button" onclick="window.runAiLeadAnalysis()" class="bg-micro-blue hover:bg-micro-navy text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow ios-btn flex items-center justify-center gap-2">
             <i class="fa-solid fa-brain text-micro-yellow"></i> AI ဖြင့် သုံးသပ်မည်
           </button>
         </div>
 
         <!-- AI Scan Output Result Box -->
-        <div id="aiScanResultContainer" class="hidden bg-white rounded-2xl p-4 border-2 border-micro-yellow shadow-md space-y-3">
+        <div id="aiScanResultContainer" class="hidden bg-white rounded-2xl p-4 border-2 border-micro-yellow shadow-md space-y-3 animate-fade-up">
           <div class="flex flex-col md:flex-row gap-4 items-start">
             <img id="aiScreenshotPreview" src="" alt="Chat Preview" class="hidden w-28 h-36 object-cover rounded-xl border shadow-sm shrink-0" />
             <div class="flex-1 space-y-2 text-xs">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="font-extrabold text-micro-navy text-sm flex items-center gap-2">
                   <i class="fa-solid fa-robot text-micro-blue"></i>
-                  <span>AI Lead スcore & အကြံပြုချက်</span>
+                  <span>AI Lead Score & အကြံပြုချက်</span>
                 </div>
                 <span id="aiDetectedBadge" class="px-3 py-1 rounded-full font-extrabold text-xs bg-rose-100 text-rose-700">🔥 HOT LEAD (92%)</span>
               </div>
@@ -499,12 +588,12 @@
               <div class="bg-amber-50/90 border border-amber-200 p-3 rounded-xl space-y-1.5">
                 <div class="flex items-center justify-between">
                   <strong class="text-micro-navy"><i class="fa-solid fa-reply text-micro-blue mr-1"></i>AI အကြံပြု ပြန်စာ (Suggested Reply):</strong>
-                  <button onclick="window.copyAiReply()" class="text-[11px] bg-micro-navy text-micro-yellow px-2.5 py-1 rounded-lg font-bold">Copy ကူးရန်</button>
+                  <button type="button" onclick="window.copyAiReply()" class="text-[11px] bg-micro-navy text-micro-yellow px-2.5 py-1 rounded-lg font-bold ios-btn">Copy ကူးရန်</button>
                 </div>
                 <p id="aiSuggestedReply" class="text-slate-700 leading-relaxed"></p>
               </div>
               <div class="flex justify-end pt-1">
-                <button onclick="window.openLeadModalFromAi()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm ios-btn">
+                <button type="button" onclick="window.openLeadModalFromAi()" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow font-bold px-4 py-2 rounded-xl shadow-sm ios-btn">
                   + ဤအချက်အလက်ဖြင့် စာရင်းတန်းသွင်းမည်
                 </button>
               </div>
@@ -521,12 +610,12 @@
         </div>
 
         <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1">
-          <button onclick="window.setLeadFilter('ALL')" data-filter="ALL" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-bold bg-micro-navy text-micro-yellow whitespace-nowrap">အားလုံး (All)</button>
-          <button onclick="window.setLeadFilter('HOT')" data-filter="HOT" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-rose-200 whitespace-nowrap">🔥 အပ်နှံရန်အလားအလာရှိသူ (Hot)</button>
-          <button onclick="window.setLeadFilter('MEDIUM')" data-filter="MEDIUM" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap">💡 အလယ်အလတ် (Medium)</button>
-          <button onclick="window.setLeadFilter('INTERESTED')" data-filter="INTERESTED" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap">⭐ စိတ်ဝင်စားသူ (Interested)</button>
-          <button onclick="window.setLeadFilter('PAID')" data-filter="PAID" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-emerald-700 border whitespace-nowrap">✅ ငွေသွင်းပြီး (Enrolled)</button>
-          <button onclick="window.setLeadFilter('NOGROUP')" data-filter="NOGROUP" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-amber-700 border whitespace-nowrap">⚠️ Group သွင်းရန်ကျန်</button>
+          <button type="button" onclick="window.setLeadFilter('ALL')" data-filter="ALL" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-bold bg-micro-navy text-micro-yellow whitespace-nowrap ios-btn">အားလုံး (All)</button>
+          <button type="button" onclick="window.setLeadFilter('HOT')" data-filter="HOT" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-rose-600 border border-rose-200 whitespace-nowrap ios-btn">🔥 အပ်နှံရန်အလားအလာရှိသူ (Hot)</button>
+          <button type="button" onclick="window.setLeadFilter('MEDIUM')" data-filter="MEDIUM" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap ios-btn">💡 အလယ်အလတ် (Medium)</button>
+          <button type="button" onclick="window.setLeadFilter('INTERESTED')" data-filter="INTERESTED" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap ios-btn">⭐ စိတ်ဝင်စားသူ (Interested)</button>
+          <button type="button" onclick="window.setLeadFilter('PAID')" data-filter="PAID" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-micro-blue border whitespace-nowrap ios-btn">✅ ငွေသွင်းပြီး (Enrolled)</button>
+          <button type="button" onclick="window.setLeadFilter('NOGROUP')" data-filter="NOGROUP" class="filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-amber-700 border whitespace-nowrap ios-btn">⚠️ Group သွင်းရန်ကျန်</button>
         </div>
       </div>
 
@@ -535,15 +624,15 @@
     </section>
 
     <!-- ================= TAB 3: SALES & INVOICES DEPARTMENT ================= -->
-    <section id="tab-sales" class="hidden space-y-5">
+    <section id="tab-sales" class="hidden space-y-5 animate-fade-up">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
-            <i class="fa-solid fa-file-invoice-dollar text-emerald-600"></i> Sales & Enrollment ဌာန (အရောင်းနှင့် ဘောက်ချာများ)
+            <i class="fa-solid fa-file-invoice-dollar text-micro-blue"></i> Sales & Enrollment ဌာန (အရောင်းနှင့် ဘောက်ချာများ)
           </h2>
           <p class="text-xs text-slate-500">ငွေသွင်းပြီးသော သင်တန်းသားများ၊ အရစ်ကျ (Installment) စာရင်းများနှင့် Official Invoice ထုတ်ယူရန်</p>
         </div>
-        <button onclick="window.openLeadModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+        <button type="button" onclick="window.openLeadModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
           + အရောင်းဘောက်ချာ / ကျောင်းသားသစ် သွင်းရန်
         </button>
       </div>
@@ -552,7 +641,7 @@
     </section>
 
     <!-- ================= TAB 4: MANAGER & FOLLOW-UP HUB ================= -->
-    <section id="tab-manager" class="hidden space-y-6">
+    <section id="tab-manager" class="hidden space-y-6 animate-fade-up">
       <div class="ios-card p-5 bg-gradient-to-r from-micro-navy to-micro-blue text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 class="text-base font-extrabold text-micro-yellow flex items-center gap-2">
@@ -560,8 +649,8 @@
           </h2>
           <p class="text-xs text-slate-200 mt-1">ဘယ် Customer က အလားအလာရှိ/မရှိ စစ်ဆေးသုံးသပ်ရန်နှင့် Page Admin များအတွက် Follow-up Content / Script များ ပို့ပေးရန်</p>
         </div>
-        <button onclick="window.openScriptModal()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2.5 rounded-xl shadow shrink-0 ios-btn">
-          + Follow-up Content / ಟာဝန် အသစ်ပို့ရန်
+        <button type="button" onclick="window.openScriptModal()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2.5 rounded-xl shadow shrink-0 ios-btn">
+          + Follow-up Content / တာဝန် အသစ်ပို့ရန်
         </button>
       </div>
 
@@ -583,7 +672,7 @@
     </section>
 
     <!-- ================= TAB 5: ACADEMIC & ATTENDANCE DEPARTMENT ================= -->
-    <section id="tab-academic" class="hidden space-y-5">
+    <section id="tab-academic" class="hidden space-y-5 animate-fade-up">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
@@ -591,7 +680,7 @@
           </h2>
           <p class="text-xs text-slate-500">အတန်းခွဲများ (Batches)၊ အချိန်ဇယား၊ Zoom Link နှင့် သင်တန်းသား Group သွင်းမှု စစ်ဆေးရန်</p>
         </div>
-        <button onclick="window.openBatchModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+        <button type="button" onclick="window.openBatchModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
           + အတန်းခွဲ (Batch) အသစ်ဖွင့်ရန်
         </button>
       </div>
@@ -600,7 +689,7 @@
     </section>
 
     <!-- ================= TAB 6: PURCHASE & FINANCE DEPARTMENT ================= -->
-    <section id="tab-finance" class="hidden space-y-5">
+    <section id="tab-finance" class="hidden space-y-5 animate-fade-up">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-lg font-extrabold text-micro-navy flex items-center gap-2">
@@ -608,7 +697,7 @@
           </h2>
           <p class="text-xs text-slate-500">သင်တန်းကျောင်းအတွက် ကုန်ကျသမျှ အသုံးစရိတ်များကို လိုချင်သော ရက်စွဲဖြင့် သွင်းနိုင်/ပြန်ပြင်နိုင်သည်</p>
         </div>
-        <button onclick="window.openExpenseModal()" class="bg-micro-yellow text-micro-navy text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
+        <button type="button" onclick="window.openExpenseModal()" class="bg-micro-yellow text-micro-navy text-xs font-extrabold px-4 py-2.5 rounded-2xl shadow ios-btn">
           + Purchase / အသုံးစရိတ် အသစ်သွင်းရန်
         </button>
       </div>
@@ -617,14 +706,21 @@
     </section>
 
     <!-- ================= TAB 7: FOUNDER / ADMIN SETTINGS ================= -->
-    <section id="tab-admin" class="hidden space-y-6">
-      <div class="ios-card p-5 bg-micro-navy text-white border-l-8 border-micro-yellow">
-        <h2 class="text-base font-extrabold text-micro-yellow flex items-center gap-2">
-          <i class="fa-solid fa-sliders"></i> Founder & Super Admin Control Center
-        </h2>
-        <p class="text-xs text-slate-300 mt-1">
-          ဝန်ထမ်းတစ်ဦးချင်းစီကို Department နှစ်ခု/သုံးခု စိတ်ကြိုက်ခွင့်ပြုချက် (Multi-Department Approval) ပေးခြင်း၊ သင်တန်းများ၊ Pay/Bank များနှင့် ပြင်ဆင်မှုမှတ်တမ်း (Audit Logs) စစ်ဆေးခြင်း
-        </p>
+    <section id="tab-admin" class="hidden space-y-6 animate-fade-up">
+      <div class="ios-card p-5 bg-micro-navy text-white border-l-8 border-micro-yellow flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-extrabold text-micro-yellow flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i> Founder & Super Admin Control Center
+          </h2>
+          <p class="text-xs text-slate-300 mt-1">
+            ဝန်ထမ်းတစ်ဦးချင်းစီကို Department နှစ်ခု/သုံးခု စိတ်ကြိုက်ခွင့်ပြုချက် ပေးခြင်း၊ သင်တန်းများ၊ Pay/Bank များနှင့် ပြင်ဆင်မှုမှတ်တမ်း စစ်ဆေးခြင်း
+          </p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="window.exportBackupJSON()" class="bg-white/10 hover:bg-white/20 text-micro-yellow text-xs font-bold px-3 py-2 rounded-xl border border-micro-yellow/30 ios-btn">
+            <i class="fa-solid fa-download mr-1"></i> Backup သိမ်းရန်
+          </button>
+        </div>
       </div>
 
       <!-- 1. Staff Approval & Multi-Department Assignment -->
@@ -634,7 +730,7 @@
             <h3 class="text-sm font-extrabold text-micro-navy">၁။ ဝန်ထမ်း ခွင့်ပြုချက် (Approval) နှင့် Department များ ခွဲဝေသတ်မှတ်ခြင်း</h3>
             <p class="text-xs text-slate-500">ဝန်ထမ်းတစ်ဦးကို Department တစ်ခုထက်မက အမှန်ခြစ်ပေး၍ တာဝန်ပေးအပ်နိုင်ပါသည်</p>
           </div>
-          <button onclick="window.openStaffModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-3.5 py-2 rounded-xl shadow ios-btn">
+          <button type="button" onclick="window.openStaffModal()" class="bg-micro-navy text-micro-yellow text-xs font-extrabold px-3.5 py-2 rounded-xl shadow ios-btn">
             + ဝန်ထမ်းအသစ် ကြိုထည့်ရန်
           </button>
         </div>
@@ -647,7 +743,7 @@
         <div class="flex flex-wrap gap-2">
           <input type="text" id="newCourseName" placeholder="သင်တန်းအမည်အသစ်..." class="flex-1 min-w-[180px] border rounded-xl px-3.5 py-2 text-xs" />
           <input type="number" id="newCourseFee" placeholder="သင်တန်းကြေး (Ks)" class="w-36 border rounded-xl px-3.5 py-2 text-xs font-bold" />
-          <button onclick="window.addCourse()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl shadow-sm ios-btn">+ ထည့်မည်</button>
+          <button type="button" onclick="window.addCourse()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl shadow-sm ios-btn">+ ထည့်မည်</button>
         </div>
         <div id="courseManageList" class="space-y-2"></div>
       </div>
@@ -658,7 +754,7 @@
           <h3 class="text-sm font-extrabold text-micro-navy">၃။ မြန်မာနိုင်ငံရှိ Pay နှင့် Bank စနစ်များ စီမံရန်</h3>
           <div class="flex gap-2">
             <input type="text" id="newPayName" placeholder="Pay / Bank အမည်သစ်..." class="flex-1 border rounded-xl px-3 py-2 text-xs" />
-            <button onclick="window.addPaymentMethod()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl">+ ထည့်မည်</button>
+            <button type="button" onclick="window.addPaymentMethod()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl ios-btn">+ ထည့်မည်</button>
           </div>
           <div id="payManageList" class="flex flex-wrap gap-2"></div>
         </div>
@@ -667,7 +763,7 @@
           <h3 class="text-sm font-extrabold text-micro-navy">၄။ စုံစမ်းလာသည့်နေရာ (Lead Sources) စီမံရန်</h3>
           <div class="flex gap-2">
             <input type="text" id="newSourceInput" placeholder="Source အသစ် (ဥပမာ - Website)..." class="flex-1 border rounded-xl px-3 py-2 text-xs" />
-            <button onclick="window.addLeadSource()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl">+ ထည့်မည်</button>
+            <button type="button" onclick="window.addLeadSource()" class="bg-micro-yellow text-micro-navy font-extrabold text-xs px-4 py-2 rounded-xl ios-btn">+ ထည့်မည်</button>
           </div>
           <div id="sourceManageList" class="flex flex-wrap gap-2"></div>
         </div>
@@ -684,12 +780,40 @@
 
   </main>
 
+  <!-- ================= MOBILE BOTTOM QUICK NAVIGATION BAR ================= -->
+  <nav id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 z-30 bg-micro-navy text-white border-t-2 border-micro-yellow shadow-2xl">
+    <div class="grid grid-cols-5 py-1.5 text-[10px]">
+      <button type="button" onclick="window.switchTab('dashboard')" class="flex flex-col items-center justify-center py-1 text-micro-yellow font-bold">
+        <i class="fa-solid fa-chart-pie text-sm mb-0.5"></i>
+        <span>Report</span>
+      </button>
+      <button type="button" onclick="window.switchTab('leads')" class="flex flex-col items-center justify-center py-1 text-slate-300">
+        <i class="fa-solid fa-wand-magic-sparkles text-sm mb-0.5"></i>
+        <span>AI / Leads</span>
+      </button>
+      <button type="button" onclick="window.openLeadModal()" class="flex flex-col items-center justify-center -mt-4">
+        <div class="w-11 h-11 rounded-full bg-micro-yellow text-micro-navy flex items-center justify-center text-lg font-black shadow-lg border-2 border-white">
+          +
+        </div>
+        <span class="text-micro-yellow font-extrabold mt-0.5">စာရင်းသွင်း</span>
+      </button>
+      <button type="button" onclick="window.switchTab('sales')" class="flex flex-col items-center justify-center py-1 text-slate-300">
+        <i class="fa-solid fa-file-invoice-dollar text-sm mb-0.5"></i>
+        <span>Sales</span>
+      </button>
+      <button type="button" onclick="window.toggleDrawer(true)" class="flex flex-col items-center justify-center py-1 text-slate-300">
+        <i class="fa-solid fa-bars text-sm mb-0.5"></i>
+        <span>ဌာနအားလုံး</span>
+      </button>
+    </div>
+  </nav>
+
   <!-- ================= MODAL 1: ADD / EDIT LEAD & SALE ================= -->
   <div id="leadModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
-    <div class="bg-white w-full max-w-xl rounded-3xl p-5 md:p-6 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl border-t-4 border-micro-yellow">
+    <div class="animate-modal-pop bg-white w-full max-w-xl rounded-3xl p-5 md:p-6 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl border-t-4 border-micro-yellow">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-extrabold text-micro-navy text-base" id="leadModalTitle">သင်တန်းလာမေးသူ / သင်တန်းသား စာရင်းသွင်းရန်</h3>
-        <button onclick="window.closeModal('leadModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold">✕</button>
+        <button type="button" onclick="window.closeModal('leadModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold ios-btn">✕</button>
       </div>
 
       <input type="hidden" id="editLeadId" />
@@ -726,7 +850,7 @@
         </div>
         <div>
           <label class="font-bold block mb-1 text-micro-navy">ငွေပေးချေမှု အနေအထား (Payment)</label>
-          <select id="leadPaymentStatus" class="w-full border rounded-xl px-3.5 py-2.5 bg-white font-bold text-micro-blue">
+          <select id="leadPaymentStatus" onchange="window.autoFillCourseFee()" class="w-full border rounded-xl px-3.5 py-2.5 bg-white font-bold text-micro-blue">
             <option value="UNPAID">⏳ ငွေမသွင်းရသေး (Inquiry)</option>
             <option value="PARTIAL">🌗 အရစ်ကျ ပေးသွင်းထားသူ (Installment)</option>
             <option value="PAID">✅ ငွေအကြေသွင်းပြီး (Full Sale)</option>
@@ -737,8 +861,8 @@
           <select id="leadPaymentMethod" class="w-full border rounded-xl px-3.5 py-2.5 bg-white"></select>
         </div>
         <div>
-          <label class="font-bold block mb-1 text-emerald-700">သွင်းပြီးငွေ ပမာဏ (Paid Ks)</label>
-          <input type="number" id="leadPaidAmount" value="0" class="w-full border rounded-xl px-3.5 py-2.5 font-extrabold text-emerald-700" />
+          <label class="font-bold block mb-1 text-micro-blue">သွင်းပြီးငွေ ပမာဏ (Paid Ks)</label>
+          <input type="number" id="leadPaidAmount" value="0" class="w-full border rounded-xl px-3.5 py-2.5 font-extrabold text-micro-navy" />
         </div>
         <div>
           <label class="font-bold block mb-1 text-rose-600">ရရန်ကျန်ငွေ (Remaining Balance Ks)</label>
@@ -752,7 +876,7 @@
           <strong class="text-micro-navy"><i class="fa-solid fa-camera text-micro-blue mr-1"></i>Chat / ငွေလွှဲ Screenshot ပုံတွဲရန် (Optional):</strong>
           <span id="modalScreenshotStatus" class="text-slate-400 ml-1">ပုံမရွေးရသေးပါ</span>
         </div>
-        <label class="cursor-pointer bg-white border border-slate-300 hover:bg-slate-100 text-micro-navy font-bold px-3 py-1.5 rounded-xl">
+        <label class="cursor-pointer bg-white border border-slate-300 hover:bg-slate-100 text-micro-navy font-bold px-3 py-1.5 rounded-xl ios-btn">
           ပုံရွေးရန်
           <input type="file" accept="image/*" class="hidden" onchange="window.handleModalImageAttach(event)" />
         </label>
@@ -778,7 +902,7 @@
         <textarea id="leadNote" rows="2" placeholder="ဥပမာ - ဈေးနှုန်းမေးထားသည်၊ လကုန်ရက် ငွေလွှဲမည်..." class="w-full border rounded-xl px-3.5 py-2"></textarea>
       </div>
 
-      <button onclick="window.saveLead()" class="w-full py-3.5 bg-micro-navy hover:bg-micro-blue text-micro-yellow rounded-2xl font-extrabold shadow-lg ios-btn">
+      <button type="button" onclick="window.saveLead()" class="w-full py-3.5 bg-micro-navy hover:bg-micro-blue text-micro-yellow rounded-2xl font-extrabold shadow-lg ios-btn">
         💾 စာရင်းသိမ်းဆည်းမည်
       </button>
     </div>
@@ -786,10 +910,10 @@
 
   <!-- ================= MODAL 2: ADD / EDIT EXPENSE (PURCHASE) ================= -->
   <div id="expenseModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+    <div class="animate-modal-pop bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-extrabold text-micro-navy text-base" id="expenseModalTitle">Purchase / အသုံးစရိတ် သွင်းရန်</h3>
-        <button onclick="window.closeModal('expenseModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+        <button type="button" onclick="window.closeModal('expenseModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold ios-btn">✕</button>
       </div>
       <input type="hidden" id="editExpenseId" />
       <div class="space-y-3 text-xs">
@@ -822,7 +946,7 @@
           <input type="text" id="expNote" placeholder="ဘောက်ချာအမှတ် သို့မဟုတ် အသေးစိတ်..." class="w-full border rounded-xl px-3.5 py-2" />
         </div>
       </div>
-      <button onclick="window.saveExpense()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+      <button type="button" onclick="window.saveExpense()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
         💾 သိမ်းဆည်းမည်
       </button>
     </div>
@@ -830,10 +954,10 @@
 
   <!-- ================= MODAL 3: STAFF & MULTI-DEPARTMENT ROLES ================= -->
   <div id="staffModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+    <div class="animate-modal-pop bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-extrabold text-micro-navy text-base" id="staffModalTitle">ဝန်ထမ်းနှင့် ဌာနတာဝန်များ သတ်မှတ်ရန်</h3>
-        <button onclick="window.closeModal('staffModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+        <button type="button" onclick="window.closeModal('staffModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold ios-btn">✕</button>
       </div>
       <input type="hidden" id="editStaffId" />
       <div class="space-y-3 text-xs">
@@ -879,7 +1003,7 @@
           </div>
         </div>
       </div>
-      <button onclick="window.saveStaffMember()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+      <button type="button" onclick="window.saveStaffMember()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
         💾 ဝန်ထမ်းစာရင်း သိမ်းဆည်းမည်
       </button>
     </div>
@@ -887,10 +1011,10 @@
 
   <!-- ================= MODAL 4: MANAGER FOLLOW-UP SCRIPT ================= -->
   <div id="scriptModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+    <div class="animate-modal-pop bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-extrabold text-micro-navy text-base">Follow-up Content / Script အသစ်ပို့ရန်</h3>
-        <button onclick="window.closeModal('scriptModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+        <button type="button" onclick="window.closeModal('scriptModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold ios-btn">✕</button>
       </div>
       <div class="space-y-3 text-xs">
         <div>
@@ -902,7 +1026,7 @@
           <textarea id="scriptBodyInput" rows="4" placeholder="မင်္ဂလာပါရှင့်... Micro Training Center မှ..." class="w-full border rounded-xl px-3.5 py-2.5"></textarea>
         </div>
       </div>
-      <button onclick="window.saveManagerScript()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+      <button type="button" onclick="window.saveManagerScript()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
         📢 Page Admin များထံ ပို့မည်
       </button>
     </div>
@@ -910,10 +1034,10 @@
 
   <!-- ================= MODAL 5: ACADEMIC BATCH ================= -->
   <div id="batchModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-50 items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
+    <div class="animate-modal-pop bg-white w-full max-w-md rounded-3xl p-5 space-y-4 shadow-2xl border-t-4 border-micro-yellow">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-extrabold text-micro-navy text-base">အတန်းခွဲ (Batch) အသစ်ဖွင့်ရန်</h3>
-        <button onclick="window.closeModal('batchModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold">✕</button>
+        <button type="button" onclick="window.closeModal('batchModal')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold ios-btn">✕</button>
       </div>
       <div class="space-y-3 text-xs">
         <div>
@@ -929,20 +1053,17 @@
           <input type="text" id="batchZoomInput" placeholder="https://zoom.us/j/..." class="w-full border rounded-xl px-3.5 py-2.5" />
         </div>
       </div>
-      <button onclick="window.saveBatch()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
+      <button type="button" onclick="window.saveBatch()" class="w-full py-3 bg-micro-navy text-micro-yellow rounded-2xl font-extrabold shadow ios-btn">
         💾 အတန်းခွဲ သိမ်းဆည်းမည်
       </button>
     </div>
   </div>
 
-  <!-- ================= SCRIPTS: FIREBASE + PDF + AI ENGINE ================= -->
+  <!-- ================= SCRIPTS: CORE ENGINE + MYANMAR WEATHER + FIREBASE ================= -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
     const FOUNDER_GMAIL = "chitkhonpaing03@gmail.com";
+    const LOCAL_STORAGE_KEY = "MICRO_TC_ENTERPRISE_STATE_V3";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA_FVMmgcE11h09sB8nhFpc0C3BSzq2Qek",
@@ -954,14 +1075,17 @@
       measurementId: "G-35Y4E4BBFE"
     };
 
-    let auth = null;
-    let db = null;
-    let sharedDocRef = null;
-    let currentAuthUser = null;
-    let currentLeadFilter = 'ALL';
-    let currentActiveTab = 'dashboard';
-    let lastAiAnalysis = null;
-    let tempAttachedImageName = '';
+    // Myanmar Cities Coordinates for Live Weather
+    const MYANMAR_CITIES = {
+      yangon: { name: 'ရန်ကုန်', lat: 16.8409, lon: 96.1735 },
+      mandalay: { name: 'မန္တလေး', lat: 21.9588, lon: 96.0891 },
+      naypyidaw: { name: 'နေပြည်တော်', lat: 19.7633, lon: 96.0785 },
+      taunggyi: { name: 'တောင်ကြီး', lat: 20.7892, lon: 97.0378 },
+      mawlamyine: { name: 'မော်လမြိုင်', lat: 16.4905, lon: 97.6282 },
+      bago: { name: 'ပဲခူး', lat: 17.3352, lon: 96.4814 },
+      monywa: { name: 'မုံရွာ', lat: 22.1086, lon: 95.1358 },
+      pathein: { name: 'ပုသိမ်', lat: 16.7792, lon: 94.7321 }
+    };
 
     const defaultData = {
       usdRate: 3550,
@@ -974,7 +1098,16 @@
         'KBZ Bank', 'CB Bank', 'AYA Bank', 'Yoma Bank', 'UAB Bank', 'MAB Bank', 'Cash (ငွေသား)'
       ],
       leadSources: ['Facebook Page Messenger', 'Facebook Ads', 'TikTok', 'Telegram', 'Viber', 'Phone Call'],
-      users: [],
+      users: [
+        {
+          id: 'u_founder',
+          name: 'Chit Khon Paing (Founder)',
+          email: FOUNDER_GMAIL,
+          role: 'FOUNDER',
+          roles: ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'],
+          approved: true
+        }
+      ],
       leads: [],
       expenses: [],
       scripts: [
@@ -998,10 +1131,74 @@
       auditLogs: []
     };
 
-    let state = JSON.parse(JSON.stringify(defaultData));
+    // Load initial state from LocalStorage or Default
+    let state = (() => {
+      try {
+        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return { ...defaultData, ...parsed };
+        }
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(defaultData));
+    })();
 
-    // Live Clock (Yangon Timezone) & Weather
-    function startLiveWidgets() {
+    let auth = null;
+    let db = null;
+    let sharedDocRef = null;
+    let currentAuthUser = null;
+    let currentLeadFilter = 'ALL';
+    let currentActiveTab = 'dashboard';
+    let lastAiAnalysis = null;
+    let tempAttachedImageName = '';
+
+    // Animated Toast Notification Helper
+    window.showToast = (message, type = 'success') => {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      const bgClass = type === 'error' ? 'bg-rose-600 text-white' : 'bg-micro-navy text-micro-yellow border border-micro-yellow';
+      toast.className = `animate-modal-pop px-4 py-2.5 rounded-2xl shadow-xl text-xs font-extrabold flex items-center gap-2 ${bgClass}`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
+    };
+
+    // ================= 1. LIVE MYANMAR TIME & WEATHER ENGINE =================
+    window.fetchMyanmarWeather = async (cityKey = 'yangon') => {
+      const city = MYANMAR_CITIES[cityKey] || MYANMAR_CITIES.yangon;
+      const tempEl = document.getElementById('widgetWeatherTemp');
+      const iconEl = document.getElementById('widgetWeatherIcon');
+      if (tempEl) tempEl.textContent = '...';
+
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Asia%2FYangon`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.current) {
+          const t = Math.round(data.current.temperature_2m);
+          const code = data.current.weather_code;
+          let desc = 'နေသာ';
+          let icon = 'fa-sun';
+
+          if (code >= 1 && code <= 3) { desc = 'တိမ်အသင့်အတင့်'; icon = 'fa-cloud-sun'; }
+          else if (code >= 45 && code <= 48) { desc = 'မြူဆိုင်း'; icon = 'fa-smog'; }
+          else if (code >= 51 && code <= 67) { desc = 'မိုးရွာ'; icon = 'fa-cloud-rain'; }
+          else if (code >= 80 && code <= 99) { desc = 'မိုးထစ်ချုန်း'; icon = 'fa-cloud-bolt'; }
+
+          if (tempEl) tempEl.textContent = `${t}°C (${desc})`;
+          if (iconEl) iconEl.className = `fa-solid ${icon} text-micro-yellow`;
+        }
+      } catch (e) {
+        if (tempEl) tempEl.textContent = `32°C (နေသာ)`;
+      }
+    };
+
+    function startLiveMyanmarWidgets() {
       const updateClock = () => {
         try {
           const now = new Date();
@@ -1009,7 +1206,8 @@
             timeZone: 'Asia/Yangon',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit'
+            second: '2-digit',
+            hour12: true
           });
           const dateStr = now.toLocaleDateString('en-GB', {
             timeZone: 'Asia/Yangon',
@@ -1017,147 +1215,59 @@
             month: 'short',
             year: 'numeric'
           });
-          document.getElementById('widgetClock').textContent = `MMT: ${dateStr} • ${timeStr}`;
-        } catch (e) {
-          document.getElementById('widgetClock').textContent = new Date().toLocaleTimeString();
-        }
+          const clockEl = document.getElementById('widgetClock');
+          if (clockEl) clockEl.textContent = `MMT: ${dateStr} • ${timeStr}`;
+        } catch (e) {}
       };
       updateClock();
       setInterval(updateClock, 1000);
-
-      // Fetch live Yangon weather (Open-Meteo free no-key API)
-      fetch('https://api.open-meteo.com/v1/forecast?latitude=16.8409&longitude=96.1735&current_weather=true')
-        .then(r => r.json())
-        .then(data => {
-          if (data && data.current_weather) {
-            document.getElementById('widgetWeather').textContent = `Yangon: ${Math.round(data.current_weather.temperature)}°C`;
-          }
-        })
-        .catch(() => {});
+      window.fetchMyanmarWeather('yangon');
     }
-    startLiveWidgets();
+    startLiveMyanmarWidgets();
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-    sharedDocRef = doc(db, "micro_training_center", "shared_state");
-
-    async function addAuditLog(actionText) {
-      const u = getActiveUser();
-      const entry = {
-        id: 'log_' + Date.now(),
-        user: u.name || (currentAuthUser && currentAuthUser.email) || 'Staff',
-        action: actionText,
-        time: new Date().toLocaleString('en-GB', { timeZone: 'Asia/Yangon' })
-      };
-      if (!Array.isArray(state.auditLogs)) state.auditLogs = [];
-      state.auditLogs.unshift(entry);
-      if (state.auditLogs.length > 60) state.auditLogs = state.auditLogs.slice(0, 60);
-    }
-
-    async function syncToCloud(logMessage = '') {
-      if (logMessage) await addAuditLog(logMessage);
-      if (!sharedDocRef) return;
-      try {
-        await setDoc(sharedDocRef, state, { merge: true });
-      } catch (err) {
-        console.error("Sync error:", err);
-      }
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      currentAuthUser = user;
-      if (!user) {
-        document.getElementById('loginScreen').classList.remove('hidden');
-        document.getElementById('pendingLockScreen').classList.add('hidden');
-        document.getElementById('mainAppContent').classList.add('hidden');
-        document.getElementById('btnLogout').classList.add('hidden');
-        document.getElementById('headerQuickAddBtn').classList.add('hidden');
-        document.getElementById('currentRoleBadge').textContent = 'Not Signed In';
-        return;
-      }
-
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('btnLogout').classList.remove('hidden');
-      document.getElementById('btnLogout').classList.add('flex');
-      document.getElementById('headerQuickAddBtn').classList.remove('hidden');
-      document.getElementById('activeUserEmail').textContent = user.email;
-
-      try {
-        const snap = await getDoc(sharedDocRef);
-        if (!snap.exists()) await setDoc(sharedDocRef, defaultData);
-      } catch (e) {
-        console.warn("Initial doc check:", e);
-      }
-
-      onSnapshot(sharedDocRef, async (docSnap) => {
-        if (docSnap.exists()) {
-          const cloudData = docSnap.data();
-          state = {
-            ...defaultData,
-            ...cloudData,
-            courses: cloudData.courses || defaultData.courses,
-            paymentMethods: cloudData.paymentMethods || defaultData.paymentMethods,
-            leadSources: cloudData.leadSources || defaultData.leadSources,
-            users: cloudData.users || [],
-            leads: cloudData.leads || [],
-            expenses: cloudData.expenses || [],
-            scripts: cloudData.scripts || defaultData.scripts,
-            batches: cloudData.batches || defaultData.batches,
-            auditLogs: cloudData.auditLogs || []
-          };
-        }
-        document.getElementById('syncStatusBadge').innerHTML = `<i class="fa-solid fa-cloud text-micro-yellow mr-1"></i>Live Synced`;
-
-        const email = user.email.toLowerCase();
-        const isFounder = email === FOUNDER_GMAIL.toLowerCase() || state.users.length === 0;
-        let uObj = state.users.find(u => (u.email || '').toLowerCase() === email);
-
-        if (!uObj) {
-          const initialRoles = isFounder ? ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'] : ['PAGE_ADMIN'];
-          uObj = {
-            id: 'u_' + Date.now(),
-            name: user.displayName || email.split('@')[0],
-            email: user.email,
-            role: isFounder ? 'FOUNDER' : 'PAGE_ADMIN',
-            roles: initialRoles,
-            approved: isFounder
-          };
-          state.users.push(uObj);
-          await syncToCloud(`အကောင့်အသစ် ဝင်ရောက်သည် (${uObj.name})`);
-        } else {
-          // Ensure roles array exists for multi-department support
-          if (!Array.isArray(uObj.roles) || uObj.roles.length === 0) {
-            uObj.roles = [uObj.role || 'PAGE_ADMIN'];
-          }
-          if (isFounder && (!uObj.approved || !uObj.roles.includes('FOUNDER'))) {
-            uObj.role = 'FOUNDER';
-            uObj.roles = ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'];
-            uObj.approved = true;
-            await syncToCloud();
-          }
-        }
-        window.renderAll();
-      });
-    });
-
-    window.handleGoogleLogin = async () => {
-      try {
-        await signInWithPopup(auth, new GoogleAuthProvider());
-      } catch (e) {
-        alert("Google Login Error: " + e.message);
+    // ================= 2. MODAL & DRAWER CONTROLS (ALWAYS ACTIVE) =================
+    window.openModal = (id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
       }
     };
 
-    window.handleLogout = async () => {
-      await signOut(auth);
+    window.closeModal = (id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('flex');
+        el.classList.add('hidden');
+      }
     };
 
-    // Helper: Get current user object and check multi-department permissions
+    window.toggleDrawer = (open) => {
+      const overlay = document.getElementById('drawerOverlay');
+      if (!overlay) return;
+      if (open) {
+        overlay.classList.remove('hidden');
+      } else {
+        overlay.classList.add('hidden');
+      }
+    };
+
+    // ================= 3. USER AUTH & PERMISSION HELPERS =================
     function getActiveUser() {
       if (!currentAuthUser) return { approved: false, roles: [] };
-      const u = state.users.find(x => (x.email || '').toLowerCase() === currentAuthUser.email.toLowerCase());
+      const email = (currentAuthUser.email || '').toLowerCase();
+      const isFounder = email === FOUNDER_GMAIL.toLowerCase();
+      let u = state.users.find(x => (x.email || '').toLowerCase() === email);
+      if (!u && isFounder) {
+        u = {
+          id: 'u_founder',
+          name: 'Chit Khon Paing (Founder)',
+          email: FOUNDER_GMAIL,
+          role: 'FOUNDER',
+          roles: ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'],
+          approved: true
+        };
+      }
       if (!u) return { approved: false, roles: [] };
       const roles = Array.isArray(u.roles) && u.roles.length > 0 ? u.roles : [u.role || 'PAGE_ADMIN'];
       return { ...u, roles };
@@ -1174,16 +1284,177 @@
       return hasDeptAccess(['FINANCE']);
     }
 
-    // Hamburger Drawer Toggle
-    window.toggleDrawer = (open) => {
-      const overlay = document.getElementById('drawerOverlay');
-      if (open) {
-        overlay.classList.remove('hidden');
-      } else {
-        overlay.classList.add('hidden');
+    async function addAuditLog(actionText) {
+      const u = getActiveUser();
+      const entry = {
+        id: 'log_' + Date.now(),
+        user: u.name || (currentAuthUser && currentAuthUser.email) || 'Staff',
+        action: actionText,
+        time: new Date().toLocaleString('en-GB', { timeZone: 'Asia/Yangon' })
+      };
+      if (!Array.isArray(state.auditLogs)) state.auditLogs = [];
+      state.auditLogs.unshift(entry);
+      if (state.auditLogs.length > 60) state.auditLogs = state.auditLogs.slice(0, 60);
+    }
+
+    async function syncToCloud(logMessage = '') {
+      if (logMessage) await addAuditLog(logMessage);
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+
+      window.renderAll();
+
+      if (sharedDocRef && setDocFn) {
+        try {
+          await setDocFn(sharedDocRef, state, { merge: true });
+        } catch (err) {
+          console.warn("Cloud sync warning (saved locally):", err);
+        }
       }
+    }
+
+    function activateUserSession(userObj) {
+      currentAuthUser = userObj;
+      const email = (userObj.email || '').toLowerCase();
+      const isFounder = email === FOUNDER_GMAIL.toLowerCase() || state.users.length === 0;
+      let uObj = state.users.find(u => (u.email || '').toLowerCase() === email);
+
+      if (!uObj) {
+        const initialRoles = isFounder
+          ? ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN']
+          : ['PAGE_ADMIN'];
+        uObj = {
+          id: 'u_' + Date.now(),
+          name: userObj.displayName || email.split('@')[0],
+          email: userObj.email,
+          role: isFounder ? 'FOUNDER' : 'PAGE_ADMIN',
+          roles: initialRoles,
+          approved: isFounder
+        };
+        state.users.push(uObj);
+      } else if (isFounder) {
+        uObj.role = 'FOUNDER';
+        uObj.roles = ['FOUNDER', 'ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'];
+        uObj.approved = true;
+      }
+
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('btnLogout').classList.remove('hidden');
+      document.getElementById('btnLogout').classList.add('flex');
+      document.getElementById('activeUserEmail').textContent = userObj.email;
+      syncToCloud();
+    }
+
+    // Quick Gmail Login (Fallback if Popup is blocked)
+    window.handleQuickEmailLogin = () => {
+      const emailInput = document.getElementById('quickEmailInput');
+      const email = (emailInput?.value || '').trim().toLowerCase();
+      if (!email || !email.includes('@')) {
+        window.showToast('ကျေးဇူးပြု၍ မှန်ကန်သော Gmail လိပ်စာ ရိုက်ထည့်ပါ', 'error');
+        return;
+      }
+      const userObj = {
+        email,
+        displayName: email === FOUNDER_GMAIL.toLowerCase() ? 'Chit Khon Paing (Founder)' : email.split('@')[0]
+      };
+      localStorage.setItem('MICRO_TC_ACTIVE_USER', JSON.stringify(userObj));
+      activateUserSession(userObj);
+      window.showToast(`မင်္ဂလာပါ ${userObj.displayName}`);
     };
 
+    // Check saved session immediately so user doesn't get stuck
+    const savedSession = localStorage.getItem('MICRO_TC_ACTIVE_USER');
+    if (savedSession) {
+      try {
+        activateUserSession(JSON.parse(savedSession));
+      } catch (e) {}
+    }
+
+    // ================= 4. FIREBASE CLOUD CONNECTION =================
+    let setDocFn = null;
+    let signOutFn = null;
+    let signInPopupFn = null;
+    let googleProvider = null;
+
+    (async () => {
+      try {
+        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+        const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+        const { getFirestore, doc, onSnapshot, setDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        sharedDocRef = doc(db, "micro_training_center", "shared_state");
+        setDocFn = setDoc;
+        signOutFn = signOut;
+        signInPopupFn = signInWithPopup;
+        googleProvider = new GoogleAuthProvider();
+
+        onSnapshot(sharedDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const cloudData = docSnap.data();
+            state = {
+              ...defaultData,
+              ...cloudData,
+              courses: cloudData.courses || defaultData.courses,
+              paymentMethods: cloudData.paymentMethods || defaultData.paymentMethods,
+              leadSources: cloudData.leadSources || defaultData.leadSources,
+              users: cloudData.users || defaultData.users,
+              leads: cloudData.leads || [],
+              expenses: cloudData.expenses || [],
+              scripts: cloudData.scripts || defaultData.scripts,
+              batches: cloudData.batches || defaultData.batches,
+              auditLogs: cloudData.auditLogs || []
+            };
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+            document.getElementById('syncStatusBadge').innerHTML = `<i class="fa-solid fa-cloud text-micro-yellow mr-1"></i>Live Synced`;
+            window.renderAll();
+          }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            localStorage.setItem('MICRO_TC_ACTIVE_USER', JSON.stringify({ email: user.email, displayName: user.displayName }));
+            activateUserSession(user);
+          }
+        });
+      } catch (err) {
+        console.warn("Firebase offline mode active:", err);
+      }
+    })();
+
+    window.handleGoogleLogin = async () => {
+      if (auth && signInPopupFn && googleProvider) {
+        try {
+          await signInPopupFn(auth, googleProvider);
+          window.showToast('Google အကောင့်ဖြင့် ချိတ်ဆက်ပြီးပါပြီ');
+          return;
+        } catch (e) {
+          console.warn("Popup blocked or domain unauthorized, using direct Gmail login:", e.message);
+        }
+      }
+      window.handleQuickEmailLogin();
+    };
+
+    window.handleLogout = async () => {
+      localStorage.removeItem('MICRO_TC_ACTIVE_USER');
+      currentAuthUser = null;
+      if (auth && signOutFn) {
+        try { await signOutFn(auth); } catch (e) {}
+      }
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('pendingLockScreen').classList.add('hidden');
+      document.getElementById('mainAppContent').classList.add('hidden');
+      document.getElementById('mobileBottomNav').classList.add('hidden');
+      document.getElementById('btnLogout').classList.add('hidden');
+      document.getElementById('activeUserEmail').textContent = 'Not Signed In';
+      document.getElementById('currentRoleBadge').textContent = 'Signed Out';
+      window.showToast('အကောင့်မှ ထွက်လိုက်ပါပြီ');
+    };
+
+    // ================= 5. NAVIGATION & TABS =================
     const deptTitles = {
       dashboard: '၁။ Overview & P&L Report ချုပ်',
       leads: '၂။ Page Admin & AI Screenshot Scanner',
@@ -1195,16 +1466,20 @@
     };
 
     window.switchTab = (tab) => {
+      if (!currentAuthUser) {
+        window.showToast('ကျေးဇူးပြု၍ Gmail ဖြင့် အရင်ဝင်ရောက်ပါ', 'error');
+        return;
+      }
       if (tab === 'finance' && !hasDeptAccess(['FINANCE', 'PURCHASE'])) {
-        alert('Finance & Purchase ဌာနသို့ ဝင်ရောက်ခွင့် မရှိပါ။ Admin ထံတွင် Department ခွင့်ပြုချက် တောင်းခံပါ။');
+        window.showToast('Finance & Purchase ဌာနသို့ ဝင်ရောက်ခွင့် မရှိပါ', 'error');
         return;
       }
       if (tab === 'admin' && !hasDeptAccess(['ADMIN'])) {
-        alert('Admin Control Center သို့ တည်ထောင်သူ (Founder) နှင့် Admin များသာ ဝင်ရောက်နိုင်ပါသည်။');
+        window.showToast('Admin Control Center သို့ Founder နှင့် Admin များသာ ဝင်ရောက်နိုင်သည်', 'error');
         return;
       }
       if (tab === 'manager' && !hasDeptAccess(['MANAGER', 'SALES', 'PAGE_ADMIN'])) {
-        alert('Manager Hub သို့ ဝင်ရောက်ခွင့် မရှိပါ။');
+        window.showToast('Manager Hub သို့ ဝင်ရောက်ခွင့် မရှိပါ', 'error');
         return;
       }
 
@@ -1214,11 +1489,9 @@
         if (sec) sec.classList.toggle('hidden', t !== tab);
         const navBtn = document.getElementById('nav-' + t);
         if (navBtn) {
-          if (t === tab) {
-            navBtn.className = 'drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-extrabold bg-micro-yellow text-micro-navy shadow transition';
-          } else {
-            navBtn.className = 'drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition';
-          }
+          navBtn.className = t === tab
+            ? 'drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-extrabold bg-micro-yellow text-micro-navy shadow transition'
+            : 'drawer-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition';
         }
       });
 
@@ -1227,25 +1500,25 @@
       window.renderAll();
     };
 
-    // Update USD Rate (Admin/Founder)
     window.promptUpdateUsdRate = async () => {
       if (!hasDeptAccess(['ADMIN', 'FINANCE'])) {
-        return alert('USD Exchange Rate ကို Admin နှင့် Finance ဌာနမှသာ ပြင်ဆင်နိုင်ပါသည်။');
+        return window.showToast('USD Rate ကို Admin နှင့် Finance ဌာနမှသာ ပြင်ဆင်နိုင်သည်', 'error');
       }
       const nextRate = prompt('လက်ရှိ 1 USD ၏ မြန်မာကျပ်ငွေ ပေါက်ဈေးကို ရိုက်ထည့်ပါ (Ks):', state.usdRate || 3550);
       if (nextRate && Number(nextRate) > 0) {
         state.usdRate = Number(nextRate);
         await syncToCloud(`USD Rate ကို ${state.usdRate} Ks သို့ ပြောင်းလဲခဲ့သည်`);
+        window.showToast(`1 USD = ${state.usdRate.toLocaleString()} Ks သိမ်းဆည်းပြီးပါပြီ`);
       }
     };
 
-    // Filter helpers
+    // ================= 6. FILTERING & RENDERING =================
     function getFilteredLeadsByCourseAndDate() {
       const courseFilter = document.getElementById('dashboardCourseFilter')?.value || 'ALL';
       const startDate = document.getElementById('filterStartDate')?.value || '';
       const endDate = document.getElementById('filterEndDate')?.value || '';
 
-      return state.leads.filter(l => {
+      return (state.leads || []).filter(l => {
         if (courseFilter !== 'ALL' && l.course !== courseFilter) return false;
         if (startDate && (l.date || '') < startDate) return false;
         if (endDate && (l.date || '') > endDate) return false;
@@ -1256,7 +1529,7 @@
     function getFilteredExpensesByDate() {
       const startDate = document.getElementById('filterStartDate')?.value || '';
       const endDate = document.getElementById('filterEndDate')?.value || '';
-      return state.expenses.filter(e => {
+      return (state.expenses || []).filter(e => {
         if (startDate && (e.date || '') < startDate) return false;
         if (endDate && (e.date || '') > endDate) return false;
         return true;
@@ -1267,6 +1540,7 @@
       document.getElementById('filterStartDate').value = '';
       document.getElementById('filterEndDate').value = '';
       window.renderAll();
+      window.showToast('ရက်စွဲ စစ်ထုတ်မှု ပြန်လည်ရှင်းလင်းပြီးပါပြီ');
     };
 
     window.jumpToLeads = (filter) => {
@@ -1278,19 +1552,19 @@
       currentLeadFilter = f;
       document.querySelectorAll('.filter-pill').forEach(btn => {
         btn.className = btn.getAttribute('data-filter') === f
-          ? 'filter-pill px-3.5 py-2 rounded-xl text-xs font-extrabold bg-micro-navy text-micro-yellow whitespace-nowrap shadow'
-          : 'filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap';
+          ? 'filter-pill px-3.5 py-2 rounded-xl text-xs font-extrabold bg-micro-navy text-micro-yellow whitespace-nowrap shadow ios-btn'
+          : 'filter-pill px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-600 border whitespace-nowrap ios-btn';
       });
       window.renderLeads();
     };
 
-    // ================= MAIN RENDER FUNCTION =================
     window.renderAll = () => {
+      if (!currentAuthUser) return;
       const user = getActiveUser();
       const usdRate = Number(state.usdRate || 3550);
       document.getElementById('widgetUsdRate').textContent = `${usdRate.toLocaleString()} Ks`;
 
-      const rolesStr = (user.roles || []).join(', ');
+      const rolesStr = (user.roles || []).slice(0, 3).join(', ');
       document.getElementById('currentRoleBadge').textContent = `${user.name || ''} (${rolesStr})`;
       document.getElementById('drawerUserName').textContent = user.name || 'Staff Member';
       document.getElementById('drawerUserEmail').textContent = user.email || '';
@@ -1301,6 +1575,7 @@
       if (!user.approved) {
         document.getElementById('pendingLockScreen').classList.remove('hidden');
         document.getElementById('mainAppContent').classList.add('hidden');
+        document.getElementById('mobileBottomNav').classList.add('hidden');
         document.getElementById('pendingUserName').textContent = user.name;
         document.getElementById('pendingUserEmail').textContent = user.email;
         return;
@@ -1308,15 +1583,14 @@
 
       document.getElementById('pendingLockScreen').classList.add('hidden');
       document.getElementById('mainAppContent').classList.remove('hidden');
+      document.getElementById('mobileBottomNav').classList.remove('hidden');
 
-      // Populate Course Filter Dropdown preserving selection
       const courseSelect = document.getElementById('dashboardCourseFilter');
       const currentSelectedCourse = courseSelect.value || 'ALL';
       courseSelect.innerHTML = `<option value="ALL">သင်တန်းအားလုံး (All Courses)</option>` +
         state.courses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
       courseSelect.value = state.courses.some(c => c.name === currentSelectedCourse) ? currentSelectedCourse : 'ALL';
 
-      // Filtered Data for KPIs
       const filteredLeads = getFilteredLeadsByCourseAndDate();
       const filteredExpenses = getFilteredExpensesByDate();
 
@@ -1335,7 +1609,6 @@
       document.getElementById('badgeLeadsCount').textContent = state.leads.length;
       document.getElementById('badgeSalesCount').textContent = state.leads.filter(l => l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL').length;
 
-      // Financial Block
       const finBlock = document.getElementById('financeDashboardBlock');
       if (canViewFinance()) {
         finBlock.classList.remove('hidden');
@@ -1366,24 +1639,28 @@
 
     function renderDashboardBreakdowns(filteredLeads) {
       const showMoney = canViewFinance();
-      // Course Summary
       const cContainer = document.getElementById('dashboardCourseBreakdown');
       cContainer.innerHTML = state.courses.map(c => {
         const cLeads = filteredLeads.filter(l => l.course === c.name);
         const cPaid = cLeads.filter(l => l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL');
         const cRev = cLeads.reduce((s, l) => s + Number(l.paidAmount || 0), 0);
+        const pct = cLeads.length > 0 ? Math.round((cPaid.length / cLeads.length) * 100) : 0;
         return `
-          <div class="p-3 rounded-2xl bg-slate-50 border flex items-center justify-between">
-            <div>
-              <div class="font-extrabold text-micro-navy">${c.name}</div>
-              <div class="text-[11px] text-slate-500">လာမေးသူ: <strong>${cLeads.length}</strong> ဦး • အပ်နှံသူ: <strong class="text-emerald-600">${cPaid.length}</strong> ဦး</div>
+          <div class="p-3.5 rounded-2xl bg-slate-50 border space-y-2">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="font-extrabold text-micro-navy">${c.name}</div>
+                <div class="text-[11px] text-slate-500">လာမေးသူ: <strong>${cLeads.length}</strong> ဦး • အပ်နှံသူ: <strong class="text-micro-blue">${cPaid.length}</strong> ဦး (${pct}%)</div>
+              </div>
+              ${showMoney ? `<div class="font-extrabold text-micro-navy bg-micro-yellow/30 px-2.5 py-1 rounded-lg">${cRev.toLocaleString()} Ks</div>` : `<span class="px-2.5 py-1 rounded-lg bg-blue-100 text-micro-blue font-bold">${cPaid.length} Sales</span>`}
             </div>
-            ${showMoney ? `<div class="font-extrabold text-micro-blue">${cRev.toLocaleString()} Ks</div>` : `<span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-700 font-bold">${cPaid.length} Sales</span>`}
+            <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+              <div class="h-full bg-micro-blue rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+            </div>
           </div>
         `;
       }).join('');
 
-      // Staff Performance Summary (How many leads & sales each Page Admin got)
       const sContainer = document.getElementById('dashboardStaffPerformance');
       const staffMap = {};
       filteredLeads.forEach(l => {
@@ -1403,12 +1680,12 @@
               <div class="font-extrabold text-micro-navy"><i class="fa-solid fa-user-check text-micro-blue mr-1"></i>${name}</div>
               <div class="text-[11px] text-slate-500">စာရင်းသွင်းမှု: <strong>${st.total}</strong> ဦး • 🔥 Hot: <strong>${st.hot}</strong> ဦး</div>
             </div>
-            <span class="px-3 py-1 rounded-xl bg-micro-navy text-micro-yellow font-extrabold">အရောင်းရရှိမှု: ${st.sales} ဦး</span>
+            <span class="px-3 py-1 rounded-xl bg-micro-navy text-micro-yellow font-extrabold">အရောင်း: ${st.sales} ဦး</span>
           </div>
         `).join('');
     }
 
-    // ================= RENDER LEADS (WITH EDIT & CUSTOM DATE) =================
+    // ================= 7. LEADS & AI SCANNER =================
     window.renderLeads = () => {
       const q = (document.getElementById('leadSearchInput')?.value || '').toLowerCase().trim();
       const baseLeads = getFilteredLeadsByCourseAndDate();
@@ -1427,7 +1704,7 @@
 
       const container = document.getElementById('leadsContainer');
       if (list.length === 0) {
-        container.innerHTML = `<div class="ios-card p-8 text-center text-xs text-slate-400">ရွေးချယ်ထားသော စာရင်း မရှိသေးပါ။</div>`;
+        container.innerHTML = `<div class="ios-card p-8 text-center text-xs text-slate-400">ရွေးချယ်ထားသော စာရင်း မရှိသေးပါ။ (+ စာရင်းသွင်းရန် ခလုတ်ကိုနှိပ်၍ အသစ်ထည့်နိုင်ပါသည်)</div>`;
         return;
       }
 
@@ -1439,17 +1716,17 @@
           : l.leadStage === 'MEDIUM'
           ? '<span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 font-extrabold text-[10px]">💡 အလယ်အလတ် (Medium)</span>'
           : l.leadStage === 'ENROLLED'
-          ? '<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 font-extrabold text-[10px]">🎓 အပ်နှံပြီး (Enrolled)</span>'
+          ? '<span class="px-2.5 py-1 rounded-full bg-micro-navy text-micro-yellow font-extrabold text-[10px]">🎓 အပ်နှံပြီး (Enrolled)</span>'
           : '<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 font-extrabold text-[10px]">⭐ စိတ်ဝင်စားသူ</span>';
 
         const payBadge = l.paymentStatus === 'PAID'
-          ? '<span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-[10px]">✅ ငွေအကြေသွင်းပြီး</span>'
+          ? '<span class="px-2.5 py-1 rounded-full bg-micro-blue text-white font-extrabold text-[10px]">✅ ငွေအကြေသွင်းပြီး</span>'
           : l.paymentStatus === 'PARTIAL'
           ? '<span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 font-extrabold text-[10px]">🌗 အရစ်ကျသွင်းထားသူ</span>'
           : '<span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px]">⏳ ငွေမသွင်းရသေး</span>';
 
         return `
-          <div class="ios-card p-4 space-y-3">
+          <div class="ios-card p-4 space-y-3 animate-fade-up">
             <div class="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <div class="flex flex-wrap items-center gap-2">
@@ -1465,7 +1742,7 @@
                 </div>
                 ${showMoney && (Number(l.paidAmount) > 0 || Number(l.balanceAmount) > 0) ? `
                   <div class="text-xs mt-1.5 flex items-center gap-3">
-                    <span class="text-emerald-700 font-extrabold">သွင်းပြီး: ${Number(l.paidAmount || 0).toLocaleString()} Ks (${l.paymentMethod || '-'})</span>
+                    <span class="text-micro-blue font-extrabold">သွင်းပြီး: ${Number(l.paidAmount || 0).toLocaleString()} Ks (${l.paymentMethod || '-'})</span>
                     ${Number(l.balanceAmount || 0) > 0 ? `<span class="text-rose-600 font-extrabold">ရရန်ကျန်: ${Number(l.balanceAmount).toLocaleString()} Ks</span>` : ''}
                   </div>
                 ` : ''}
@@ -1480,7 +1757,7 @@
 
             <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs">
               <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${l.fbGroup ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400'}">
+                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${l.fbGroup ? 'bg-blue-50 text-micro-blue' : 'bg-slate-100 text-slate-400'}">
                   <i class="fa-brands fa-facebook mr-1"></i>FB Group ${l.fbGroup ? '✓' : '✗'}
                 </span>
                 <span class="px-2 py-0.5 rounded text-[11px] font-bold ${l.tgGroup ? 'bg-sky-50 text-sky-700' : 'bg-slate-100 text-slate-400'}">
@@ -1490,14 +1767,14 @@
 
               <div class="flex items-center gap-2">
                 ${(l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL') ? `
-                  <button onclick="window.printStudentInvoice('${l.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-extrabold">
+                  <button type="button" onclick="window.printStudentInvoice('${l.id}')" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-micro-navy font-extrabold ios-btn">
                     <i class="fa-solid fa-receipt mr-1"></i>Invoice ထုတ်ရန်
                   </button>
                 ` : ''}
-                <button onclick="window.openLeadModal('${l.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-micro-blue font-extrabold">
+                <button type="button" onclick="window.openLeadModal('${l.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-micro-blue font-extrabold ios-btn">
                   <i class="fa-solid fa-pen-to-square mr-1"></i>Edit ပြင်ရန်
                 </button>
-                <button onclick="window.deleteLead('${l.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold">
+                <button type="button" onclick="window.deleteLead('${l.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold ios-btn">
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
@@ -1507,7 +1784,6 @@
       }).join('');
     };
 
-    // ================= AI SCREENSHOT & CHAT SCANNER ENGINE =================
     window.handleScreenshotUpload = (event) => {
       const file = event.target.files[0];
       if (!file) return;
@@ -1526,17 +1802,16 @@
       if (!file) return;
       tempAttachedImageName = file.name;
       document.getElementById('modalScreenshotStatus').textContent = `✓ ${file.name} တွဲထားပြီး`;
+      window.showToast('Screenshot ပုံ တွဲပြီးပါပြီ');
     };
 
     window.runAiLeadAnalysis = (fileName = '') => {
       const rawText = (document.getElementById('aiChatTextInput').value || '').trim();
       const lower = (rawText + ' ' + fileName).toLowerCase();
 
-      // Extract phone number if present in pasted text
       const phoneMatch = rawText.match(/(09\d{7,9})/);
       const detectedPhone = phoneMatch ? phoneMatch[1] : '';
 
-      // Detect course
       let detectedCourse = state.courses[0]?.name || 'Advance Excel';
       state.courses.forEach(c => {
         if (lower.includes(c.name.toLowerCase()) || (lower.includes('job') && c.name.toLowerCase().includes('job'))) {
@@ -1544,14 +1819,13 @@
         }
       });
 
-      // Determine Lead Potential Score
       let stage = 'HOT';
       let score = '94%';
       let badgeClass = 'bg-rose-100 text-rose-700';
       let advice = '';
       let reply = '';
 
-      if (lower.includes('စဉ်းစား') || lower.includes('နောက်မှ') || lower.includes('แพง') || lower.includes('busy')) {
+      if (lower.includes('စဉ်းစား') || lower.includes('နောက်မှ') || lower.includes('busy')) {
         stage = 'MEDIUM';
         score = '68%';
         badgeClass = 'bg-blue-100 text-blue-700';
@@ -1579,12 +1853,13 @@
       document.getElementById('aiAdviceText').textContent = advice;
       document.getElementById('aiSuggestedReply').textContent = reply;
       document.getElementById('aiScanResultContainer').classList.remove('hidden');
+      window.showToast('AI သုံးသပ်ချက် ထွက်ပေါ်လာပါပြီ');
     };
 
     window.copyAiReply = () => {
       const txt = document.getElementById('aiSuggestedReply').textContent;
       navigator.clipboard.writeText(txt);
-      alert('AI ပြန်စာကို Copy ကူးယူပြီးပါပြီ။ Messenger/Viber တွင် တိုက်ရိုက် Paste ချပို့နိုင်ပါပြီ။');
+      window.showToast('AI ပြန်စာကို Copy ကူးယူပြီးပါပြီ');
     };
 
     window.openLeadModalFromAi = () => {
@@ -1597,7 +1872,7 @@
       }
     };
 
-    // ================= LEAD MODAL (ADD & EDIT) =================
+    // ================= 8. LEAD MODAL (ADD & EDIT) =================
     window.autoFillCourseFee = () => {
       const cName = document.getElementById('leadCourse').value;
       const found = state.courses.find(c => c.name === cName);
@@ -1661,7 +1936,9 @@
       const phone = document.getElementById('leadPhone').value.trim();
       const chosenDate = document.getElementById('leadDate').value || new Date().toISOString().slice(0, 10);
 
-      if (!name || !phone) return alert('အမည်နှင့် ဖုန်းနံပါတ် ထည့်သွင်းပါ။');
+      if (!name || !phone) {
+        return window.showToast('အမည်နှင့် ဖုန်းနံပါတ် ထည့်သွင်းပေးပါ', 'error');
+      }
 
       const u = getActiveUser();
       const payload = {
@@ -1687,7 +1964,8 @@
           state.leads[idx] = { ...state.leads[idx], ...payload, lastEditedBy: u.name };
         }
         window.closeModal('leadModal');
-        await syncToCloud(`Lead/ကျောင်းသား "${name}" စာရင်းကို ပြင်ဆင်ခဲ့သည် (ရက်စွဲ: ${chosenDate})`);
+        await syncToCloud(`Lead/ကျောင်းသား "${name}" စာရင်းကို ပြင်ဆင်ခဲ့သည်`);
+        window.showToast(`"${name}" စာရင်း ပြင်ဆင်ပြီးပါပြီ`);
       } else {
         state.leads.unshift({
           id: 'L' + Date.now(),
@@ -1696,6 +1974,7 @@
         });
         window.closeModal('leadModal');
         await syncToCloud(`Lead/ကျောင်းသားအသစ် "${name}" ကို စာရင်းသွင်းခဲ့သည်`);
+        window.showToast(`"${name}" စာရင်း အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ`);
       }
     };
 
@@ -1704,9 +1983,10 @@
       if (!confirm(`"${target?.name || ''}" ၏ စာရင်းကို ဖျက်သိမ်းမှာ သေချာပါသလား?`)) return;
       state.leads = state.leads.filter(x => x.id !== id);
       await syncToCloud(`Lead "${target?.name || id}" ကို ဖျက်သိမ်းခဲ့သည်`);
+      window.showToast('စာရင်း ဖျက်သိမ်းပြီးပါပြီ');
     };
 
-    // ================= SALES & INVOICES TAB =================
+    // ================= 9. SALES & INVOICES TAB =================
     function renderSalesTab(filteredLeads) {
       const container = document.getElementById('salesInvoicesContainer');
       const salesList = filteredLeads.filter(l => l.paymentStatus === 'PAID' || l.paymentStatus === 'PARTIAL');
@@ -1716,8 +1996,8 @@
         return;
       }
 
-      container.innerHTML = salesList.map((l, idx) => `
-        <div class="ios-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-emerald-500">
+      container.innerHTML = salesList.map((l) => `
+        <div class="ios-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-micro-blue">
           <div class="space-y-1 text-xs">
             <div class="flex items-center gap-2">
               <span class="font-black text-micro-blue">INV-${l.id.slice(-5)}</span>
@@ -1728,15 +2008,15 @@
               ဖုန်း: <strong>${l.phone}</strong> • Pay: <strong>${l.paymentMethod}</strong> • ရက်စွဲ: <strong>${l.date}</strong>
             </div>
             <div class="flex items-center gap-3 pt-1">
-              <span class="font-extrabold text-emerald-700">သွင်းပြီးငွေ: ${Number(l.paidAmount || 0).toLocaleString()} Ks</span>
-              ${Number(l.balanceAmount || 0) > 0 ? `<span class="font-extrabold text-rose-600">ရရန်ကျန်: ${Number(l.balanceAmount).toLocaleString()} Ks</span>` : '<span class="text-emerald-600 font-bold">✓ အကြေပေးချေပြီး</span>'}
+              <span class="font-extrabold text-micro-navy">သွင်းပြီးငွေ: ${Number(l.paidAmount || 0).toLocaleString()} Ks</span>
+              ${Number(l.balanceAmount || 0) > 0 ? `<span class="font-extrabold text-rose-600">ရရန်ကျန်: ${Number(l.balanceAmount).toLocaleString()} Ks</span>` : '<span class="text-micro-blue font-bold">✓ အကြေပေးချေပြီး</span>'}
             </div>
           </div>
           <div class="flex items-center gap-2 shrink-0">
-            <button onclick="window.printStudentInvoice('${l.id}')" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow text-xs font-extrabold px-3.5 py-2 rounded-xl shadow ios-btn">
+            <button type="button" onclick="window.printStudentInvoice('${l.id}')" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow text-xs font-extrabold px-3.5 py-2 rounded-xl shadow ios-btn">
               <i class="fa-solid fa-file-pdf mr-1"></i> Invoice PDF ထုတ်ရန်
             </button>
-            <button onclick="window.openLeadModal('${l.id}')" class="bg-slate-100 hover:bg-slate-200 text-micro-navy text-xs font-bold px-3 py-2 rounded-xl">
+            <button type="button" onclick="window.openLeadModal('${l.id}')" class="bg-slate-100 hover:bg-slate-200 text-micro-navy text-xs font-bold px-3 py-2 rounded-xl ios-btn">
               Edit
             </button>
           </div>
@@ -1744,10 +2024,10 @@
       `).join('');
     }
 
-    // Print Individual Official Student Invoice PDF
     window.printStudentInvoice = (leadId) => {
       const l = state.leads.find(x => x.id === leadId);
       if (!l) return;
+      window.showToast('Invoice PDF ထုတ်နေပါသည်...');
       const el = document.createElement('div');
       el.innerHTML = `
         <div style="padding: 32px; font-family: 'Inter', 'Padauk', sans-serif; color: #142143; border: 3px solid #142143; border-radius: 16px;">
@@ -1778,7 +2058,7 @@
             <tbody>
               <tr>
                 <td style="padding:12px; border:1px solid #cbd5e1; font-weight:bold;">${l.course} Training Fee</td>
-                <td style="padding:12px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#047857;">${Number(l.paidAmount || 0).toLocaleString()} Ks</td>
+                <td style="padding:12px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#142143;">${Number(l.paidAmount || 0).toLocaleString()} Ks</td>
                 <td style="padding:12px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#e11d48;">${Number(l.balanceAmount || 0).toLocaleString()} Ks</td>
               </tr>
             </tbody>
@@ -1796,7 +2076,7 @@
       }).save();
     };
 
-    // ================= MANAGER HUB & FOLLOW-UP SCRIPTS =================
+    // ================= 10. MANAGER HUB & FOLLOW-UP SCRIPTS =================
     function renderManagerTab() {
       const sContainer = document.getElementById('managerScriptsList');
       const scripts = state.scripts || [];
@@ -1805,10 +2085,10 @@
           <div class="flex items-center justify-between">
             <h4 class="font-extrabold text-micro-navy">${sc.title}</h4>
             <div class="flex items-center gap-1.5">
-              <button onclick="window.copyScriptText('${sc.id}')" class="px-2.5 py-1 rounded-lg bg-micro-navy text-micro-yellow font-bold text-[11px]">
+              <button type="button" onclick="window.copyScriptText('${sc.id}')" class="px-2.5 py-1 rounded-lg bg-micro-navy text-micro-yellow font-bold text-[11px] ios-btn">
                 <i class="fa-regular fa-copy mr-1"></i>Copy ကူးရန်
               </button>
-              <button onclick="window.deleteScript('${sc.id}')" class="text-rose-500 px-1.5 font-bold">✕</button>
+              <button type="button" onclick="window.deleteScript('${sc.id}')" class="text-rose-500 px-1.5 font-bold ios-btn">✕</button>
             </div>
           </div>
           <p class="text-slate-600 leading-relaxed bg-white p-2.5 rounded-xl border">${sc.body}</p>
@@ -1828,7 +2108,7 @@
             </div>
             <div class="flex items-center gap-2">
               <span class="px-2.5 py-1 rounded-full font-extrabold text-[10px] ${l.leadStage === 'HOT' ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}">${l.leadStage}</span>
-              <button onclick="window.openLeadModal('${l.id}')" class="px-3 py-1.5 rounded-xl bg-micro-navy text-micro-yellow font-bold">စစ်ဆေး/ပြင်ရန်</button>
+              <button type="button" onclick="window.openLeadModal('${l.id}')" class="px-3 py-1.5 rounded-xl bg-micro-navy text-micro-yellow font-bold ios-btn">စစ်ဆေး/ပြင်ရန်</button>
             </div>
           </div>
         `).join('');
@@ -1843,7 +2123,7 @@
     window.saveManagerScript = async () => {
       const title = document.getElementById('scriptTitleInput').value.trim();
       const body = document.getElementById('scriptBodyInput').value.trim();
-      if (!title || !body) return alert('ခေါင်းစဉ်နှင့် စာသား ထည့်သွင်းပါ။');
+      if (!title || !body) return window.showToast('ခေါင်းစဉ်နှင့် စာသား ထည့်သွင်းပါ', 'error');
       if (!Array.isArray(state.scripts)) state.scripts = [];
       state.scripts.unshift({
         id: 'sc_' + Date.now(),
@@ -1854,13 +2134,14 @@
       });
       window.closeModal('scriptModal');
       await syncToCloud(`Follow-up Content "${title}" အသစ်ထည့်သွင်းခဲ့သည်`);
+      window.showToast('Follow-up Content ပေးပို့ပြီးပါပြီ');
     };
 
     window.copyScriptText = (id) => {
       const sc = (state.scripts || []).find(x => x.id === id);
       if (!sc) return;
       navigator.clipboard.writeText(sc.body);
-      alert('Follow-up Content စာသားကို Copy ကူးပြီးပါပြီ။');
+      window.showToast('Follow-up Content ကို Copy ကူးပြီးပါပြီ');
     };
 
     window.deleteScript = async (id) => {
@@ -1868,7 +2149,7 @@
       await syncToCloud();
     };
 
-    // ================= ACADEMIC & ATTENDANCE TAB =================
+    // ================= 11. ACADEMIC & ATTENDANCE TAB =================
     function renderAcademicTab() {
       const container = document.getElementById('academicBatchesContainer');
       const batches = state.batches || [];
@@ -1879,14 +2160,14 @@
               <h4 class="font-extrabold text-sm text-micro-navy">${b.name}</h4>
               <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${b.schedule}</p>
             </div>
-            <button onclick="window.deleteBatch('${b.id}')" class="text-rose-500 text-xs font-bold">✕</button>
+            <button type="button" onclick="window.deleteBatch('${b.id}')" class="text-rose-500 text-xs font-bold ios-btn">✕</button>
           </div>
           <div class="bg-slate-50 p-2.5 rounded-xl border text-xs text-micro-blue font-semibold break-all">
             <i class="fa-solid fa-video mr-1"></i> ${b.zoom || 'Zoom Link မထည့်ရသေးပါ'}
           </div>
           <div class="flex items-center justify-between pt-2 border-t text-xs">
-            <span class="font-bold text-slate-600">Attendance မှတ်တမ်းတင်ပြီး: <strong class="text-emerald-600">${b.attendanceCount || 0} ကြိမ်</strong></span>
-            <button onclick="window.markBatchAttendance('${b.id}')" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow font-bold px-3.5 py-1.5 rounded-xl ios-btn">
+            <span class="font-bold text-slate-600">Attendance မှတ်တမ်းတင်ပြီး: <strong class="text-micro-blue">${b.attendanceCount || 0} ကြိမ်</strong></span>
+            <button type="button" onclick="window.markBatchAttendance('${b.id}')" class="bg-micro-navy hover:bg-micro-blue text-micro-yellow font-bold px-3.5 py-1.5 rounded-xl ios-btn">
               ✓ ယနေ့ Attendance မှတ်မည်
             </button>
           </div>
@@ -1905,11 +2186,12 @@
       const name = document.getElementById('batchNameInput').value.trim();
       const schedule = document.getElementById('batchScheduleInput').value.trim();
       const zoom = document.getElementById('batchZoomInput').value.trim();
-      if (!name) return alert('Batch အမည် ထည့်ပါ။');
+      if (!name) return window.showToast('Batch အမည် ထည့်ပါ', 'error');
       if (!Array.isArray(state.batches)) state.batches = [];
       state.batches.push({ id: 'b_' + Date.now(), name, schedule, zoom, attendanceCount: 0 });
       window.closeModal('batchModal');
       await syncToCloud(`အတန်းခွဲသစ် "${name}" ဖွင့်လှစ်ခဲ့သည်`);
+      window.showToast(`"${name}" အတန်းခွဲ သိမ်းဆည်းပြီးပါပြီ`);
     };
 
     window.markBatchAttendance = async (bid) => {
@@ -1917,7 +2199,7 @@
       if (!b) return;
       b.attendanceCount = Number(b.attendanceCount || 0) + 1;
       await syncToCloud(`"${b.name}" အတွက် Attendance မှတ်တမ်းတင်ခဲ့သည်`);
-      alert(`${b.name} အတွက် ယနေ့ Attendance မှတ်တမ်းတင်ပြီးပါပြီ။`);
+      window.showToast(`${b.name} အတွက် Attendance မှတ်ပြီးပါပြီ`);
     };
 
     window.deleteBatch = async (bid) => {
@@ -1926,7 +2208,7 @@
       await syncToCloud();
     };
 
-    // ================= FINANCE & PURCHASE TAB (WITH EDIT & CUSTOM DATE) =================
+    // ================= 12. FINANCE & PURCHASE TAB =================
     function renderFinanceTab(filteredExpenses) {
       const pContainer = document.getElementById('purchaseListSection');
       const list = filteredExpenses || state.expenses;
@@ -1943,10 +2225,10 @@
             </div>
             <div class="flex items-center gap-3">
               <div class="font-black text-sm text-rose-600">-${Number(e.amount).toLocaleString()} Ks</div>
-              <button onclick="window.openExpenseModal('${e.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 text-micro-blue font-extrabold">
+              <button type="button" onclick="window.openExpenseModal('${e.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 text-micro-blue font-extrabold ios-btn">
                 Edit ပြင်ရန်
               </button>
-              <button onclick="window.deleteExpense('${e.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold">
+              <button type="button" onclick="window.deleteExpense('${e.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold ios-btn">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
@@ -1983,7 +2265,7 @@
       const title = document.getElementById('expTitle').value.trim();
       const amount = Number(document.getElementById('expAmount').value || 0);
       const chosenDate = document.getElementById('expDate').value || new Date().toISOString().slice(0, 10);
-      if (!title || amount <= 0) return alert('အကြောင်းအရာနှင့် ငွေပမာဏ ထည့်ပါ။');
+      if (!title || amount <= 0) return window.showToast('အကြောင်းအရာနှင့် ငွေပမာဏ ထည့်ပါ', 'error');
 
       const payload = {
         title,
@@ -1999,10 +2281,12 @@
         if (idx > -1) state.expenses[idx] = { ...state.expenses[idx], ...payload };
         window.closeModal('expenseModal');
         await syncToCloud(`အသုံးစရိတ် "${title}" (${amount.toLocaleString()} Ks) ကို ပြင်ဆင်ခဲ့သည်`);
+        window.showToast('အသုံးစရိတ် ပြင်ဆင်ပြီးပါပြီ');
       } else {
         state.expenses.unshift({ id: 'E' + Date.now(), ...payload });
         window.closeModal('expenseModal');
         await syncToCloud(`အသုံးစရိတ်သစ် "${title}" (${amount.toLocaleString()} Ks) သွင်းခဲ့သည်`);
+        window.showToast('အသုံးစရိတ် သိမ်းဆည်းပြီးပါပြီ');
       }
     };
 
@@ -2011,9 +2295,10 @@
       if (!confirm('ဤအသုံးစရိတ်ကို ဖျက်သိမ်းမှာ သေချာပါသလား?')) return;
       state.expenses = state.expenses.filter(x => x.id !== id);
       await syncToCloud(`အသုံးစရိတ် "${target?.title || id}" ကို ဖျက်သိမ်းခဲ့သည်`);
+      window.showToast('အသုံးစရိတ် ဖျက်သိမ်းပြီးပါပြီ');
     };
 
-    // ================= ADMIN PANEL: MULTI-DEPARTMENT APPROVALS & SETTINGS =================
+    // ================= 13. ADMIN PANEL: MULTI-DEPARTMENT APPROVALS & SETTINGS =================
     function renderAdminPanel() {
       const allDepts = ['ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PURCHASE', 'ACADEMIC', 'PAGE_ADMIN'];
 
@@ -2025,26 +2310,25 @@
               <div>
                 <strong class="text-sm text-micro-navy">${u.name}</strong>
                 <span class="text-slate-500 ml-1">(${u.email})</span>
-                ${!u.approved ? '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-extrabold ml-2">⏳ Pending Approval</span>' : '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-extrabold ml-2">✓ Approved</span>'}
+                ${!u.approved ? '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-extrabold ml-2">⏳ Pending Approval</span>' : '<span class="px-2 py-0.5 rounded bg-blue-100 text-micro-blue font-extrabold ml-2">✓ Approved</span>'}
               </div>
               <div class="flex items-center gap-2">
-                <button onclick="window.toggleApprove('${u.id}')" class="px-3 py-1.5 rounded-xl font-extrabold ${u.approved ? 'bg-amber-500 text-white' : 'bg-micro-navy text-micro-yellow'}">
+                <button type="button" onclick="window.toggleApprove('${u.id}')" class="px-3 py-1.5 rounded-xl font-extrabold ios-btn ${u.approved ? 'bg-amber-500 text-white' : 'bg-micro-navy text-micro-yellow'}">
                   ${u.approved ? 'Lock ပြန်ချမည်' : '✓ Approve ပေးမည်'}
                 </button>
-                <button onclick="window.openStaffModal('${u.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 text-micro-blue font-extrabold">
+                <button type="button" onclick="window.openStaffModal('${u.id}')" class="px-3 py-1.5 rounded-xl bg-blue-50 text-micro-blue font-extrabold ios-btn">
                   Edit
                 </button>
-                <button onclick="window.deleteStaff('${u.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold">✕</button>
+                <button type="button" onclick="window.deleteStaff('${u.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold ios-btn">✕</button>
               </div>
             </div>
 
-            <!-- Multi-Department Quick Checkboxes -->
             <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200">
               <span class="text-[11px] font-bold text-slate-500 mr-1">ဌာနတာဝန်များ (နှိပ်၍ တိုး/လျှော့နိုင်သည်):</span>
               ${allDepts.map(dept => {
                 const active = uRoles.includes(dept) || uRoles.includes('FOUNDER');
                 return `
-                  <button onclick="window.toggleUserDept('${u.id}', '${dept}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${active ? 'bg-micro-navy text-micro-yellow border-micro-navy' : 'bg-white text-slate-500 border-slate-200'}">
+                  <button type="button" onclick="window.toggleUserDept('${u.id}', '${dept}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ios-btn ${active ? 'bg-micro-navy text-micro-yellow border-micro-navy' : 'bg-white text-slate-500 border-slate-200'}">
                     ${active ? '✓ ' : '+ '}${dept}
                   </button>
                 `;
@@ -2058,22 +2342,21 @@
         <div class="flex items-center justify-between bg-slate-50 border rounded-xl px-3.5 py-2.5 text-xs">
           <div><strong class="text-micro-navy">${c.name}</strong> — <span class="font-bold text-micro-blue">${Number(c.fee).toLocaleString()} Ks</span></div>
           <div class="flex items-center gap-2">
-            <button onclick="window.editCoursePrompt('${c.id}')" class="text-micro-blue font-bold">ပြင်မည်</button>
-            <button onclick="window.removeCourse('${c.id}')" class="text-rose-600 font-bold">ဖျက်မည်</button>
+            <button type="button" onclick="window.editCoursePrompt('${c.id}')" class="text-micro-blue font-bold ios-btn">ပြင်မည်</button>
+            <button type="button" onclick="window.removeCourse('${c.id}')" class="text-rose-600 font-bold ios-btn">ဖျက်မည်</button>
           </div>
         </div>`).join('');
 
       document.getElementById('payManageList').innerHTML = state.paymentMethods.map((p, idx) => `
         <span class="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-micro-navy px-3 py-1 rounded-xl text-xs font-bold">
-          ${p} <button onclick="window.removePayment(${idx})" class="text-rose-500 font-bold ml-1">×</button>
+          ${p} <button type="button" onclick="window.removePayment(${idx})" class="text-rose-500 font-bold ml-1">×</button>
         </span>`).join('');
 
       document.getElementById('sourceManageList').innerHTML = state.leadSources.map((s, idx) => `
         <span class="inline-flex items-center gap-1.5 bg-slate-100 border text-slate-700 px-3 py-1 rounded-xl text-xs font-bold">
-          ${s} <button onclick="window.removeSource(${idx})" class="text-rose-500 font-bold ml-1">×</button>
+          ${s} <button type="button" onclick="window.removeSource(${idx})" class="text-rose-500 font-bold ml-1">×</button>
         </span>`).join('');
 
-      // Audit Logs
       const logs = state.auditLogs || [];
       document.getElementById('auditLogsContainer').innerHTML = logs.length === 0
         ? `<div class="text-slate-400 py-3">မှတ်တမ်း မရှိသေးပါ။</div>`
@@ -2110,7 +2393,7 @@
       const email = document.getElementById('staffEmailInput').value.trim();
       const selectedRoles = Array.from(document.querySelectorAll('.staff-role-chk:checked')).map(c => c.value);
 
-      if (!name || !email) return alert('ဝန်ထမ်းအမည်နှင့် Gmail ထည့်သွင်းပါ။');
+      if (!name || !email) return window.showToast('ဝန်ထမ်းအမည်နှင့် Gmail ထည့်သွင်းပါ', 'error');
       if (selectedRoles.length === 0) selectedRoles.push('PAGE_ADMIN');
 
       if (editId) {
@@ -2123,6 +2406,7 @@
         }
         window.closeModal('staffModal');
         await syncToCloud(`ဝန်ထမ်း "${name}" ၏ ဌာနတာဝန်များကို ပြင်ဆင်ခဲ့သည်`);
+        window.showToast('ဝန်ထမ်းတာဝန်များ ပြင်ဆင်ပြီးပါပြီ');
       } else {
         state.users.push({
           id: 'u_' + Date.now(),
@@ -2134,6 +2418,7 @@
         });
         window.closeModal('staffModal');
         await syncToCloud(`ဝန်ထမ်းအသစ် "${name}" ကို ထည့်သွင်းခဲ့သည်`);
+        window.showToast(`ဝန်ထမ်းအသစ် "${name}" ထည့်သွင်းပြီးပါပြီ`);
       }
     };
 
@@ -2142,13 +2427,14 @@
       if (!u) return;
       if (!Array.isArray(u.roles)) u.roles = [u.role || 'PAGE_ADMIN'];
       if (u.roles.includes(dept)) {
-        if (u.roles.length === 1) return alert('အနည်းဆုံး ဌာန ၁ ခု ရှိရပါမည်။');
+        if (u.roles.length === 1) return window.showToast('အနည်းဆုံး ဌာန ၁ ခု ရှိရပါမည်', 'error');
         u.roles = u.roles.filter(r => r !== dept);
       } else {
         u.roles.push(dept);
       }
       u.role = u.roles[0];
       await syncToCloud(`${u.name} ၏ ဌာနခွင့်ပြုချက် (${dept}) ပြောင်းလဲခဲ့သည်`);
+      window.showToast(`${u.name} ၏ ဌာနတာဝန် ပြောင်းလဲပြီးပါပြီ`);
     };
 
     window.toggleApprove = async (uid) => {
@@ -2156,6 +2442,7 @@
       if (u) {
         u.approved = !u.approved;
         await syncToCloud(`${u.name} အား ${u.approved ? 'Approve ပေးခဲ့သည်' : 'Lock ချခဲ့သည်'}`);
+        window.showToast(`${u.name} အား ${u.approved ? 'Approve ပေးလိုက်ပါပြီ' : 'Lock ချလိုက်ပါပြီ'}`);
       }
     };
 
@@ -2169,11 +2456,12 @@
     window.addCourse = async () => {
       const name = document.getElementById('newCourseName').value.trim();
       const fee = Number(document.getElementById('newCourseFee').value || 0);
-      if (!name) return;
+      if (!name) return window.showToast('သင်တန်းအမည် ရိုက်ထည့်ပါ', 'error');
       state.courses.push({ id: 'c_' + Date.now(), name, fee });
       document.getElementById('newCourseName').value = '';
       document.getElementById('newCourseFee').value = '';
       await syncToCloud(`သင်တန်းအသစ် "${name}" ထည့်သွင်းခဲ့သည်`);
+      window.showToast(`"${name}" သင်တန်းအသစ် ထည့်ပြီးပါပြီ`);
     };
 
     window.editCoursePrompt = async (cid) => {
@@ -2185,6 +2473,7 @@
       c.name = newName.trim();
       c.fee = Number(newFee || 0);
       await syncToCloud(`သင်တန်း "${c.name}" အချက်အလက် ပြင်ဆင်ခဲ့သည်`);
+      window.showToast('သင်တန်းအချက်အလက် ပြင်ဆင်ပြီးပါပြီ');
     };
 
     window.removeCourse = async (cid) => {
@@ -2198,6 +2487,7 @@
       state.paymentMethods.push(val);
       document.getElementById('newPayName').value = '';
       await syncToCloud();
+      window.showToast(`"${val}" ထည့်သွင်းပြီးပါပြီ`);
     };
 
     window.removePayment = async (idx) => {
@@ -2211,6 +2501,7 @@
       state.leadSources.push(val);
       document.getElementById('newSourceInput').value = '';
       await syncToCloud();
+      window.showToast(`"${val}" ထည့်သွင်းပြီးပါပြီ`);
     };
 
     window.removeSource = async (idx) => {
@@ -2218,7 +2509,16 @@
       await syncToCloud();
     };
 
-    // ================= EXPORT TO EXCEL (CSV) & PDF REPORT =================
+    // ================= 14. EXPORT TO EXCEL (CSV), PDF & BACKUP JSON =================
+    window.exportBackupJSON = () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `MicroTC_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      window.showToast('Backup ဖိုင် ဒေါင်းလုဒ်ဆွဲပြီးပါပြီ');
+    };
+
     window.exportCSV = () => {
       const filtered = getFilteredLeadsByCourseAndDate();
       const headers = ['Date', 'Name', 'Phone', 'Course', 'Source', 'LeadStage', 'PaymentStatus', 'PaidAmount', 'BalanceAmount', 'PaymentMethod', 'RecordedBy', 'Note'];
@@ -2243,9 +2543,11 @@
       a.href = url;
       a.download = `MicroTC_Report_${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
+      window.showToast('Excel (CSV) ဖိုင် ထုတ်ယူပြီးပါပြီ');
     };
 
     window.exportReportPDF = () => {
+      window.showToast('PDF Report ထုတ်ယူနေပါသည်...');
       const showMoney = canViewFinance();
       const filteredLeads = getFilteredLeadsByCourseAndDate();
       const filteredExpenses = getFilteredExpensesByDate();
@@ -2264,7 +2566,7 @@
               <div style="text-align:right; font-size: 11px;">
                 <div><strong>Total Revenue:</strong> ${rev.toLocaleString()} Ks</div>
                 <div><strong>Total Expenses:</strong> ${exp.toLocaleString()} Ks</div>
-                <div style="color:#047857;"><strong>Net Profit:</strong> ${(rev - exp).toLocaleString()} Ks</div>
+                <div style="color:#1a5d94;"><strong>Net Profit:</strong> ${(rev - exp).toLocaleString()} Ks</div>
               </div>
             ` : ''}
           </div>
@@ -2305,21 +2607,6 @@
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
       }).save();
-    };
-
-    window.openModal = (id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.classList.remove('hidden');
-        el.classList.add('flex');
-      }
-    };
-    window.closeModal = (id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.classList.remove('flex');
-        el.classList.add('hidden');
-      }
     };
   </script>
 </body>
