@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signed() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)); }
+    function admin() { return signed() && me().data.role == 'admin'; }
+    function allowed(p) { return signed() && (me().data.role == 'admin' || me().data.permissions.hasAny([p, '*'])); }
+
+    match /users/{id} {
+      allow read: if signed() && (id == request.auth.uid || admin());
+      allow create: if signed() && id == request.auth.uid;
+      allow update: if signed() && (id == request.auth.uid || admin());
+      allow delete: if admin();
+    }
+    match /settings/{id} { allow read: if signed(); allow write: if admin(); }
+    match /auditLogs/{id} { allow read: if admin(); allow create: if signed(); allow update, delete: if admin(); }
+    match /students/{id} { allow read, create: if allowed('students'); allow update: if allowed('students'); allow delete: if admin(); }
+    match /studentCodes/{id} { allow read, create, update: if allowed('students'); allow delete: if admin(); }
+    match /courses/{id} { allow read: if signed(); allow create, update: if allowed('courses'); allow delete: if admin(); }
+    match /batches/{id} { allow read: if signed(); allow create, update: if allowed('schedule'); allow delete: if admin(); }
+    match /attendance/{id} { allow read, write: if allowed('attendance'); allow delete: if admin(); }
+    match /transactions/{id} { allow read: if allowed('finance') || allowed('reports'); allow create: if allowed('finance'); allow update, delete: if admin(); }
+    match /approvals/{id} { allow read, create: if signed(); allow update, delete: if admin(); }
+    match /staff/{id} { allow read: if signed(); allow write: if admin(); }
+    match /departments/{id} { allow read: if signed(); allow write: if admin(); }
+    match /expenseCategories/{id} { allow read: if signed(); allow write: if admin(); }
+    match /leadSources/{id} { allow read: if signed(); allow write: if admin(); }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

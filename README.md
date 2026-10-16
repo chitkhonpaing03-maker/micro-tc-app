@@ -1,43 +1,71 @@
-# 🎓 Micro Training Center - Online Management System
+# 🎓 MTC Enterprise Final
 
-Micro Training Center အတွက် တည်ဆောက်ထားသော **Real-Time Online Management & Reporting Web Application** ဖြစ်ပါသည်။ ဖုန်းနှင့် ကွန်ပျူတာတို့မှ Google Gmail ဖြင့် လွယ်ကူလုံခြုံစွာ ဝင်ရောက်အသုံးပြုနိုင်ပြီး ဌာနအလိုက် လုပ်ပိုင်ခွင့်များ ခွဲခြားပေးထားပါသည်။
+Professional responsive management web app for **Micro Training Center (MTC)** using Firebase Authentication, Cloud Firestore and Firebase Storage.
 
----
+## What is included
 
-## ✨ Key Features & Capabilities
+- Professional responsive dashboard, glass/soft UI, motion and mobile layout
+- MTC logo upload and branding settings
+- Google sign-in
+- Username + Password login UI using the Firebase Email/Password provider with an `@mtc.local` alias
+- Admin / staff / teacher profiles, departments, display names and photos
+- Student registration with **Paid** or **Day-1 Free Pass**
+- Optional phone number — blank is allowed
+- Short Student Code generated from **Student Name + selected Course**
+- Student Code is copied to clipboard after generation when the browser permits it
+- Course selector instead of typing a course name
+- New courses automatically become available to Student and Schedule selectors after refresh
+- Teacher schedule with teacher photo, display name, course, batch, day, time and room
+- Attendance
+- Finance with income/expense and monthly `period` fields
+- Date-range Summary and Detail reports
+- E-compatible CSV exports (`Download E` / `Export E`)
+- Approval workflow
+- Audit log
+- Departments
+- Private Student Portal setting is **OFF** by default
+- Safe legacy `shared_state` migration tool that copies data without deleting the source
+- Firestore and Storage security rules
 
-1. **🔒 Secure Google Gmail Authentication & Founder Approval:**
-   * Google Sign-In ဖြင့် အလွယ်တကူ ဝင်ရောက်နိုင်ခြင်း။
-   * ဝန်ထမ်းအသစ်များ ဝင်ရောက်လာပါက တည်ထောင်သူ (Founder) မှ **Approve** ပေးမှသာ စနစ်ကို စတင်အသုံးပြုနိုင်ခြင်း။
+## Important: username/password staff creation
 
-2. **📈 Sales & Inquiry Management (လာမေးသူနှင့် သင်တန်းသားများ):**
-   * သင်တန်းလာမေးသူများ (Inquiries/Leads) ကို မှတ်ချက်များ၊ လာမေးသည့်နေရာ (`Source`) နှင့် အလားအလာအဆင့်များ (`🔥 Hot`, `💡 Medium`, `⭐ Interested`) ဖြင့် စီမံခန့်ခွဲနိုင်ခြင်း။
-   * သင်တန်းအပ်နှံပြီးသူများအား **FB Group, Telegram Group နှင့် Zoom Link** ပို့ပြီး/မပို့ တစ်ချက်နှိပ် စစ်ဆေးနိုင်ခြင်း။
+A browser-only GitHub Pages app must **not** create Firebase Auth users with an Admin SDK secret and must never store plaintext passwords in Firestore.
 
-3. **💰 Finance, Purchase & P&L Reporting (ငွေစာရင်းနှင့် အမြတ်အရှုံး):**
-   * **Admin နှင့် Finance ဌာနများသာ** ငွေကြေးပမာဏများနှင့် အမြတ်/အရှုံး (Net P&L) စာရင်းများကို မြင်တွေ့နိုင်ခြင်း။
-   * ကျန်ဝန်ထမ်းများအတွက် ငွေကြေးအချက်အလက်များ အလိုအလျောက် ဖုံးကွယ်ထားပေးခြင်းဖြင့် လုံခြုံရေး အပြည့်အဝရှိခြင်း။
+The included app therefore provides the safe login UI and staff profile management. To make **Admin → Create Staff Username/Password** fully automatic, deploy a trusted Firebase Cloud Function using the Firebase Admin SDK. The project is deliberately structured so this can be added without changing the Firestore data model.
 
-4. **📑 One-Click PDF Reporting:**
-   * စာရင်းဇယားများနှင့် Report များကို သေသပ်လှပသော **PDF ဖိုင်** အဖြစ် တစ်ချက်နှိပ်ကာ တိုက်ရိုက် ထုတ်ယူနိုင်ခြင်း။
+For a no-cost first deployment, Google login can be used for the first admin/staff accounts. Firebase Email/Password accounts can also be created from Firebase Console while testing.
 
-5. **⚙️ Advanced Admin Control Center (အသေးစိတ် ဆက်တင်များ):**
-   * **Courses Management:** သင်တန်းအသစ်များ တိုးခြင်း၊ သင်တန်းကြေး ပြင်ဆင်ခြင်း။
-   * **Payment Methods:** KBZPay, WavePay, ဘဏ်အကောင့်များနှင့် ငွေပေးချေမှုစနစ်များ စီမံခြင်း။
-   * **Lead Sources:** လာမေးသည့်နေရာ (Facebook, TikTok, Instagram စသည်ဖြင့်) အသစ်များ ထည့်သွင်းခြင်း။
-   * **Department Roles:** ဝန်ထမ်းများကို `Admin`, `Finance`, `Sales`, `Purchase`, `Page Admin` အဖြစ် ရာထူးသတ်မှတ်ပေးခြင်း။
+## Existing data safety
 
----
+**Do not delete the Firebase project or existing Firestore documents.** The app uses separate collections for the new normalized data model and does not automatically delete legacy data.
 
-## 🛠️ Technology Stack
-* **Frontend:** HTML5, Tailwind CSS (Responsive Design for Mobile & Desktop)
-* **Backend & Database:** Google Firebase (Cloud Firestore & Firebase Authentication)
-* **Hosting:** Vercel / GitHub Pages
-* **Libraries:** FontAwesome, html2pdf.js
+The Settings page contains a **Legacy Migration** tool. Enter the exact collection name that contains the existing `shared_state` document and run the import. The source document is not deleted.
 
----
+## Firebase setup
 
-## 📱 How to Use
-1. App Link နှိပ်ပြီး ဝင်ရောက်ပါ (`Sign in with Google`)။
-2. ပထမဆုံးဝင်သူသည် အလိုအလျောက် **👑 Founder / Admin** ဖြစ်သွားပါမည်။
-3. ဝန်ထမ်းအသစ်များ ဝင်လာပါက Admin ဌာနမှ **Approve** ပေးပြီး သက်ဆိုင်ရာ ဌာနအလိုက် ရာထူးသတ်မှတ်ပေးပါ။
+1. Firebase Console → Authentication → Sign-in method → keep **Google** and **Email/Password** enabled.
+2. Firebase Console → Firestore Database → keep the existing database/data.
+3. Deploy `firestore.rules`.
+4. Enable Firebase Storage and deploy `storage.rules`.
+5. Confirm the Firebase Web SDK config in `firebase-config.js`.
+6. Upload this project to GitHub.
+7. GitHub → Settings → Pages → Deploy from `main` / root.
+8. Firebase Authentication → Settings → Authorized domains → add the GitHub Pages domain.
+
+## First login
+
+The first authenticated account that creates a profile while `settings/main.setupComplete` is not `true` becomes the initial `admin`. The app then marks setup complete. Verify the first admin profile before inviting other staff.
+
+## Firestore collections used
+
+`users`, `students`, `studentCodes`, `courses`, `batches`, `attendance`, `transactions`, `approvals`, `staff`, `departments`, `auditLogs`, `settings`.
+
+The old `shared_state` structure can remain untouched during migration.
+
+## Student Portal
+
+The portal is intentionally OFF. When a domain and a controlled public route are ready, a code-only student page can be added without requiring Gmail login. Keep it disabled until security rules for that public use case are reviewed.
+
+## Gemini
+
+Do not put a production Gemini private API key in public GitHub JavaScript. Use a server-side proxy / Cloud Function when Gemini features are enabled.

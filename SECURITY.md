@@ -1,21 +1,11 @@
-# Security Policy
+# Security Notes
 
-## Supported Versions
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
-
-## Reporting a Vulnerability
-
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+- Never store plain passwords in Firestore.
+- Never publish a production Gemini private API key in GitHub JavaScript.
+- Admin role changes must remain admin-only.
+- Keep Firestore/Storage rules deployed.
+- Keep audit logs for sensitive actions.
+- Do not delete Firestore data just to update the UI.
+- Student Portal is OFF by default.
+- A public code-only student portal requires separate security review before enabling.
+- Automatic Admin-created Firebase Auth accounts require a trusted backend / Cloud Function using the Firebase Admin SDK.
