@@ -324,6 +324,21 @@
             <i class="fa-solid fa-shield-halved text-xs text-micro-yellow"></i>
           </button>
         </div>
+
+        <div class="px-3 pb-3 space-y-1.5">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-micro-yellow/80 px-3 py-1">Enterprise Modules</div>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('customers')" id="nav-customers" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-address-book w-5 text-center text-sky-300"></i><span>၈။ Customer Inquiry</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('students')" id="nav-students" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-user-graduate w-5 text-center text-micro-yellow"></i><span>၉။ Student Management</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('codes')" id="nav-codes" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-qrcode w-5 text-center text-micro-yellow"></i><span>၁၀။ Student Code Generator</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('courses')" id="nav-courses" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-graduation-cap w-5 text-center text-sky-300"></i><span>၁၁။ Course Management</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('teachers')" id="nav-teachers" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-chalkboard-user w-5 text-center text-emerald-300"></i><span>၁၂။ Teacher & Schedule</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('attendance')" id="nav-attendance" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-calendar-check w-5 text-center text-amber-300"></i><span>၁၃။ Attendance</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('reports')" id="nav-reports" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-chart-column w-5 text-center text-violet-300"></i><span>၁၄။ Reports / E Import & Export</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('documents')" id="nav-documents" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-file-contract w-5 text-center text-cyan-300"></i><span>၁၅။ Invoice & Certificate</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('notifications')" id="nav-notifications" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-bell w-5 text-center text-rose-300"></i><span>၁၆။ Notifications</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('ai')" id="nav-ai" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-robot w-5 text-center text-fuchsia-300"></i><span>၁၇။ AI Assistant</span></button>
+          <button type="button" onclick="window.switchTab('enterprise');window.setEnterprisePanel('admin')" id="nav-enterprise-admin" class="drawer-nav-btn w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold text-slate-200 hover:bg-white/10 transition"><i class="fa-solid fa-shield-halved w-5 text-center text-micro-yellow"></i><span>၁၈။ Enterprise Admin Control</span></button>
+        </div>
       </div>
 
       <!-- Drawer Footer -->
@@ -356,17 +371,15 @@
         <span>Sign in with Google (Gmail)</span>
       </button>
 
-      <!-- Option 2: Direct Gmail Entry (Works even if Popup is blocked on Mobile / WebView) -->
+      <!-- Option 2: Staff Username + Password -->
       <div class="pt-3 border-t border-slate-200 space-y-2.5 text-left">
-        <label class="block text-[11px] font-bold text-slate-500 text-center">
-          သို့မဟုတ် ဖုန်း Browser တွင် Google Popup ပိတ်နေပါက Gmail ရိုက်ထည့်၍ ဝင်ပါ
-        </label>
-        <div class="flex gap-2">
-          <input type="email" id="quickEmailInput" placeholder="သင့် Gmail လိပ်စာ ရိုက်ထည့်ပါ..." value="" class="flex-1 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-micro-blue" />
-          <button type="button" onclick="window.handleQuickEmailLogin()" class="bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-4 py-2.5 rounded-xl shadow ios-btn shrink-0">
-            ဝင်မည် <i class="fa-solid fa-arrow-right ml-1"></i>
-          </button>
-        </div>
+        <label class="block text-[11px] font-bold text-slate-500 text-center">Staff Account ဖြင့် ဝင်ရန်</label>
+        <input type="text" id="usernameLoginInput" autocomplete="username" placeholder="Username" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-micro-blue" />
+        <input type="password" id="passwordLoginInput" autocomplete="current-password" placeholder="Password" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:border-micro-blue" />
+        <button type="button" onclick="window.handleUsernameLogin()" class="w-full bg-micro-yellow hover:bg-amber-400 text-micro-navy font-extrabold text-xs px-4 py-2.5 rounded-xl shadow ios-btn">
+          Username + Password ဖြင့် ဝင်မည် <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+        <p class="text-[10px] text-slate-400 text-center">Account ကို Staff ကိုယ်တိုင် Register လုပ်၍မရပါ။ Admin ကသာ Create လုပ်ပေးနိုင်သည်။</p>
       </div>
     </div>
   </div>
@@ -778,6 +791,27 @@
       </div>
     </section>
 
+    <!-- ================= TAB 8: ENTERPRISE MODULE CENTER ================= -->
+    <section id="tab-enterprise" class="hidden space-y-5 animate-fade-up">
+      <div class="ios-card p-5 bg-gradient-to-r from-micro-navy to-micro-blue text-white border-b-4 border-micro-yellow">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div><div class="text-[10px] uppercase tracking-widest text-micro-yellow font-black">MTC Enterprise Control</div><h2 class="text-xl font-black">Enterprise Module Center</h2><p class="text-xs text-slate-200 mt-1">Customer, Student, Code, Course, Teacher, Attendance, Report, Document, AI နှင့် Admin Control အားလုံးကို Menu Bar ထဲမှ တစ်နေရာတည်းတွင် စီမံနိုင်ပါသည်။</p></div>
+          <div class="flex gap-2"><span id="enterpriseMonthBadge" class="px-3 py-2 rounded-xl bg-white/10 text-xs font-bold">Current Month</span><button type="button" onclick="window.monthClose()" class="px-3 py-2 rounded-xl bg-micro-yellow text-micro-navy text-xs font-black ios-btn">Monthly Close</button></div>
+        </div>
+      </div>
+      <div id="enterprisePanelCustomers" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelStudents" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelCodes" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelCourses" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelTeachers" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelAttendance" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelReports" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelDocuments" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelNotifications" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelAi" class="enterprise-panel hidden"></div>
+      <div id="enterprisePanelAdmin" class="enterprise-panel hidden"></div>
+    </section>
+
   </main>
 
   <!-- ================= MOBILE BOTTOM QUICK NAVIGATION BAR ================= -->
@@ -1059,6 +1093,14 @@
     </div>
   </div>
 
+  <!-- ================= ENTERPRISE MODALS ================= -->
+  <div id="enterpriseModal" class="hidden fixed inset-0 bg-micro-navy/60 backdrop-blur-sm z-[60] items-center justify-center p-4">
+    <div class="animate-modal-pop bg-white w-full max-w-2xl rounded-3xl p-5 md:p-6 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl border-t-4 border-micro-yellow">
+      <div class="flex items-center justify-between border-b pb-3"><h3 id="enterpriseModalTitle" class="font-black text-micro-navy">Enterprise Entry</h3><button onclick="window.closeModal('enterpriseModal')" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button></div>
+      <div id="enterpriseModalBody"></div>
+    </div>
+  </div>
+
   <!-- ================= SCRIPTS: CORE ENGINE + MYANMAR WEATHER + FIREBASE ================= -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script type="module">
@@ -1130,6 +1172,31 @@
       ],
       auditLogs: []
     };
+
+    // ================= ENTERPRISE DATA (ADDITIVE — ORIGINAL DATA KEPT) =================
+    Object.assign(defaultData, {
+      customers: [], students: [], generatedCodes: [], teachers: [], schedules: [], attendance: [],
+      notifications: [], invoices: [], certificates: [],
+      departments: [
+        {id:'D_SALES',name:'Sales Department',active:true},{id:'D_PURCHASE',name:'Purchase Department',active:true},
+        {id:'D_PAGE',name:'Page Admin Department',active:true},{id:'D_TEACHER',name:'Teacher Department',active:true},
+        {id:'D_HR',name:'HR Department',active:true},{id:'D_ACCOUNT',name:'Accountant Department',active:true},
+        {id:'D_MANAGER',name:'Manager Department',active:true}
+      ],
+      permissions: {
+        ADMIN:{View:true,Add:true,Edit:true,Delete:true,Approve:true,Export:true,Report:true,Settings:true},
+        MANAGER:{View:true,Add:true,Edit:true,Delete:false,Approve:true,Export:true,Report:true,Settings:false},
+        SALES:{View:true,Add:true,Edit:true,Delete:false,Approve:false,Export:true,Report:true,Settings:false},
+        PURCHASE:{View:true,Add:true,Edit:true,Delete:false,Approve:false,Export:true,Report:true,Settings:false},
+        PAGE_ADMIN:{View:true,Add:true,Edit:true,Delete:false,Approve:false,Export:true,Report:true,Settings:false},
+        ACADEMIC:{View:true,Add:true,Edit:true,Delete:false,Approve:false,Export:true,Report:true,Settings:false},
+        FINANCE:{View:true,Add:true,Edit:true,Delete:false,Approve:true,Export:true,Report:true,Settings:false},
+        TEACHER:{View:true,Add:true,Edit:true,Delete:false,Approve:false,Export:false,Report:false,Settings:false},
+        HR:{View:true,Add:true,Edit:true,Delete:false,Approve:true,Export:true,Report:true,Settings:false}
+      },
+      settings:{brandName:'MTC',logoData:'',studentPortalEnabled:false,aiProvider:'Gemini',defaultStudentType:'Paid Student',codePrefix:'MTC',monthlyCloseDay:28},
+      monthlyClosures:[], importHistory:[]
+    });
 
     // Load initial state from LocalStorage or Default
     let state = (() => {
@@ -1351,6 +1418,17 @@
     window.handleQuickEmailLogin = () => {
       window.showToast('လုံခြုံရေးအတွက် Google Sign-in ဖြင့်သာ ဝင်ရောက်ပါ။', 'error');
     };
+
+    window.handleUsernameLogin = async () => {
+      const username=(document.getElementById('usernameLoginInput')?.value||'').trim().toLowerCase();
+      const password=document.getElementById('passwordLoginInput')?.value||'';
+      if(!username||!password) return window.showToast('Username နှင့် Password နှစ်ခုလုံးထည့်ပါ','error');
+      const staff=(state.users||[]).find(u=>(u.username||'').toLowerCase()===username);
+      if(!staff||!staff.email) return window.showToast('Username မတွေ့ပါ။ Admin ထံမှ Account ရယူပါ','error');
+      if(staff.approved===false) return window.showToast('Admin Approval မရသေးပါ','error');
+      if(!auth) return window.showToast('Firebase Authentication မချိတ်ဆက်ရသေးပါ','error');
+      try{await signInWithEmailAndPassword(auth,staff.email,password)}catch(e){console.error(e);window.showToast('Username သို့မဟုတ် Password မှားနေပါသည်','error')}
+    };
     // Old local-only sessions are untrusted and must not bypass Firebase Authentication.
     localStorage.removeItem('MICRO_TC_ACTIVE_USER');
 
@@ -1363,7 +1441,7 @@
     (async () => {
       try {
         const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
-        const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+        const { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
         const { getFirestore, doc, onSnapshot, setDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
 
         const app = initializeApp(firebaseConfig);
@@ -1378,28 +1456,11 @@
         onSnapshot(sharedDocRef, (docSnap) => {
           if (docSnap.exists()) {
             const cloudData = docSnap.data();
-            // Merge cloud + local state. Never replace local arrays with an empty
-            // or older cloud snapshot, because this app is designed to preserve
-            // existing MTC data while new records are added.
-            const mergeById = (a,b) => {
-              const m = new Map((Array.isArray(a)?a:[]).filter(x=>x?.id).map(x=>[x.id,x]));
-              (Array.isArray(b)?b:[]).filter(x=>x?.id).forEach(x=>m.set(x.id,{...(m.get(x.id)||{}),...x}));
-              return [...m.values()];
-            };
-            state = {
-              ...defaultData,
-              ...state,
-              ...cloudData,
-              courses: mergeById(state.courses || defaultData.courses, cloudData.courses || []),
-              paymentMethods: Array.from(new Set([...(state.paymentMethods || defaultData.paymentMethods), ...(cloudData.paymentMethods || [])])),
-              leadSources: Array.from(new Set([...(state.leadSources || defaultData.leadSources), ...(cloudData.leadSources || [])])),
-              users: mergeById(state.users || defaultData.users, cloudData.users || []),
-              leads: mergeById(state.leads || [], cloudData.leads || []),
-              expenses: mergeById(state.expenses || [], cloudData.expenses || []),
-              scripts: mergeById(state.scripts || defaultData.scripts, cloudData.scripts || []),
-              batches: mergeById(state.batches || defaultData.batches, cloudData.batches || []),
-              auditLogs: mergeById(state.auditLogs || [], cloudData.auditLogs || [])
-            };
+            state = { ...defaultData, ...cloudData };
+            Object.keys(defaultData).forEach(k => {
+              if (Array.isArray(defaultData[k]) && !Array.isArray(state[k])) state[k] = JSON.parse(JSON.stringify(defaultData[k]));
+              if (defaultData[k] && typeof defaultData[k] === 'object' && !Array.isArray(defaultData[k]) && (!state[k] || typeof state[k] !== 'object')) state[k] = JSON.parse(JSON.stringify(defaultData[k]));
+            });
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
             document.getElementById('syncStatusBadge').innerHTML = `<i class="fa-solid fa-cloud text-micro-yellow mr-1"></i>Live Synced`;
             window.renderAll();
@@ -1410,7 +1471,6 @@
           if (user) {
             localStorage.setItem('MICRO_TC_ACTIVE_USER', JSON.stringify({ email: user.email, displayName: user.displayName }));
             activateUserSession(user);
-            try { await loadCloud(); } catch (e) { console.warn('MTC+ post-login sync', e); }
           }
         });
       } catch (err) {
@@ -1457,7 +1517,8 @@
       manager: '၄။ Manager & Follow-up Content Hub',
       academic: '၅။ Academic & Attendance ဌာန',
       finance: '၆။ Purchase & Finance ဌာန',
-      admin: '၇။ Founder / Admin Control Settings'
+      admin: '၇။ Founder / Admin Control Settings',
+      enterprise: '၈။ MTC Enterprise Module Center'
     };
 
     window.switchTab = (tab) => {
@@ -1479,7 +1540,7 @@
       }
 
       currentActiveTab = tab;
-      ['dashboard', 'leads', 'sales', 'manager', 'academic', 'finance', 'admin'].forEach(t => {
+      ['dashboard', 'leads', 'sales', 'manager', 'academic', 'finance', 'admin', 'enterprise'].forEach(t => {
         const sec = document.getElementById('tab-' + t);
         if (sec) sec.classList.toggle('hidden', t !== tab);
         const navBtn = document.getElementById('nav-' + t);
@@ -1630,6 +1691,7 @@
       renderAcademicTab();
       renderFinanceTab(filteredExpenses);
       renderAdminPanel();
+      renderEnterprise();
     };
 
     function renderDashboardBreakdowns(filteredLeads) {
@@ -2371,12 +2433,16 @@
         document.getElementById('editStaffId').value = u.id;
         document.getElementById('staffNameInput').value = u.name || '';
         document.getElementById('staffEmailInput').value = u.email || '';
+        document.getElementById('staffUsernameInput').value = u.username || '';
+        document.getElementById('staffPasswordInput').value = '';
         const uRoles = Array.isArray(u.roles) ? u.roles : [u.role || 'PAGE_ADMIN'];
         chks.forEach(chk => { chk.checked = uRoles.includes(chk.value); });
       } else {
         document.getElementById('editStaffId').value = '';
         document.getElementById('staffNameInput').value = '';
         document.getElementById('staffEmailInput').value = '';
+        document.getElementById('staffUsernameInput').value = '';
+        document.getElementById('staffPasswordInput').value = '';
         chks.forEach(chk => { chk.checked = chk.value === 'PAGE_ADMIN'; });
       }
       window.openModal('staffModal');
@@ -2386,6 +2452,7 @@
       const editId = document.getElementById('editStaffId').value;
       const name = document.getElementById('staffNameInput').value.trim();
       const email = document.getElementById('staffEmailInput').value.trim();
+      const username = document.getElementById('staffUsernameInput').value.trim().toLowerCase();
       const selectedRoles = Array.from(document.querySelectorAll('.staff-role-chk:checked')).map(c => c.value);
 
       if (!name || !email) return window.showToast('ဝန်ထမ်းအမည်နှင့် Gmail ထည့်သွင်းပါ', 'error');
@@ -2396,6 +2463,7 @@
         if (u) {
           u.name = name;
           u.email = email;
+          u.username = username || u.username || email.split('@')[0];
           u.roles = selectedRoles;
           u.role = selectedRoles[0];
         }
@@ -2407,6 +2475,7 @@
           id: 'u_' + Date.now(),
           name,
           email,
+          username: username || email.split('@')[0],
           role: selectedRoles[0],
           roles: selectedRoles,
           approved: true
@@ -2503,6 +2572,74 @@
       state.leadSources.splice(idx, 1);
       await syncToCloud();
     };
+
+
+    // ================= 14. ENTERPRISE MODULES =================
+    const ENT_PANELS=['customers','students','codes','courses','teachers','attendance','reports','documents','notifications','ai','admin'];
+    let currentEnterprisePanel='customers';
+    const esc=v=>String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    const uid=p=>p+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);
+    function isAdmin(){const u=getActiveUser();return !!(u.roles||[]).some(r=>r==='FOUNDER'||r==='ADMIN')}
+    function hasPermission(action, dept){const u=getActiveUser(); if(isAdmin()) return true; const roles=u.roles||[]; return roles.some(r=>(r===dept||!dept) && state.permissions?.[r]?.[action]);}
+    function requirePerm(action,dept){if(!hasPermission(action,dept)){window.showToast('ဤလုပ်ဆောင်ချက်အတွက် Admin ခွင့်ပြုချက် မရှိပါ','error');return false}return true}
+    function monthKey(d=new Date()){return new Date(d).toISOString().slice(0,7)}
+    function enterpriseHeader(title,subtitle,button=''){return `<div class="flex flex-col md:flex-row md:items-center justify-between gap-3"><div><h2 class="text-lg font-black text-micro-navy">${title}</h2><p class="text-xs text-slate-500 mt-1">${subtitle}</p></div>${button}</div>`}
+    window.setEnterprisePanel=(panel)=>{currentEnterprisePanel=ENT_PANELS.includes(panel)?panel:'customers';ENT_PANELS.forEach(p=>document.getElementById('enterprisePanel'+p[0].toUpperCase()+p.slice(1))?.classList.toggle('hidden',p!==currentEnterprisePanel));renderEnterprisePanel()}
+    function openEnt(title,html){document.getElementById('enterpriseModalTitle').textContent=title;document.getElementById('enterpriseModalBody').innerHTML=html;window.openModal('enterpriseModal')}
+    function courseOptions(){return state.courses.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('')}
+    function teacherOptions(){return state.teachers.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}
+    function studentOptions(){return state.students.map(t=>`<option value="${esc(t.id)}">${esc(t.name)} (${esc(t.studentCode||'-')})</option>`).join('')}
+
+    window.openCustomerEntry=()=>openEnt('Customer Inquiry စာရင်းသွင်းရန်',`<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"><input id="ecName" class="border rounded-xl px-3 py-2.5" placeholder="Customer Name *"><input id="ecPhone" class="border rounded-xl px-3 py-2.5" placeholder="Phone (မရှိရင် မထည့်လည်းရ)"><input id="ecDate" type="date" value="${new Date().toISOString().slice(0,10)}" class="border rounded-xl px-3 py-2.5"><select id="ecCourse" class="border rounded-xl px-3 py-2.5"><option value="">Course မသတ်မှတ်ရသေး</option>${courseOptions()}</select><input id="ecSource" class="border rounded-xl px-3 py-2.5" placeholder="Source"><textarea id="ecNote" class="sm:col-span-2 border rounded-xl px-3 py-2.5" rows="3" placeholder="Inquiry / Remark"></textarea></div><button onclick="window.saveEnterpriseCustomer()" class="mt-4 w-full py-3 rounded-2xl bg-micro-navy text-micro-yellow font-black">💾 Customer သိမ်းမည်</button>`)
+    window.saveEnterpriseCustomer=async()=>{if(!requirePerm('Add','PAGE_ADMIN'))return;const name=document.getElementById('ecName').value.trim();if(!name)return window.showToast('Customer Name ထည့်ပါ','error');state.customers.unshift({id:uid('CUS'),name,phone:document.getElementById('ecPhone').value.trim()||'-',date:document.getElementById('ecDate').value,course:document.getElementById('ecCourse').value||'-',source:document.getElementById('ecSource').value.trim()||'-',note:document.getElementById('ecNote').value.trim()||'-',createdBy:getActiveUser().name});state.notifications.unshift({id:uid('N'),title:'Customer အသစ်',body:`${name} ကို Customer Inquiry ထဲသို့ ထည့်သွင်းထားသည်`,date:new Date().toISOString()});window.closeModal('enterpriseModal');await syncToCloud(`Customer "${name}" အသစ်ထည့်သွင်းခဲ့သည်`);window.setEnterprisePanel('customers')}
+
+    window.openStudentEntry=()=>openEnt('Student Management — Student အသစ်သွင်းရန်',`<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"><input id="esName" class="border rounded-xl px-3 py-2.5" placeholder="Student Name *"><input id="esPhone" class="border rounded-xl px-3 py-2.5" placeholder="Phone"><input id="esDate" type="date" value="${new Date().toISOString().slice(0,10)}" class="border rounded-xl px-3 py-2.5"><select id="esType" class="border rounded-xl px-3 py-2.5"><option>Paid Student</option><option>Day 1 Free Pass</option></select><select id="esCourse" class="border rounded-xl px-3 py-2.5">${courseOptions()}</select><input id="esBatch" class="border rounded-xl px-3 py-2.5" placeholder="Batch (optional)"><input id="esFee" type="number" class="border rounded-xl px-3 py-2.5" placeholder="Paid / Course Fee"><textarea id="esNote" class="sm:col-span-2 border rounded-xl px-3 py-2.5" rows="2" placeholder="Remark"></textarea></div><button onclick="window.saveEnterpriseStudent()" class="mt-4 w-full py-3 rounded-2xl bg-micro-navy text-micro-yellow font-black">💾 Student သိမ်းမည်</button>`)
+    window.saveEnterpriseStudent=async()=>{if(!requirePerm('Add','ACADEMIC'))return;const name=document.getElementById('esName').value.trim();if(!name)return window.showToast('Student Name ထည့်ပါ','error');const st={id:uid('STU'),name,phone:document.getElementById('esPhone').value.trim()||'-',date:document.getElementById('esDate').value,type:document.getElementById('esType').value,course:document.getElementById('esCourse').value,batch:document.getElementById('esBatch').value.trim()||'-',fee:Number(document.getElementById('esFee').value||0),note:document.getElementById('esNote').value.trim()||'-',studentCode:'',createdBy:getActiveUser().name};state.students.unshift(st);window.closeModal('enterpriseModal');await syncToCloud(`Student "${name}" အသစ်ထည့်သွင်းခဲ့သည်`);window.setEnterprisePanel('students')}
+
+    window.generateStudentCode=async()=>{if(!requirePerm('Add','ACADEMIC'))return;const sid=document.getElementById('codeStudent').value;const st=state.students.find(x=>x.id===sid);if(!st)return window.showToast('Student ရွေးချယ်ပါ','error');const prefix=state.settings.codePrefix||'MTC';const code=`${prefix}${new Date().getFullYear().toString().slice(-2)}-${String(state.generatedCodes.length+1).padStart(4,'0')}`;st.studentCode=code;state.generatedCodes.unshift({id:uid('CODE'),code,studentId:st.id,studentName:st.name,course:st.course,generatedBy:getActiveUser().name,date:new Date().toISOString().slice(0,10)});await syncToCloud(`Student Code ${code} ကို ${st.name} အတွက် Generate လုပ်ခဲ့သည်`);document.getElementById('generatedCodeOutput').textContent=code;document.getElementById('generatedCodeMeta').textContent=`${st.name} • ${st.course}`;window.showToast('Short Student Code Generate ပြီးပါပြီ')}
+    window.copyGeneratedCode=()=>{const v=document.getElementById('generatedCodeOutput').textContent;if(v&&v!=='—')navigator.clipboard.writeText(v).then(()=>window.showToast('Code Copy ကူးပြီးပါပြီ'))}
+    window.shareStudentCode=()=>{const code=document.getElementById('generatedCodeOutput').textContent;if(navigator.share&&code&&code!=='—')navigator.share({title:'MTC Student Code',text:`MTC Student Code: ${code}`});else window.copyGeneratedCode()}
+
+    window.openTeacherEntry=()=>openEnt('Teacher Management — Teacher အသစ်သွင်းရန်',`<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"><input id="etName" class="border rounded-xl px-3 py-2.5" placeholder="Teacher Display Name *"><input id="etPhoto" class="border rounded-xl px-3 py-2.5" placeholder="Photo URL (optional)"><input id="etDept" class="border rounded-xl px-3 py-2.5" placeholder="Department / Role"><select id="etCourse" class="border rounded-xl px-3 py-2.5">${courseOptions()}</select><input id="etBatch" class="border rounded-xl px-3 py-2.5" placeholder="Batch"><input id="etRoom" class="border rounded-xl px-3 py-2.5" placeholder="Room"><textarea id="etSchedule" class="sm:col-span-2 border rounded-xl px-3 py-2.5" rows="2" placeholder="Mon, Wed, Fri • 8:00 PM - 9:30 PM"></textarea></div><button onclick="window.saveTeacher()" class="mt-4 w-full py-3 rounded-2xl bg-micro-navy text-micro-yellow font-black">💾 Teacher သိမ်းမည်</button>`)
+    window.saveTeacher=async()=>{if(!requirePerm('Add','ACADEMIC'))return;const name=document.getElementById('etName').value.trim();if(!name)return window.showToast('Teacher Name ထည့်ပါ','error');const t={id:uid('T'),name,photo:document.getElementById('etPhoto').value.trim()||'',department:document.getElementById('etDept').value.trim()||'Teacher',course:document.getElementById('etCourse').value,batch:document.getElementById('etBatch').value.trim()||'-',room:document.getElementById('etRoom').value.trim()||'-',schedule:document.getElementById('etSchedule').value.trim()||'-'};state.teachers.unshift(t);await syncToCloud(`Teacher "${name}" ထည့်သွင်းခဲ့သည်`);window.closeModal('enterpriseModal');window.setEnterprisePanel('teachers')}
+
+    window.openScheduleEntry=()=>openEnt('Teacher Schedule / Timetable',`<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"><select id="schTeacher" class="border rounded-xl px-3 py-2.5">${teacherOptions()}</select><select id="schCourse" class="border rounded-xl px-3 py-2.5">${courseOptions()}</select><input id="schDate" type="date" value="${new Date().toISOString().slice(0,10)}" class="border rounded-xl px-3 py-2.5"><input id="schTime" class="border rounded-xl px-3 py-2.5" placeholder="8:00 PM - 9:30 PM"><input id="schBatch" class="border rounded-xl px-3 py-2.5" placeholder="Batch"><input id="schRoom" class="border rounded-xl px-3 py-2.5" placeholder="Room"></div><button onclick="window.saveSchedule()" class="mt-4 w-full py-3 rounded-2xl bg-micro-navy text-micro-yellow font-black">💾 Schedule သိမ်းမည်</button>`)
+    window.saveSchedule=async()=>{if(!requirePerm('Add','ACADEMIC'))return;const tid=document.getElementById('schTeacher').value,t=state.teachers.find(x=>x.id===tid);state.schedules.unshift({id:uid('SCH'),teacherId:tid,teacherName:t?.name||'-',course:document.getElementById('schCourse').value,date:document.getElementById('schDate').value,time:document.getElementById('schTime').value||'-',batch:document.getElementById('schBatch').value||'-',room:document.getElementById('schRoom').value||'-'});await syncToCloud('Teacher Schedule အသစ်သိမ်းခဲ့သည်');window.closeModal('enterpriseModal');window.setEnterprisePanel('teachers')}
+
+    window.markStudentAttendance=async(sid,status='Present')=>{if(!requirePerm('Add','ACADEMIC'))return;const st=state.students.find(x=>x.id===sid);if(!st)return;state.attendance.unshift({id:uid('ATT'),studentId:sid,studentName:st.name,studentCode:st.studentCode||'-',course:st.course,batch:st.batch,date:new Date().toISOString().slice(0,10),status,markedBy:getActiveUser().name});await syncToCloud(`Attendance ${st.name} = ${status}`);window.setEnterprisePanel('attendance')}
+
+    window.exportEnterpriseE=()=>{if(!requirePerm('Export'))return;const rows=state.students.map(x=>({StudentCode:x.studentCode||'-',StudentName:x.name,Phone:x.phone,Type:x.type,Course:x.course,Batch:x.batch,Date:x.date,Fee:x.fee,Note:x.note}));const csv='\uFEFF'+['StudentCode,StudentName,Phone,Type,Course,Batch,Date,Fee,Note',...rows.map(r=>[r.StudentCode,r.StudentName,r.Phone,r.Type,r.Course,r.Batch,r.Date,r.Fee,r.Note].map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`MTC_Students_${new Date().toISOString().slice(0,10)}.csv`;a.click();state.importHistory.unshift({id:uid('EXP'),type:'E Export',date:new Date().toISOString(),by:getActiveUser().name});syncToCloud('Student data E Export ထုတ်ခဲ့သည်')}
+    window.importEnterpriseE=async(ev)=>{if(!requirePerm('Add'))return;const file=ev.target.files[0];if(!file)return;const text=await file.text();const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(Boolean);if(lines.length<2)return window.showToast('E file အချက်အလက် မလုံလောက်ပါ','error');const head=lines[0].split(',').map(x=>x.replace(/^"|"$/g,''));let count=0;for(const line of lines.slice(1)){const vals=[];let cur='',q=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'&&line[i+1]==='"'){cur+='"';i++;continue}if(ch==='"'){q=!q;continue}if(ch===','&&!q){vals.push(cur);cur='';continue}cur+=ch}vals.push(cur);const o={};head.forEach((h,i)=>o[h]=vals[i]||'');if(o.StudentName){const existing=state.students.find(s=>o.StudentCode&&s.studentCode===o.StudentCode);if(existing)Object.assign(existing,{name:o.StudentName,phone:o.Phone||'-',type:o.Type||existing.type,course:o.Course||existing.course,batch:o.Batch||'-',date:o.Date||existing.date,fee:Number(o.Fee||existing.fee),note:o.Note||'-'});else state.students.push({id:uid('STU'),name:o.StudentName,phone:o.Phone||'-',type:o.Type||'Paid Student',course:o.Course||state.courses[0]?.name||'-',batch:o.Batch||'-',date:o.Date||new Date().toISOString().slice(0,10),fee:Number(o.Fee||0),note:o.Note||'-',studentCode:o.StudentCode||''});count++}}state.importHistory.unshift({id:uid('IMP'),type:'E Import',count,date:new Date().toISOString(),by:getActiveUser().name});await syncToCloud(`E Import ဖြင့် ${count} row ထည့်/ပြင်ခဲ့သည်`);window.showToast(`${count} row Import ပြီးပါပြီ`);window.setEnterprisePanel('students')}
+
+    window.printCertificate=studentId=>{const st=state.students.find(x=>x.id===studentId);if(!st)return;const el=document.createElement('div');el.innerHTML=`<div style="padding:50px;text-align:center;border:10px solid #142143;font-family:Arial"><div style="font-size:18px;font-weight:900">MTC</div><h1>Certificate of Completion</h1><p>This certificate is proudly presented to</p><h2>${esc(st.name)}</h2><p>for completing <strong>${esc(st.course)}</strong></p><p>${esc(st.date)}</p></div>`;html2pdf().from(el).set({margin:8,filename:`MTC_Certificate_${st.studentCode||st.id}.pdf`,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}}).save()}
+    window.printEnterpriseInvoice=studentId=>{const st=state.students.find(x=>x.id===studentId);if(!st)return;const el=document.createElement('div');el.innerHTML=`<div style="padding:30px;font-family:Arial;color:#142143;border:3px solid #142143"><h1>MTC — Invoice</h1><p><b>Student:</b> ${esc(st.name)}</p><p><b>Code:</b> ${esc(st.studentCode||'-')}</p><p><b>Course:</b> ${esc(st.course)}</p><p><b>Type:</b> ${esc(st.type)}</p><p><b>Amount:</b> ${Number(st.fee||0).toLocaleString()} Ks</p><p><b>Date:</b> ${esc(st.date)}</p></div>`;html2pdf().from(el).set({margin:10,filename:`MTC_Invoice_${st.studentCode||st.id}.pdf`,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a5',orientation:'landscape'}}).save()}
+
+    window.addDepartment=async()=>{if(!requirePerm('Settings','ADMIN'))return;const name=prompt('Department အမည်ထည့်ပါ');if(!name)return;state.departments.push({id:uid('DEP'),name,active:true});await syncToCloud(`Department "${name}" ထည့်သွင်းခဲ့သည်`);window.setEnterprisePanel('admin')}
+    window.togglePermission=async(role,action)=>{if(!isAdmin())return window.showToast('Admin သာ Permission ပြင်နိုင်သည်','error');if(!state.permissions[role])state.permissions[role]={};state.permissions[role][action]=!state.permissions[role][action];await syncToCloud(`Permission ${role}/${action} ပြောင်းလဲခဲ့သည်`);window.setEnterprisePanel('admin')}
+    window.createStaffAccount=async()=>{if(!isAdmin())return window.showToast('Admin သာ Staff Account Create လုပ်နိုင်သည်','error');const name=document.getElementById('eaName').value.trim(),email=document.getElementById('eaEmail').value.trim(),username=document.getElementById('eaUsername').value.trim().toLowerCase(),password=document.getElementById('eaPassword').value;const role=document.getElementById('eaRole').value;if(!name||!email||!username||password.length<6)return window.showToast('Name, Email, Username နှင့် Password (အနည်းဆုံး 6 လုံး) ဖြည့်ပါ','error');if(state.users.some(u=>(u.username||'').toLowerCase()===username))return window.showToast('Username ရှိပြီးသားပါ','error');if(!auth)return window.showToast('Firebase Auth မချိတ်ဆက်ရသေးပါ','error');try{const {initializeApp,getApps}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');const {getAuth,createUserWithEmailAndPassword}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');const secondary=getApps().find(a=>a.name==='MTCAccountCreator')||initializeApp(firebaseConfig,'MTCAccountCreator');const secAuth=getAuth(secondary);await createUserWithEmailAndPassword(secAuth,email,password);await signOutFn(secAuth);state.users.push({id:uid('USR'),name,email,username,role,roles:[role],approved:true});await syncToCloud(`Staff Account ${username} Create လုပ်ခဲ့သည်`);window.showToast(`Staff ${username} Account ဖန်တီးပြီးပါပြီ`);window.setEnterprisePanel('admin')}catch(e){console.error(e);window.showToast(e.code==='auth/email-already-in-use'?'Email Account ရှိပြီးသားပါ':`Account Create မအောင်မြင်ပါ: ${e.message}`,'error')}}
+    window.saveEnterpriseSettings=async()=>{if(!isAdmin())return window.showToast('Admin သာ Settings ပြင်နိုင်သည်','error');state.settings.codePrefix=document.getElementById('setPrefix').value.trim()||'MTC';state.settings.aiProvider=document.getElementById('setAiProvider').value;state.settings.studentPortalEnabled=document.getElementById('setPortal').checked;state.settings.brandName=document.getElementById('setBrand').value.trim()||'MTC';await syncToCloud('Enterprise Settings သိမ်းဆည်းခဲ့သည်');window.showToast('Admin Settings သိမ်းဆည်းပြီးပါပြီ')}
+    window.monthClose=async()=>{if(!isAdmin())return window.showToast('Admin သာ Monthly Close လုပ်နိုင်သည်','error');const m=monthKey();if(state.monthlyClosures.some(x=>x.month===m))return window.showToast(`${m} ပိတ်ပြီးသားပါ`,'error');state.monthlyClosures.push({id:uid('MON'),month:m,closedAt:new Date().toISOString(),closedBy:getActiveUser().name});await syncToCloud(`${m} Monthly Close လုပ်ခဲ့သည်`);window.showToast(`${m} ကို Close လုပ်ပြီး Historical Data မပျက်ပါ`) }
+
+    function renderEnterprisePanel(){
+      const ids=Object.fromEntries(ENT_PANELS.map(p=>[p,document.getElementById('enterprisePanel'+p[0].toUpperCase()+p.slice(1))]));
+      Object.entries(ids).forEach(([p,el])=>{if(el)el.classList.toggle('hidden',p!==currentEnterprisePanel)});
+      document.getElementById('enterpriseMonthBadge').textContent='Current Month: '+monthKey();
+      const customers=state.customers||[],students=state.students||[],teachers=state.teachers||[];
+      if(currentEnterprisePanel==='customers') ids.customers.innerHTML=enterpriseHeader('Customer Inquiry','Student Management နှင့် သီးခြား Customer စုံစမ်းမေးမြန်းချက်စာရင်း',`<button onclick="window.openCustomerEntry()" class="bg-micro-navy text-micro-yellow px-4 py-2.5 rounded-2xl font-black">+ Customer အသစ်</button>`)+`<div class="ios-card overflow-auto"><table class="w-full text-xs"><thead><tr class="bg-slate-50"><th class="p-3 text-left">Date</th><th class="p-3 text-left">Customer</th><th class="p-3 text-left">Phone</th><th class="p-3 text-left">Course</th><th class="p-3 text-left">Source</th><th class="p-3 text-left">Remark</th></tr></thead><tbody>${customers.map(x=>`<tr class="border-t"><td class="p-3">${esc(x.date)}</td><td class="p-3 font-bold">${esc(x.name)}</td><td class="p-3">${esc(x.phone)}</td><td class="p-3">${esc(x.course)}</td><td class="p-3">${esc(x.source)}</td><td class="p-3">${esc(x.note)}</td></tr>`).join('')||'<tr><td colspan="6" class="p-8 text-center text-slate-400">Customer မရှိသေးပါ</td></tr>'}</tbody></table></div>`;
+      if(currentEnterprisePanel==='students') ids.students.innerHTML=enterpriseHeader('Student Management','Paid Student / Day 1 Free Pass ကို သီးခြားခွဲပြီး သိမ်းဆည်းနိုင်သည်',`<button onclick="window.openStudentEntry()" class="bg-micro-navy text-micro-yellow px-4 py-2.5 rounded-2xl font-black">+ Student အသစ်</button>`)+`<div class="ios-card overflow-auto"><table class="w-full text-xs"><thead><tr class="bg-slate-50"><th class="p-3 text-left">Code</th><th class="p-3 text-left">Name</th><th class="p-3 text-left">Phone</th><th class="p-3 text-left">Type</th><th class="p-3 text-left">Course</th><th class="p-3 text-left">Batch</th><th class="p-3 text-left">Date</th><th class="p-3">Action</th></tr></thead><tbody>${students.map(x=>`<tr class="border-t"><td class="p-3 font-black text-micro-blue">${esc(x.studentCode||'-')}</td><td class="p-3 font-bold">${esc(x.name)}</td><td class="p-3">${esc(x.phone||'-')}</td><td class="p-3">${esc(x.type)}</td><td class="p-3">${esc(x.course)}</td><td class="p-3">${esc(x.batch||'-')}</td><td class="p-3">${esc(x.date)}</td><td class="p-3 whitespace-nowrap"><button onclick="window.printEnterpriseInvoice('${x.id}')" class="px-2 py-1 bg-blue-50 rounded-lg text-micro-blue">Invoice</button> <button onclick="window.printCertificate('${x.id}')" class="px-2 py-1 bg-amber-50 rounded-lg text-amber-700">Certificate</button></td></tr>`).join('')||'<tr><td colspan="8" class="p-8 text-center text-slate-400">Student မရှိသေးပါ</td></tr>'}</tbody></table></div>`;
+      if(currentEnterprisePanel==='codes') ids.codes.innerHTML=enterpriseHeader('Student Code Generator','Student Name + Course ရွေးချယ်ပြီး Short Code Generate / Copy / Share လုပ်နိုင်သည်')+`<div class="grid lg:grid-cols-2 gap-5"><div class="ios-card p-5 space-y-3"><select id="codeStudent" class="w-full border rounded-xl px-3 py-3">${studentOptions()}</select><button onclick="window.generateStudentCode()" class="w-full bg-micro-navy text-micro-yellow py-3 rounded-2xl font-black">Generate Short Code</button><div class="text-center bg-slate-50 rounded-2xl p-5"><div id="generatedCodeOutput" class="text-3xl font-black text-micro-blue">—</div><div id="generatedCodeMeta" class="text-xs text-slate-500 mt-1">Student မရွေးရသေးပါ</div><div class="flex justify-center gap-2 mt-4"><button onclick="window.copyGeneratedCode()" class="px-4 py-2 rounded-xl bg-white border font-bold">Copy</button><button onclick="window.shareStudentCode()" class="px-4 py-2 rounded-xl bg-micro-yellow font-black">Send</button></div></div></div><div class="ios-card p-5"><h3 class="font-black text-micro-navy mb-3">Generated Code History</h3><div class="space-y-2 max-h-96 overflow-auto">${(state.generatedCodes||[]).map(x=>`<div class="p-3 rounded-xl bg-slate-50 border text-xs"><b class="text-micro-blue">${esc(x.code)}</b> — ${esc(x.studentName)} • ${esc(x.course)}<div class="text-slate-400 mt-1">${esc(x.date)} • ${esc(x.generatedBy)}</div></div>`).join('')||'<div class="text-slate-400 text-center py-6">Code မရှိသေးပါ</div>'}</div></div></div>`;
+      if(currentEnterprisePanel==='courses') ids.courses.innerHTML=enterpriseHeader('Course Management','Course တစ်ခါထည့်ပြီး Student / Code / Batch / Schedule / Attendance / Report / Finance တွင် ပြန်ရွေးသုံးနိုင်သည်')+`<div class="ios-card p-5 space-y-4"><div class="flex gap-2"><input id="entCourseName" class="flex-1 border rounded-xl px-3 py-2.5" placeholder="Course Name"><input id="entCourseFee" type="number" class="w-40 border rounded-xl px-3 py-2.5" placeholder="Fee"><button onclick="window.addEntCourse()" class="px-4 rounded-xl bg-micro-navy text-micro-yellow font-black">+ Add</button></div><div class="space-y-2">${state.courses.map(c=>`<div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-xs"><b>${esc(c.name)}</b><span>${Number(c.fee||0).toLocaleString()} Ks</span></div>`).join('')}</div></div>`;
+      if(currentEnterprisePanel==='teachers') ids.teachers.innerHTML=enterpriseHeader('Teacher & Schedule','Teacher photo/name + course + batch + room + timetable',`<div class="flex gap-2"><button onclick="window.openTeacherEntry()" class="bg-micro-navy text-micro-yellow px-4 py-2.5 rounded-2xl font-black">+ Teacher</button><button onclick="window.openScheduleEntry()" class="bg-micro-yellow text-micro-navy px-4 py-2.5 rounded-2xl font-black">+ Schedule</button></div>`)+`<div class="grid md:grid-cols-2 gap-4">${teachers.map(t=>`<div class="ios-card p-4 flex gap-3"><div class="w-14 h-14 rounded-2xl bg-slate-100 overflow-hidden flex items-center justify-center">${t.photo?`<img src="${esc(t.photo)}" class="w-full h-full object-cover">`:'👨‍🏫'}</div><div class="text-xs"><b class="text-sm">${esc(t.name)}</b><div>${esc(t.department)}</div><div>${esc(t.course)} • ${esc(t.batch)}</div><div>Room: ${esc(t.room)}</div><div class="text-slate-500 mt-1">${esc(t.schedule)}</div></div></div>`).join('')}</div><div class="ios-card overflow-auto"><table class="w-full text-xs"><thead><tr class="bg-slate-50"><th class="p-3 text-left">Date</th><th class="p-3">Teacher</th><th class="p-3">Course</th><th class="p-3">Batch</th><th class="p-3">Time</th><th class="p-3">Room</th></tr></thead><tbody>${(state.schedules||[]).map(x=>`<tr class="border-t"><td class="p-3">${esc(x.date)}</td><td class="p-3">${esc(x.teacherName)}</td><td class="p-3">${esc(x.course)}</td><td class="p-3">${esc(x.batch)}</td><td class="p-3">${esc(x.time)}</td><td class="p-3">${esc(x.room)}</td></tr>`).join('')||'<tr><td colspan="6" class="p-8 text-center text-slate-400">Schedule မရှိသေးပါ</td></tr>'}</tbody></table></div>`;
+      if(currentEnterprisePanel==='attendance') ids.attendance.innerHTML=enterpriseHeader('Attendance','Student တစ်ယောက်ချင်းစီကို Present / Absent / Late အဖြစ် မှတ်တမ်းတင်ပြီး Date နဲ့ ပြန်ကြည့်နိုင်သည်')+`<div class="ios-card overflow-auto"><table class="w-full text-xs"><thead><tr class="bg-slate-50"><th class="p-3 text-left">Student</th><th class="p-3">Code</th><th class="p-3">Course</th><th class="p-3">Date</th><th class="p-3">Status</th><th class="p-3">By</th><th class="p-3">Mark</th></tr></thead><tbody>${students.map(x=>`<tr class="border-t"><td class="p-3 font-bold">${esc(x.name)}</td><td class="p-3">${esc(x.studentCode||'-')}</td><td class="p-3">${esc(x.course)}</td><td class="p-3">${new Date().toISOString().slice(0,10)}</td><td class="p-3">${(state.attendance||[]).find(a=>a.studentId===x.id&&a.date===new Date().toISOString().slice(0,10))?.status||'-'}</td><td class="p-3">${(state.attendance||[]).find(a=>a.studentId===x.id&&a.date===new Date().toISOString().slice(0,10))?.markedBy||'-'}</td><td class="p-3 whitespace-nowrap"><button onclick="window.markStudentAttendance('${x.id}','Present')" class="px-2 py-1 bg-emerald-50 rounded">Present</button><button onclick="window.markStudentAttendance('${x.id}','Absent')" class="px-2 py-1 bg-rose-50 rounded">Absent</button><button onclick="window.markStudentAttendance('${x.id}','Late')" class="px-2 py-1 bg-amber-50 rounded">Late</button></td></tr>`).join('')}</tbody></table></div>`;
+      if(currentEnterprisePanel==='reports'){const studentsCount=students.length, paid=students.filter(x=>x.type==='Paid Student').length,free=students.filter(x=>x.type==='Day 1 Free Pass').length;ids.reports.innerHTML=enterpriseHeader('Reports & E Import / Export','Detail + Summary, Date/Month filters နှင့် E file Import / Export')+`<div class="grid sm:grid-cols-3 gap-3"><div class="ios-card p-4"><b>Total Students</b><div class="text-2xl font-black">${studentsCount}</div></div><div class="ios-card p-4"><b>Paid</b><div class="text-2xl font-black text-micro-blue">${paid}</div></div><div class="ios-card p-4"><b>Day 1 Free Pass</b><div class="text-2xl font-black text-amber-600">${free}</div></div></div><div class="ios-card p-5 space-y-3"><div class="flex flex-wrap gap-2"><button onclick="window.exportEnterpriseE()" class="px-4 py-2.5 rounded-xl bg-micro-navy text-micro-yellow font-black">E Export</button><label class="px-4 py-2.5 rounded-xl bg-micro-yellow text-micro-navy font-black cursor-pointer">E Import<input type="file" accept=".csv,.txt" class="hidden" onchange="window.importEnterpriseE(event)"></label><button onclick="window.exportReportPDF()" class="px-4 py-2.5 rounded-xl bg-white border font-bold">PDF Summary</button><button onclick="window.exportBackupJSON()" class="px-4 py-2.5 rounded-xl bg-white border font-bold">Backup JSON</button></div><div class="text-[11px] text-slate-500">Export လုပ်ထားသော E file ထဲ Data ဖြည့်ပြီး ပြန် Import လုပ်နိုင်သည်။ StudentCode ရှိလျှင် existing record ကို update လုပ်ပြီး မရှိလျှင် အသစ်ထည့်သည်။</div></div>`}
+      if(currentEnterprisePanel==='documents') ids.documents.innerHTML=enterpriseHeader('Invoice & Certificate','Student Data မှ Auto ဖြည့်ပြီး MTC-branded PDF ထုတ်နိုင်သည်')+`<div class="ios-card overflow-auto"><table class="w-full text-xs"><thead><tr class="bg-slate-50"><th class="p-3 text-left">Student</th><th class="p-3">Code</th><th class="p-3">Course</th><th class="p-3">Type</th><th class="p-3">Documents</th></tr></thead><tbody>${students.map(x=>`<tr class="border-t"><td class="p-3 font-bold">${esc(x.name)}</td><td class="p-3">${esc(x.studentCode||'-')}</td><td class="p-3">${esc(x.course)}</td><td class="p-3">${esc(x.type)}</td><td class="p-3 whitespace-nowrap"><button onclick="window.printEnterpriseInvoice('${x.id}')" class="px-3 py-1.5 bg-blue-50 text-micro-blue rounded-xl font-bold">Invoice</button> <button onclick="window.printCertificate('${x.id}')" class="px-3 py-1.5 bg-amber-50 text-amber-700 rounded-xl font-bold">Certificate</button></td></tr>`).join('')}</tbody></table></div>`;
+      if(currentEnterprisePanel==='notifications') ids.notifications.innerHTML=enterpriseHeader('Notifications','System အကြောင်းကြားချက်များကို ဒီ Menu ထဲမှာ စုစည်းထားသည်')+`<div class="space-y-2">${(state.notifications||[]).map(n=>`<div class="ios-card p-4"><b>${esc(n.title)}</b><div class="text-xs text-slate-600 mt-1">${esc(n.body)}</div><div class="text-[10px] text-slate-400 mt-1">${esc(n.date)}</div></div>`).join('')||'<div class="ios-card p-8 text-center text-slate-400">Notification မရှိသေးပါ</div>'}</div>`;
+      if(currentEnterprisePanel==='ai') ids.ai.innerHTML=enterpriseHeader('AI Assistant','Gemini ကို default သုံးပြီး မရပါက OpenAI provider ကို ပြောင်းနိုင်သော configuration')+`<div class="ios-card p-5 space-y-4"><div class="grid sm:grid-cols-2 gap-3"><select id="setAiProvider" class="border rounded-xl px-3 py-2.5"><option ${state.settings.aiProvider==='Gemini'?'selected':''}>Gemini</option><option ${state.settings.aiProvider==='OpenAI'?'selected':''}>OpenAI</option></select><input id="aiPrompt" class="border rounded-xl px-3 py-2.5" placeholder="AI ကို မေးလိုသည့် အကြောင်းအရာ"></div><button onclick="window.runEnterpriseAi()" class="w-full bg-micro-navy text-micro-yellow py-3 rounded-2xl font-black">AI Analysis</button><div id="aiEnterpriseOutput" class="bg-slate-50 rounded-2xl p-4 text-xs min-h-24">AI output ဒီနေရာမှာ ပေါ်မည်။ API key ကို public HTML ထဲ hard-code မလုပ်ထားပါ။</div></div>`;
+      if(currentEnterprisePanel==='admin') ids.admin.innerHTML=enterpriseHeader('Enterprise Admin Control Center','Department, Staff Account, Roles, Permissions, Approval, Report/Dashboard Access, Defaults, Branding နှင့် custom configuration အားလုံးကို Admin ထိန်းချုပ်နိုင်သည်')+`<div class="grid lg:grid-cols-2 gap-5"><div class="ios-card p-5 space-y-3"><h3 class="font-black">Staff Account Create</h3><input id="eaName" class="w-full border rounded-xl px-3 py-2.5 text-xs" placeholder="Staff Name"><input id="eaEmail" type="email" class="w-full border rounded-xl px-3 py-2.5 text-xs" placeholder="Staff Gmail"><input id="eaUsername" class="w-full border rounded-xl px-3 py-2.5 text-xs" placeholder="Username"><input id="eaPassword" type="password" class="w-full border rounded-xl px-3 py-2.5 text-xs" placeholder="Temporary Password (6+ chars)"><select id="eaRole" class="w-full border rounded-xl px-3 py-2.5 text-xs">${Object.keys(state.permissions).map(r=>`<option>${r}</option>`).join('')}</select><button onclick="window.createStaffAccount()" class="w-full bg-micro-navy text-micro-yellow py-3 rounded-2xl font-black">Create Staff Account</button></div><div class="ios-card p-5 space-y-3"><h3 class="font-black">Brand / Default Settings</h3><input id="setBrand" value="${esc(state.settings.brandName)}" class="w-full border rounded-xl px-3 py-2.5 text-xs" placeholder="Brand Name"><input id="setPrefix" value="${esc(state.settings.codePrefix)}" class="w-full border rounded-xl px-3 py-2.5 text-xs" placeholder="Student Code Prefix"><label class="flex items-center gap-2 text-xs"><input id="setPortal" type="checkbox" ${state.settings.studentPortalEnabled?'checked':''}> Student Portal Public Access (later)</label><button onclick="window.saveEnterpriseSettings()" class="w-full bg-micro-yellow text-micro-navy py-3 rounded-2xl font-black">Save Settings</button><button onclick="window.addDepartment()" class="w-full bg-white border py-3 rounded-2xl font-bold">+ Department Add</button></div></div><div class="ios-card p-5 space-y-3"><h3 class="font-black">Department & Permission Matrix</h3><div class="overflow-auto"><table class="w-full text-[11px]"><thead><tr><th class="p-2 text-left">Role</th>${['View','Add','Edit','Delete','Approve','Export','Report','Settings'].map(a=>`<th class="p-2">${a}</th>`).join('')}</tr></thead><tbody>${Object.keys(state.permissions).map(r=>`<tr class="border-t"><td class="p-2 font-bold">${r}</td>${['View','Add','Edit','Delete','Approve','Export','Report','Settings'].map(a=>`<td class="p-2 text-center"><input type="checkbox" ${state.permissions[r][a]?'checked':''} onchange="window.togglePermission('${r}','${a}')"></td>`).join('')}</tr>`).join('')}</tbody></table></div><div class="grid sm:grid-cols-2 gap-2 text-xs">${state.departments.map(d=>`<div class="p-3 bg-slate-50 rounded-xl border flex justify-between"><span>${esc(d.name)}</span><b>${d.active?'Active':'Closed'}</b></div>`).join('')}</div></div><div class="ios-card p-5"><h3 class="font-black mb-3">Staff / Approval</h3><div class="space-y-2">${state.users.map(u=>`<div class="p-3 rounded-xl bg-slate-50 border text-xs flex flex-wrap justify-between gap-2"><div><b>${esc(u.name)}</b> <span class="text-slate-400">${esc(u.username||u.email)}</span><div class="text-slate-500">${(u.roles||[]).join(', ')}</div></div><div><button onclick="window.toggleApprove('${u.id}')" class="px-3 py-1.5 rounded-xl ${u.approved?'bg-amber-100 text-amber-700':'bg-micro-navy text-micro-yellow'} font-bold">${u.approved?'Lock':'Approve'}</button></div></div>`).join('')}</div></div>`;
+    }
+    window.addEntCourse=async()=>{if(!requirePerm('Add','ADMIN'))return;const n=document.getElementById('entCourseName').value.trim(),f=Number(document.getElementById('entCourseFee').value||0);if(!n)return window.showToast('Course Name ထည့်ပါ','error');state.courses.push({id:uid('C'),name:n,fee:f});await syncToCloud(`Course "${n}" အသစ်ထည့်သွင်းခဲ့သည်`);window.setEnterprisePanel('courses')}
+    window.runEnterpriseAi=()=>{const provider=document.getElementById('setAiProvider')?.value||state.settings.aiProvider;const prompt=document.getElementById('aiPrompt')?.value||'';document.getElementById('aiEnterpriseOutput').textContent=`${provider} AI Provider ကို ရွေးထားသည်။ Prompt: ${prompt||'(မေးခွန်းမထည့်ရသေး)'}\n\nProduction API call အတွက် secure server/proxy သို့မဟုတ် Firebase Cloud Function တွင် API key ထည့်ရမည်။ Public HTML ထဲ key မထည့်ပါနှင့်။`;state.settings.aiProvider=provider;syncToCloud('AI Provider setting ပြောင်းလဲခဲ့သည်')}
+    function renderEnterprise(){if(currentActiveTab==='enterprise')renderEnterprisePanel()}
 
     // ================= 14. EXPORT TO EXCEL (CSV), PDF & BACKUP JSON =================
     window.exportBackupJSON = () => {
@@ -2604,213 +2741,5 @@
       }).save();
     };
   </script>
-
-<script>window.__MTC_FIREBASE_CONFIG__=JSON.stringify({apiKey:"AIzaSyA_FVMmgcE11h09sB8nhFpc0C3BSzq2Qek",authDomain:"micro-training-center.firebaseapp.com",projectId:"micro-training-center",storageBucket:"micro-training-center.firebasestorage.app",messagingSenderId:"535516234007",appId:"1:535516234007:web:3c8844c8196c39023f3752",measurementId:"G-35Y4E4BBFE"});</script>
-<script>(function(){
-  'use strict';
-  const STYLE = `
-  #mtcPlusLauncher{position:fixed;right:18px;bottom:86px;z-index:9998;background:linear-gradient(135deg,#142143,#1a5d94);color:#ffaf00;border:1px solid #ffaf00;border-radius:18px;padding:11px 14px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.22);cursor:pointer;animation:mtcPulse 3s infinite}
-  @keyframes mtcPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-  #mtcPlusShell{position:fixed;inset:0;z-index:9997;background:rgba(10,18,38,.62);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:14px}
-  #mtcPlusShell.open{display:flex}
-  #mtcPlusApp{width:min(1500px,100%);height:min(94vh,980px);background:#f5f7fb;border-radius:28px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.35);display:grid;grid-template-columns:260px 1fr}
-  #mtcPlusSide{background:linear-gradient(180deg,#101a34,#142143);color:#fff;padding:20px;overflow:auto}
-  .mp-brand{font-weight:1000;font-size:20px;color:#ffaf00;margin-bottom:20px}.mp-brand small{display:block;color:#aeb9cf;font-size:10px;margin-top:3px}
-  .mp-nav{display:block;width:100%;text-align:left;padding:11px 12px;margin:5px 0;border:0;border-radius:14px;background:transparent;color:#dce4f3;font-weight:800;cursor:pointer}.mp-nav:hover,.mp-nav.active{background:#ffaf00;color:#142143}
-  #mtcPlusMain{overflow:auto}.mp-top{position:sticky;top:0;z-index:4;background:rgba(245,247,251,.92);backdrop-filter:blur(12px);padding:18px 22px;border-bottom:1px solid #e3e8f2;display:flex;justify-content:space-between;align-items:center;gap:12px}.mp-top h2{margin:0;color:#142143;font-size:21px}.mp-close{border:0;background:#e9edf5;color:#142143;border-radius:12px;padding:9px 12px;font-weight:900;cursor:pointer}.mp-body{padding:22px}.mp-page{display:none}.mp-page.active{display:block;animation:mpIn .25s ease}@keyframes mpIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .mp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.mp-card{background:#fff;border:1px solid #e5eaf2;border-radius:20px;padding:17px;box-shadow:0 8px 25px rgba(25,43,75,.05)}.mp-kpi{font-size:25px;font-weight:1000;color:#142143}.mp-muted{font-size:11px;color:#71809a}.mp-title{font-size:16px;font-weight:1000;color:#142143;margin-bottom:12px}.mp-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.mp-field{display:flex;flex-direction:column;gap:6px}.mp-field.full{grid-column:1/-1}.mp-field label{font-size:11px;font-weight:900;color:#526078}.mp-field input,.mp-field select,.mp-field textarea{border:1px solid #d9e0ec;border-radius:12px;padding:10px 11px;font-size:12px;outline:none;background:#fff}.mp-field input:focus,.mp-field select:focus,.mp-field textarea:focus{border-color:#1a5d94;box-shadow:0 0 0 3px rgba(26,93,148,.08)}.mp-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.mp-btn{border:0;border-radius:12px;padding:10px 13px;font-weight:900;font-size:11px;cursor:pointer}.mp-primary{background:#142143;color:#ffaf00}.mp-secondary{background:#e9edf5;color:#142143}.mp-danger{background:#fee2e2;color:#991b1b}.mp-table{width:100%;border-collapse:collapse;font-size:11px}.mp-table th{background:#142143;color:#ffaf00;padding:10px;text-align:left}.mp-table td{padding:9px;border-bottom:1px solid #edf0f5}.mp-table tr:hover td{background:#f8fafc}.mp-badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:1000}.mp-paid{background:#dcfce7;color:#166534}.mp-free{background:#dbeafe;color:#1d4ed8}.mp-open{background:#fff7ed;color:#9a3412}.mp-closed{background:#ede9fe;color:#6d28d9}.mp-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:1000;letter-spacing:1px;color:#142143}.mp-photo{width:38px;height:38px;border-radius:12px;object-fit:cover;background:#e9edf5}.mp-empty{text-align:center;padding:35px;color:#8490a5;font-size:12px}.mp-note{background:#fff9e6;border:1px solid #f5d77b;border-radius:14px;padding:11px;font-size:11px;color:#725800}.mp-report-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.mp-report-controls input,.mp-report-controls select{padding:9px;border:1px solid #d9e0ec;border-radius:11px;font-size:11px}.mp-switch{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800}.mp-modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:10000}.mp-modal.open{display:flex}.mp-modal-box{background:#fff;border-radius:22px;padding:20px;width:min(600px,100%);max-height:90vh;overflow:auto}.mp-small{font-size:10px;color:#71809a}
-  @media(max-width:900px){#mtcPlusApp{grid-template-columns:1fr;height:96vh}#mtcPlusSide{display:none}.mp-grid{grid-template-columns:repeat(2,1fr)}.mp-report-controls{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:600px){#mtcPlusLauncher{right:10px;bottom:72px}.mp-body{padding:14px}.mp-form{grid-template-columns:1fr}.mp-grid{grid-template-columns:1fr}.mp-report-controls{grid-template-columns:1fr}.mp-table{min-width:780px}.mp-table-wrap{overflow:auto}.mp-top{padding:14px}.mp-top h2{font-size:17px}}
-  `;
-  document.head.insertAdjacentHTML('beforeend','<style id="mtcPlusStyle">'+STYLE+'</style>');
-
-  const html = `
-  <button id="mtcPlusLauncher" onclick="MTCPlus.open()">✦ MTC+ Workspace</button>
-  <div id="mtcPlusShell">
-    <div id="mtcPlusApp">
-      <aside id="mtcPlusSide">
-        <div class="mp-brand">MTC+<small>Enterprise Operations</small></div>
-        <button class="mp-nav active" data-page="home">⌂ Dashboard</button>
-        <button class="mp-nav" data-page="students">🎓 Student Data</button>
-        <button class="mp-nav" data-page="codes">⌁ Code Generator</button>
-        <button class="mp-nav" data-page="customers">◉ Customer Inquiry</button>
-        <button class="mp-nav" data-page="academic">◫ Teacher Schedule</button>
-        <button class="mp-nav" data-page="staff">♙ Staff & Department</button>
-        <button class="mp-nav" data-page="courses">▦ Courses & Batches</button>
-        <button class="mp-nav" data-page="reports">▤ Reports</button>
-        <button class="mp-nav" data-page="certificates">▧ Certificates</button>
-        <button class="mp-nav" data-page="accounts">♙ Accounts</button>
-        <button class="mp-nav" data-page="backup">⤓ Backup / Restore</button>
-      </aside>
-      <section id="mtcPlusMain">
-        <header class="mp-top"><div><h2 id="mpPageTitle">MTC+ Dashboard</h2><div class="mp-small">အဟောင်း Data မဖျက်ဘဲ feature အသစ်များကို သီးခြား layer ဖြင့် ထပ်တိုးထားသည်</div></div><button class="mp-close" onclick="MTCPlus.close()">✕ Close</button></header>
-        <div class="mp-body">
-          <section class="mp-page active" id="mp-home">
-            <div class="mp-grid" id="mpKpis"></div>
-            <div class="mp-card" style="margin-top:14px"><div class="mp-title">Quick Actions</div><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.go('students')">+ Student</button><button class="mp-btn mp-primary" onclick="MTCPlus.go('codes')">Generate Code</button><button class="mp-btn mp-primary" onclick="MTCPlus.go('customers')">+ Customer Inquiry</button><button class="mp-btn mp-secondary" onclick="MTCPlus.go('reports')">Open Reports</button><button class="mp-btn mp-secondary" onclick="MTCPlus.go('academic')">Teacher Schedule</button></div></div>
-            <div class="mp-card" style="margin-top:14px"><div class="mp-title">System Notes</div><div class="mp-note">Phone number is optional. Student Code is short and generated from name + selected course. Student Portal remains OFF by default until Admin enables it. Monthly closing is non-destructive: previous months remain searchable by Start Date / End Date.</div></div>
-          </section>
-
-          <section class="mp-page" id="mp-students">
-            <div class="mp-card"><div class="mp-title">Student Registration</div><form id="mpStudentForm" class="mp-form">
-              <div class="mp-field"><label>Student Name *</label><input id="mpStudentName" required></div>
-              <div class="mp-field"><label>Course *</label><select id="mpStudentCourse" required></select></div>
-              <div class="mp-field"><label>Enrollment Type *</label><select id="mpStudentType"><option value="paid">Paid</option><option value="free_day1">Day 1 Free Pass</option></select></div>
-              <div class="mp-field"><label>Phone (Optional)</label><input id="mpStudentPhone" inputmode="tel"></div>
-              <div class="mp-field"><label>Start Date</label><input id="mpStudentStart" type="date"></div>
-              <div class="mp-field"><label>Batch</label><select id="mpStudentBatch"></select></div>
-              <div class="mp-field full"><label>Note</label><textarea id="mpStudentNote" rows="2"></textarea></div>
-            </form><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.saveStudent()">Save Student</button><button class="mp-btn mp-secondary" onclick="MTCPlus.resetStudent()">Reset</button></div></div>
-            <div class="mp-card" style="margin-top:14px"><div class="mp-title">Students</div><div class="mp-table-wrap"><table class="mp-table"><thead><tr><th>Code</th><th>Name</th><th>Course</th><th>Type</th><th>Phone</th><th>Batch</th><th>Date</th><th></th></tr></thead><tbody id="mpStudentRows"></tbody></table></div></div>
-          </section>
-
-          <section class="mp-page" id="mp-codes">
-            <div class="mp-card"><div class="mp-title">Short Student Code Generator</div><div class="mp-form"><div class="mp-field"><label>Student Name *</label><input id="mpCodeName"></div><div class="mp-field"><label>Course *</label><select id="mpCodeCourse"></select></div></div><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.generateCode()">Generate Code</button><button class="mp-btn mp-secondary" onclick="MTCPlus.copyLastCode()">Copy Last Code</button></div><div id="mpGeneratedCode" style="margin-top:15px"></div></div>
-            <div class="mp-card" style="margin-top:14px"><div class="mp-title">Generated Code History</div><div class="mp-table-wrap"><table class="mp-table"><thead><tr><th>Code</th><th>Name</th><th>Course</th><th>Created By</th><th>Date</th></tr></thead><tbody id="mpCodeRows"></tbody></table></div></div>
-          </section>
-
-          <section class="mp-page" id="mp-customers"><div class="mp-card"><div class="mp-title">Customer Inquiry / Lead Data</div><form id="mpCustomerForm" class="mp-form"><div class="mp-field"><label>Name *</label><input id="mpCustomerName" required></div><div class="mp-field"><label>Phone (Optional)</label><input id="mpCustomerPhone"></div><div class="mp-field"><label>Interested Course</label><select id="mpCustomerCourse"></select></div><div class="mp-field"><label>Source</label><input id="mpCustomerSource" placeholder="Facebook / Walk-in / Referral"></div><div class="mp-field full"><label>Inquiry Note</label><textarea id="mpCustomerNote" rows="3"></textarea></div></form><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.saveCustomer()">Save Customer</button></div></div><div class="mp-card" style="margin-top:14px"><div class="mp-title">Customer List</div><div class="mp-table-wrap"><table class="mp-table"><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Course</th><th>Source</th><th>Note</th></tr></thead><tbody id="mpCustomerRows"></tbody></table></div></div></section>
-
-          <section class="mp-page" id="mp-academic"><div class="mp-card"><div class="mp-title">Teacher Schedule</div><div class="mp-note">Teacher profile name/photo and schedule are stored separately so the schedule view can show the teacher's chosen display name and photo.</div><div id="mpScheduleGrid" class="mp-grid" style="margin-top:14px"></div></div></section>
-
-          <section class="mp-page" id="mp-staff"><div class="mp-card"><div class="mp-title">Staff & Department</div><form class="mp-form"><div class="mp-field"><label>Display Name *</label><input id="mpStaffName"></div><div class="mp-field"><label>Department</label><select id="mpStaffDept"><option>Admin</option><option>Academic</option><option>Sales</option><option>Finance</option><option>Marketing</option><option>Customer Service</option><option>HR</option><option>IT</option><option>Other</option></select></div><div class="mp-field"><label>Role</label><input id="mpStaffRole" placeholder="Teacher / Staff / Manager"></div><div class="mp-field"><label>Photo</label><input id="mpStaffPhoto" type="file" accept="image/*"></div></form><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.saveStaff()">Save Staff Profile</button></div></div><div class="mp-card" style="margin-top:14px"><div class="mp-title">Staff Directory</div><div id="mpStaffGrid" class="mp-grid"></div></div></section>
-
-          <section class="mp-page" id="mp-courses"><div class="mp-card"><div class="mp-title">Courses & Batches</div><form class="mp-form"><div class="mp-field"><label>New Course Name *</label><input id="mpCourseName"></div><div class="mp-field"><label>Fee</label><input id="mpCourseFee" type="number" min="0"></div><div class="mp-field"><label>Teacher</label><select id="mpBatchTeacher"></select></div><div class="mp-field"><label>Batch Name</label><input id="mpBatchName" placeholder="Batch 01"></div><div class="mp-field"><label>Days</label><input id="mpBatchDays" placeholder="Mon, Wed, Fri"></div><div class="mp-field"><label>Time</label><input id="mpBatchTime" placeholder="6:00 PM - 8:00 PM"></div><div class="mp-field"><label>Room / Link</label><input id="mpBatchRoom"></div></form><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.saveCourseAndBatch()">Save Course + Batch</button></div></div><div class="mp-card" style="margin-top:14px"><div class="mp-title">Course / Batch List</div><div id="mpCourseList"></div></div></section>
-
-          <section class="mp-page" id="mp-reports"><div class="mp-card"><div class="mp-title">Detail / Summary Reports</div><div class="mp-report-controls"><input id="mpReportStart" type="date"><input id="mpReportEnd" type="date"><select id="mpReportCourse"><option value="">All Courses</option></select><select id="mpReportType"><option value="all">All Data</option><option value="students">Students</option><option value="customers">Customers</option><option value="codes">Codes</option></select></div><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.renderReport()">View Report</button><button class="mp-btn mp-secondary" onclick="MTCPlus.exportReport('csv')">Export E</button><button class="mp-btn mp-secondary" onclick="MTCPlus.exportReport('pdf')">Export PDF</button><button class="mp-btn mp-secondary" onclick="MTCPlus.closeCurrentMonth()">Close Current Month</button></div><div id="mpReportSummary" style="margin-top:15px"></div><div class="mp-table-wrap" style="margin-top:15px"><table class="mp-table"><thead><tr><th>Date</th><th>Type</th><th>Name</th><th>Code</th><th>Course</th><th>Phone</th><th>Status</th></tr></thead><tbody id="mpReportRows"></tbody></table></div></div></section>
-
-          <section class="mp-page" id="mp-certificates"><div class="mp-card"><div class="mp-title">Certificate Generator</div><div class="mp-form"><div class="mp-field"><label>Student Name *</label><input id="mpCertName"></div><div class="mp-field"><label>Course *</label><select id="mpCertCourse"></select></div><div class="mp-field"><label>Certificate No.</label><input id="mpCertNo" placeholder="Auto"></div><div class="mp-field"><label>Completion Date</label><input id="mpCertDate" type="date"></div></div><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.generateCertificate()">Generate Certificate PDF</button></div></div></section>
-
-          <section class="mp-page" id="mp-accounts"><div class="mp-card"><div class="mp-title">Admin-Created Staff Accounts</div><div class="mp-note">Firebase Email/Password provider must be enabled. Username is stored as a profile label; authentication uses the generated internal email alias.</div><form class="mp-form"><div class="mp-field"><label>Username *</label><input id="mpAcctUsername" autocomplete="off"></div><div class="mp-field"><label>Temporary Password *</label><input id="mpAcctPassword" type="password" autocomplete="new-password"></div><div class="mp-field"><label>Display Name</label><input id="mpAcctDisplay"></div></form><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.createAccount()">Create Account</button></div><div id="mpAccountResult" style="margin-top:12px"></div></div><div class="mp-card" style="margin-top:14px"><div class="mp-title">Account Directory</div><div id="mpAccountRows"></div></div></section>
-
-          <section class="mp-page" id="mp-backup"><div class="mp-card"><div class="mp-title">Backup / Restore</div><div class="mp-note">Restore is merge-only: it appends new records by ID and does not replace the existing MTC+ records.</div><div class="mp-actions"><button class="mp-btn mp-primary" onclick="MTCPlus.exportBackup()">Download Backup JSON</button><label class="mp-btn mp-secondary">Import & Merge JSON<input id="mpBackupInput" type="file" accept="application/json" hidden onchange="MTCPlus.importBackup(event)"></label></div></div></section>
-        </div>
-      </section>
-    </div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend',html);
-
-  const cfg = window.__MTC_FIREBASE_CONFIG__ || {apiKey:"AIzaSyA_FVMmgcE11h09sB8nhFpc0C3BSzq2Qek",authDomain:"micro-training-center.firebaseapp.com",projectId:"micro-training-center",storageBucket:"micro-training-center.firebasestorage.app",messagingSenderId:"535516234007",appId:"1:535516234007:web:3c8844c8196c39023f3752",measurementId:"G-35Y4E4BBFE"};
-  const KEY='MTC_PLUS_V1';
-  const blank={students:[],customers:[],codes:[],staff:[],courses:[],batches:[],accounts:[],monthlyCloses:[]};
-  const normalizeBlank=(src)=>{const out={};for(const k of Object.keys(blank))out[k]=Array.isArray(src?.[k])?src[k]:[];return out};
-  let s=normalizeBlank(JSON.parse(localStorage.getItem(KEY)||'null')||blank);
-  let fb={app:null,db:null,auth:null,storage:null,setDoc:null,deleteDoc:null,getDocs:null,addDoc:null,collection:null,doc:null,onSnapshot:null,uploadBytes:null,getDownloadURL:null,storageRef:null,secondary:null,secondaryAuth:null,createUserWithEmailAndPassword:null};
-  let lastCode=localStorage.getItem(KEY+'_LAST_CODE')||'';
-  const $=id=>document.getElementById(id);
-  const esc=v=>String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-  const nowISO=()=>new Date().toISOString();
-  const userName=()=>window.__MTC_ACTIVE_USER__?.displayName||window.__MTC_ACTIVE_USER__?.email||'Admin';
-  function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(s));localStorage.setItem(KEY+'_LAST_CODE',lastCode||'')}catch(e){console.warn('MTC+ local save failed',e)}}
-  function arrMerge(oldArr,newArr){const m=new Map((oldArr||[]).filter(x=>x?.id).map(x=>[x.id,x]));(newArr||[]).filter(x=>x?.id).forEach(x=>{if(!m.has(x.id))m.set(x.id,x)});return [...m.values()]}
-  const pendingKey=KEY+'_PENDING';
-  function getPending(){try{return JSON.parse(localStorage.getItem(pendingKey)||'[]')}catch(e){return []}}
-  function setPending(v){try{localStorage.setItem(pendingKey,JSON.stringify(v))}catch(e){}}
-  function queueCloud(col,obj){const q=getPending();const k=`${col}/${obj.id}`;if(!q.some(x=>x.key===k))q.push({key:k,col,id:obj.id,obj});setPending(q)}
-  async function cloudAdd(col,obj){try{if(fb.addDoc&&fb.collection&&fb.db){await fb.addDoc(fb.collection(fb.db,'mtc_plus',col),obj);return true}}catch(e){console.warn('MTC+ cloud add',e)}return false}
-  async function cloudSet(col,id,obj){try{if(fb.setDoc&&fb.doc&&fb.db&&fb.auth?.currentUser){await fb.setDoc(fb.doc(fb.db,'mtc_plus',col,id),obj,{merge:true});return true}}catch(e){console.warn('MTC+ cloud set',e)}return false}
-  async function flushPending(){if(!fb.auth?.currentUser)return;const q=getPending();const left=[];for(const item of q){const ok=await cloudSet(item.col,item.id,item.obj);if(!ok)left.push(item)}setPending(left);if(q.length&&!left.length)notify('Cloud sync ပြီးပါပြီ')}
-
-  async function initFirebase(){
-    try{
-      const appmod=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-      const fs=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-      const au=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-      const st=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js');
-      fb.app=appmod.getApps().length?appmod.getApps()[0]:appmod.initializeApp(cfg);
-      fb.db=fs.getFirestore(fb.app);fb.collection=fs.collection;fb.doc=fs.doc;fb.setDoc=fs.setDoc;fb.deleteDoc=fs.deleteDoc;fb.addDoc=fs.addDoc;fb.getDocs=fs.getDocs;fb.onSnapshot=fs.onSnapshot;
-      fb.auth=au.getAuth(fb.app);fb.storage=st.getStorage(fb.app);fb.uploadBytes=st.uploadBytes;fb.getDownloadURL=st.getDownloadURL;fb.storageRef=st.ref;
-      try{fb.secondary=appmod.initializeApp(cfg,'MTCPlusSecondary');fb.secondaryAuth=au.getAuth(fb.secondary);fb.createUserWithEmailAndPassword=au.createUserWithEmailAndPassword}catch(e){console.warn('secondary auth',e)}
-      if(fb.auth?.currentUser) await loadCloud();
-    }catch(e){console.warn('MTC+ Firebase unavailable; local mode',e)}
-  }
-  async function loadCloud(){
-    if(!fb.getDocs||!fb.db||!fb.auth?.currentUser)return;
-    for(const col of Object.keys(blank)){
-      try{
-        const snap=await fb.getDocs(fb.collection(fb.db,'mtc_plus',col));
-        const cloudRows=snap.docs.map(d=>({id:d.id,...d.data()}));
-        // Merge-only: never replace local records with an empty/partial cloud result.
-        s[col]=arrMerge(s[col],cloudRows);
-        const cloudIds=new Set(cloudRows.map(x=>x.id));
-        for(const row of s[col]) if(!cloudIds.has(row.id)) queueCloud(col,row);
-      }catch(e){console.warn('MTC+ cloud load',col,e)}
-    }
-    saveLocal();
-    await flushPending();
-    renderAll();
-  }
-  function courses(){const old=(window.state?.courses||[]).map(c=>typeof c==='string'?{name:c}:c).filter(Boolean);const names=new Map();[...old,...s.courses].forEach(c=>{const n=c.name||c.course||'';if(n&&!names.has(n))names.set(n,c)});return [...names.values()]}
-  function fillSelect(id,placeholder='Select course'){const el=$(id);if(!el)return;const cur=el.value;el.innerHTML=`<option value="">${placeholder}</option>`+courses().map(c=>`<option value="${esc(c.name||c.course)}">${esc(c.name||c.course)}</option>`).join('');if(cur)el.value=cur}
-  function fillBatchSelect(){const el=$('mpStudentBatch');if(!el)return;el.innerHTML='<option value="">No batch selected</option>'+s.batches.map(b=>`<option value="${esc(b.id)}">${esc(b.course)} — ${esc(b.name)} — ${esc(b.days||'')} ${esc(b.time||'')}</option>`).join('')}
-  function renderKpi(){
-    const m=[['Students',s.students.length,'🎓'],['Customers',s.customers.length,'◉'],['Generated Codes',s.codes.length,'⌁'],['Staff',s.staff.length,'♙']];$('mpKpis').innerHTML=m.map(x=>`<div class="mp-card"><div class="mp-muted">${x[2]} ${x[0]}</div><div class="mp-kpi">${x[1].toLocaleString()}</div></div>`).join('');
-  }
-  function renderStudents(){
-    $('mpStudentRows').innerHTML=s.students.slice().reverse().map(x=>`<tr><td class="mp-code">${esc(x.code)}</td><td>${esc(x.name)}</td><td>${esc(x.course)}</td><td><span class="mp-badge ${x.type==='paid'?'mp-paid':'mp-free'}">${x.type==='paid'?'PAID':'DAY 1 FREE'}</span></td><td>${esc(x.phone||'-')}</td><td>${esc(x.batchName||'-')}</td><td>${esc(x.startDate||x.createdAt?.slice(0,10)||'-')}</td><td><button class="mp-btn mp-danger" onclick="MTCPlus.deleteItem('students','${x.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="8" class="mp-empty">No student data yet.</td></tr>'
-  }
-  function renderCodes(){$('mpCodeRows').innerHTML=s.codes.slice().reverse().map(x=>`<tr><td class="mp-code">${esc(x.code)}</td><td>${esc(x.name)}</td><td>${esc(x.course)}</td><td>${esc(x.createdBy)}</td><td>${esc(x.createdAt?.slice(0,16).replace('T',' ')||'')}</td></tr>`).join('')||'<tr><td colspan="5" class="mp-empty">No codes generated yet.</td></tr>'}
-  function renderCustomers(){$('mpCustomerRows').innerHTML=s.customers.slice().reverse().map(x=>`<tr><td>${esc(x.createdAt?.slice(0,10)||'')}</td><td>${esc(x.name)}</td><td>${esc(x.phone||'-')}</td><td>${esc(x.course||'-')}</td><td>${esc(x.source||'-')}</td><td>${esc(x.note||'-')}</td></tr>`).join('')||'<tr><td colspan="6" class="mp-empty">No customer inquiries yet.</td></tr>'}
-  function renderStaff(){
-    $('mpStaffGrid').innerHTML=s.staff.map(x=>`<div class="mp-card"><div style="display:flex;gap:10px;align-items:center"><img class="mp-photo" src="${esc(x.photo||'')}" onerror="this.style.visibility='hidden'"><div><b>${esc(x.name)}</b><div class="mp-muted">${esc(x.role||'Staff')} · ${esc(x.dept||'Other')}</div></div></div></div>`).join('')||'<div class="mp-empty">No staff profiles yet.</div>';
-    $('mpBatchTeacher').innerHTML='<option value="">Select teacher</option>'+s.staff.filter(x=>/teacher/i.test(x.role||'')||/academic/i.test(x.dept||'')).map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('');
-  }
-  function renderSchedule(){
-    $('mpScheduleGrid').innerHTML=s.batches.map(b=>{const t=s.staff.find(x=>x.id===b.teacherId);return `<div class="mp-card"><div style="display:flex;gap:10px;align-items:center"><img class="mp-photo" src="${esc(t?.photo||'')}" onerror="this.style.visibility='hidden'"><div><div class="mp-title" style="margin:0">${esc(b.course)} · ${esc(b.name)}</div><div class="mp-muted">${esc(t?.name||'Teacher not assigned')}</div></div></div><div style="margin-top:12px;font-size:12px;font-weight:900;color:#142143">${esc(b.days||'-')} · ${esc(b.time||'-')}</div><div class="mp-muted" style="margin-top:4px">${esc(b.room||'')}</div></div>`}).join('')||'<div class="mp-empty">No schedules yet.</div>'
-  }
-  function renderCourses(){ $('mpCourseList').innerHTML=courses().map(c=>`<div class="mp-card" style="margin-bottom:8px"><b>${esc(c.name||c.course)}</b><span class="mp-muted"> · ${Number(c.fee||0).toLocaleString()} Ks</span></div>`).join('') }
-  function renderAccounts(){ $('mpAccountRows').innerHTML=s.accounts.map(a=>`<div class="mp-card" style="margin-bottom:8px"><b>${esc(a.username)}</b> · ${esc(a.displayName||'')} <span class="mp-muted">(${esc(a.createdAt?.slice(0,10)||'')})</span></div>`).join('')||'<div class="mp-empty">No accounts created.</div>' }
-  function renderAll(){fillSelect('mpStudentCourse');fillSelect('mpCodeCourse');fillSelect('mpCustomerCourse');fillSelect('mpCertCourse');fillSelect('mpReportCourse','All Courses');fillBatchSelect();renderKpi();renderStudents();renderCodes();renderCustomers();renderStaff();renderSchedule();renderCourses();renderAccounts()}
-  function notify(msg){if(window.showToast)window.showToast(msg);else alert(msg)}
-  function uid(prefix){return prefix+'_'+crypto.randomUUID().replaceAll('-','').slice(0,14)}
-  function shortCode(name,course){const clean=v=>String(v||'').replace(/[^A-Za-z0-9\u1000-\u109F]/g,'').toUpperCase();const a=clean(name).slice(0,2)||'ST';const b=clean(course).slice(0,2)||'MT';return `MTC-${a}${b}-${String(Math.floor(Math.random()*9000)+1000)}`}
-  async function add(col,obj){
-    s[col].push(obj);
-    saveLocal();
-    const ok=await cloudSet(col,obj.id,obj);
-    if(!ok) queueCloud(col,obj);
-    renderAll();
-    if(!ok) notify('Local မှာသိမ်းပြီးပါပြီ။ Login/Internet ပြန်ရတဲ့အခါ Cloud ကို အလိုအလျောက် Sync လုပ်ပါမည်။');
-  }
-  const MTCPlus={
-    open(){ $('mtcPlusShell').classList.add('open'); renderAll(); },
-    close(){ $('mtcPlusShell').classList.remove('open'); },
-    go(page){document.querySelectorAll('.mp-nav').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.mp-page').forEach(p=>p.classList.toggle('active',p.id==='mp-'+page));$('mpPageTitle').textContent=({home:'MTC+ Dashboard',students:'Student Data',codes:'Code Generator',customers:'Customer Inquiry',academic:'Teacher Schedule',staff:'Staff & Department',courses:'Courses & Batches',reports:'Reports',certificates:'Certificates',accounts:'Accounts',backup:'Backup / Restore'})[page]||'MTC+'},
-    async generateCode(){const name=$('mpCodeName').value.trim(),course=$('mpCodeCourse').value;if(!name||!course)return notify('Name နဲ့ Course ရွေးပေးပါ','error');let code=shortCode(name,course);while(s.codes.some(x=>x.code===code))code=shortCode(name,course);const obj={id:uid('code'),code,name,course,createdBy:userName(),createdAt:nowISO()};await add('codes',obj);lastCode=code;saveLocal();$('mpGeneratedCode').innerHTML=`<div class="mp-card" style="text-align:center;background:#fff9e6;border:2px dashed #ffaf00"><div class="mp-muted">Generated Student Code</div><div style="font-size:30px;font-weight:1000;letter-spacing:2px;margin:6px">${esc(code)}</div><button class="mp-btn mp-primary" onclick="navigator.clipboard.writeText('${esc(code)}');MTCPlus.toast('Code copied')">Copy Code</button></div>`;notify('Student Code generate ပြီးပါပြီ')},
-    copyLastCode(){if(!lastCode)return notify('အရင် Generate လုပ်ပါ','error');navigator.clipboard.writeText(lastCode);notify('Code copied')},
-    async saveStudent(){const name=$('mpStudentName').value.trim(),course=$('mpStudentCourse').value;if(!name||!course)return notify('Student Name နဲ့ Course လိုပါတယ်','error');const batch=s.batches.find(b=>b.id===$('mpStudentBatch').value);let code=shortCode(name,course);while(s.students.some(x=>x.code===code))code=shortCode(name,course);const obj={id:uid('stu'),code,name,course,type:$('mpStudentType').value,phone:$('mpStudentPhone').value.trim(),startDate:$('mpStudentStart').value||new Date().toISOString().slice(0,10),batchId:batch?.id||'',batchName:batch?.name||'',note:$('mpStudentNote').value.trim(),createdBy:userName(),createdAt:nowISO()};await add('students',obj);$('mpStudentForm').reset();notify('Student data saved')},
-    resetStudent(){$('mpStudentForm').reset()},
-    async saveCustomer(){const name=$('mpCustomerName').value.trim();if(!name)return notify('Customer Name လိုပါတယ်','error');const obj={id:uid('cus'),name,phone:$('mpCustomerPhone').value.trim(),course:$('mpCustomerCourse').value,source:$('mpCustomerSource').value.trim(),note:$('mpCustomerNote').value.trim(),createdBy:userName(),createdAt:nowISO()};await add('customers',obj);$('mpCustomerForm').reset();notify('Customer inquiry saved')},
-    async saveStaff(){const name=$('mpStaffName').value.trim();if(!name)return notify('Display Name လိုပါတယ်','error');let photo='';const f=$('mpStaffPhoto').files[0];if(f){try{if(fb.storage&&fb.uploadBytes){const r=fb.storageRef(fb.storage,`mtc_plus/staff/${Date.now()}_${f.name.replace(/[^a-zA-Z0-9.]/g,'_')}`);await fb.uploadBytes(r,f);photo=await fb.getDownloadURL(r)}else{photo=await new Promise((res,rej)=>{const rd=new FileReader();rd.onload=()=>res(rd.result);rd.onerror=rej;rd.readAsDataURL(f)})}}catch(e){notify('Photo upload မအောင်မြင်ပါ','error')}}const obj={id:uid('staff'),name,dept:$('mpStaffDept').value,role:$('mpStaffRole').value.trim(),photo,createdBy:userName(),createdAt:nowISO()};await add('staff',obj);$('mpStaffName').value='';$('mpStaffRole').value='';$('mpStaffPhoto').value='';notify('Staff profile saved')},
-    async saveCourseAndBatch(){const name=$('mpCourseName').value.trim();if(!name)return notify('Course name လိုပါတယ်','error');const c={id:uid('course'),name,fee:Number($('mpCourseFee').value||0),createdBy:userName(),createdAt:nowISO()};await add('courses',c);const bname=$('mpBatchName').value.trim()||'Batch 01';const b={id:uid('batch'),course:name,name:bname,teacherId:$('mpBatchTeacher').value,days:$('mpBatchDays').value.trim(),time:$('mpBatchTime').value.trim(),room:$('mpBatchRoom').value.trim(),createdBy:userName(),createdAt:nowISO()};await add('batches',b);if(window.state){window.state.courses=window.state.courses||[];if(!window.state.courses.some(x=>(x.name||x)===name))window.state.courses.push({name,fee:c.fee});try{window.renderAll();}catch(e){}}notify('Course + Batch saved and synced')},
-    async deleteItem(col,id){
-      if(!confirm('Delete this record?'))return;
-      s[col]=s[col].filter(x=>x.id!==id);
-      saveLocal();
-      try{if(fb.auth?.currentUser&&fb.doc&&fb.db&&fb.deleteDoc)await fb.deleteDoc(fb.doc(fb.db,'mtc_plus',col,id));}catch(e){console.warn('MTC+ cloud delete',e)}
-      renderAll();
-      notify('Record deleted. Existing legacy data was not changed.');
-    },
-    renderReport(){const start=$('mpReportStart').value,end=$('mpReportEnd').value,course=$('mpReportCourse').value,type=$('mpReportType').value;const inRange=d=>(!start||d>=start)&&(!end||d<=end);let rows=[];if(type==='all'||type==='students')s.students.forEach(x=>{if(inRange((x.startDate||x.createdAt?.slice(0,10)||''))&&(!course||x.course===course))rows.push({date:x.startDate||x.createdAt?.slice(0,10),type:'Student',name:x.name,code:x.code,course:x.course,phone:x.phone,status:x.type})});if(type==='all'||type==='customers')s.customers.forEach(x=>{if(inRange(x.createdAt?.slice(0,10)||'')&&(!course||x.course===course))rows.push({date:x.createdAt?.slice(0,10),type:'Customer',name:x.name,code:'',course:x.course,phone:x.phone,status:'Inquiry'})});if(type==='all'||type==='codes')s.codes.forEach(x=>{if(inRange(x.createdAt?.slice(0,10)||'')&&(!course||x.course===course))rows.push({date:x.createdAt?.slice(0,10),type:'Code',name:x.name,code:x.code,course:x.course,phone:'',status:'Generated'})});rows.sort((a,b)=>String(b.date).localeCompare(String(a.date)));$('mpReportSummary').innerHTML=`<div class="mp-grid"><div class="mp-card"><div class="mp-muted">Total Records</div><div class="mp-kpi">${rows.length}</div></div><div class="mp-card"><div class="mp-muted">Students</div><div class="mp-kpi">${rows.filter(x=>x.type==='Student').length}</div></div><div class="mp-card"><div class="mp-muted">Customers</div><div class="mp-kpi">${rows.filter(x=>x.type==='Customer').length}</div></div><div class="mp-card"><div class="mp-muted">Codes</div><div class="mp-kpi">${rows.filter(x=>x.type==='Code').length}</div></div></div>`;$('mpReportRows').innerHTML=rows.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.name)}</td><td class="mp-code">${esc(x.code)}</td><td>${esc(x.course||'-')}</td><td>${esc(x.phone||'-')}</td><td>${esc(x.status)}</td></tr>`).join('')||'<tr><td colspan="7" class="mp-empty">No records in selected range.</td></tr>'},
-    exportReport(kind){this.renderReport();const start=$('mpReportStart').value||'all',end=$('mpReportEnd').value||'all';const rows=[...document.querySelectorAll('#mpReportRows tr')].map(tr=>[...tr.children].map(td=>td.innerText));if(kind==='csv'){const csv='\uFEFF'+[['Date','Type','Name','Code','Course','Phone','Status'],...rows].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`MTC_Report_${start}_${end}.csv`;a.click()}else{const el=document.createElement('div');el.style.padding='20px';el.innerHTML=`<h2>MTC Report</h2><p>${start} → ${end}</p><table style="width:100%;border-collapse:collapse;font-size:10px"><tr>${['Date','Type','Name','Code','Course','Phone','Status'].map(x=>`<th style="border:1px solid #ccc;padding:5px">${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(v=>`<td style="border:1px solid #ccc;padding:5px">${esc(v)}</td>`).join('')}</tr>`).join('')}</table>`;html2pdf().from(el).set({filename:`MTC_Report_${start}_${end}.pdf`,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}}).save()}},
-    async closeCurrentMonth(){const d=new Date(),month=d.toISOString().slice(0,7);if(s.monthlyCloses.some(x=>x.month===month))return notify('ဒီလစာရင်းပိတ်ထားပြီးပါပြီ');const obj={id:uid('close'),month,closedAt:nowISO(),closedBy:userName(),studentCount:s.students.filter(x=>(x.startDate||x.createdAt||'').startsWith(month)).length,customerCount:s.customers.filter(x=>(x.createdAt||'').startsWith(month)).length,codeCount:s.codes.filter(x=>(x.createdAt||'').startsWith(month)).length};await add('monthlyCloses',obj);notify(`${month} month closed. Previous data remains searchable.`)},
-    async generateCertificate(){const name=$('mpCertName').value.trim(),course=$('mpCertCourse').value;if(!name||!course)return notify('Name နဲ့ Course လိုပါတယ်','error');const no=$('mpCertNo').value.trim()||`MTC-CERT-${new Date().getFullYear()}-${Math.floor(Math.random()*9000)+1000}`;const date=$('mpCertDate').value||new Date().toISOString().slice(0,10);const el=document.createElement('div');el.style.width='1120px';el.style.height='790px';el.style.padding='55px';el.style.boxSizing='border-box';el.style.background='#fff';el.style.border='18px solid #142143';el.style.fontFamily='Arial, sans-serif';el.innerHTML=`<div style="height:100%;border:4px solid #ffaf00;text-align:center;padding:50px;box-sizing:border-box"><div style="font-size:22px;font-weight:900;color:#142143">MICRO COMPUTER TRAINING CENTER</div><div style="color:#ffaf00;font-size:48px;font-weight:1000;margin-top:55px">CERTIFICATE</div><div style="margin-top:35px;font-size:18px;color:#68758d">This certificate is proudly presented to</div><div style="margin-top:22px;font-size:42px;font-weight:1000;color:#142143">${esc(name)}</div><div style="margin-top:24px;font-size:18px;color:#68758d">for successfully completing</div><div style="margin-top:15px;font-size:28px;font-weight:900;color:#1a5d94">${esc(course)}</div><div style="margin-top:45px;display:flex;justify-content:space-between;font-size:13px"><span>Date: ${esc(date)}</span><span>Certificate No: ${esc(no)}</span></div><div style="margin-top:50px;font-size:14px;font-weight:900">Micro Training Center · Academic Department</div></div>`;html2pdf().from(el).set({filename:`${no}.pdf`,html2canvas:{scale:2},jsPDF:{unit:'px',format:[1120,790],orientation:'landscape'}}).save();notify('Certificate PDF generated')},
-    async createAccount(){const u=$('mpAcctUsername').value.trim().toLowerCase().replace(/[^a-z0-9._-]/g,'');const p=$('mpAcctPassword').value;const display=$('mpAcctDisplay').value.trim()||u;if(!u||!p)return notify('Username နဲ့ password လိုပါတယ်','error');if(p.length<6)return notify('Password အနည်းဆုံး 6 characters လိုပါတယ်','error');if(!fb.createUserWithEmailAndPassword||!fb.secondaryAuth)return notify('Firebase Email/Password Authentication ကို Enable လုပ်ပြီးမှ Account create လုပ်ပါ','error');const alias=`${u}@mtc.local`;try{const cred=await fb.createUserWithEmailAndPassword(fb.secondaryAuth,alias,p);const obj={id:uid('acct'),username:u,displayName:display,uid:cred.user.uid,createdAt:nowISO(),createdBy:userName()};await add('accounts',obj);await fb.secondaryAuth.signOut();$('mpAccountResult').innerHTML=`<div class="mp-note">Account created. Username: <b>${esc(u)}</b><br>Login system uses Firebase Email/Password internally.</div>`}catch(e){notify(e.message||'Account creation failed','error')}},
-    exportBackup(){const payload={version:'MTC_PLUS_V1',exportedAt:nowISO(),data:s};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));a.download=`MTC_PLUS_Backup_${new Date().toISOString().slice(0,10)}.json`;a.click()},
-    importBackup(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async()=>{try{const p=JSON.parse(r.result);const d=p.data||p;for(const col of Object.keys(blank))s[col]=arrMerge(s[col],d[col]);saveLocal();for(const col of Object.keys(blank))for(const x of s[col])await cloudSet(col,x.id,x);renderAll();notify('Backup merged. Existing MTC+ data was preserved.')}catch(err){notify('Invalid backup file','error')}};r.readAsText(f)},
-    toast(m){notify(m)}
-  };
-  window.MTCPlus=MTCPlus;
-  document.querySelectorAll('.mp-nav').forEach(b=>b.addEventListener('click',()=>MTCPlus.go(b.dataset.page)));
-  $('mtcPlusShell').addEventListener('click',e=>{if(e.target.id==='mtcPlusShell')MTCPlus.close()});
-  initFirebase();renderAll();
-
-  // Remove the prefilled founder Gmail from the legacy login form without altering legacy login behavior.
-  const q=$('quickEmailInput');if(q)q.value='';
-  const loginCard=$('loginScreen');if(loginCard){
-    const label=loginCard.querySelector('label');if(label)label.textContent='Google Sign-in မရပါက သင့်အဖွဲ့အစည်း Gmail ကို အသုံးပြုနိုင်ပါသည်';
-  }
-})();
-</script>
 </body>
 </html>
