@@ -1,25 +1,39 @@
-# Micro Training Center — Enterprise Final
+# MTC Enterprise Web App — Final Build
+
+This package keeps the supplied original MTC app and adds the requested enterprise modules inside the same hamburger/menu navigation.
 
 ## Included
-- `index.html` — original MTC Enterprise OS + MTC+ additions.
-- `firestore.rules` — authenticated access for legacy shared state and MTC+ collections.
-- `storage.rules` — authenticated staff-photo storage.
-- `firebase.json` — Firebase rules configuration.
+- Original MTC Dashboard, Page Admin, Sales, Manager, Academic, Finance, Founder/Admin modules
+- Customer Inquiry separate from Student Management
+- Paid Student / Day 1 Free Pass
+- Short Student Code Generator with history, copy and share
+- Course Management
+- Teacher profile and schedule/timetable
+- Attendance
+- Detail/Summary reporting foundation + date/month filtering
+- E (CSV) import/export
+- PDF report, invoice and certificate
+- Notifications
+- Gemini/OpenAI provider configuration UI
+- Staff username/password account workflow (Firebase Email/Password under the hood)
+- Department, roles and permission matrix
+- Monthly close history without deleting old data
+- Backup JSON
+- Firebase Firestore cloud persistence + local cache
+- Responsive iOS-style UI preserved from the original
 
-## Data persistence
-MTC+ saves locally first and then syncs each record to Firestore. If Firebase Auth is not ready or the network is unavailable, records remain in local storage and are queued for cloud sync. After Google login/Auth restoration, the app merges cloud records with local records and uploads local-only records instead of replacing them.
+## Firebase setup
+1. Enable Authentication: Google and Email/Password.
+2. Create Firestore Database.
+3. Add the deployed site domain under Authentication > Settings > Authorized domains.
+4. Upload `index.html` to GitHub Pages or Firebase Hosting.
+5. Deploy the included Firestore rules only after reviewing them for your organization.
 
-## Existing design / data
-The original Enterprise OS UI and existing features remain in `index.html`; MTC+ is an additive workspace. Do not replace the Firebase project ID/config unless you intentionally move the app to another Firebase project.
+## Data safety
+The app writes to the existing `micro_training_center/shared_state` document and also keeps a browser LocalStorage cache. The additive enterprise fields are merged into the existing state so existing records are not intentionally deleted by this build. Always export a JSON backup before replacing a production file.
 
-## GitHub Pages
-Upload `index.html` to the repository root (or rename it to `index.html` as provided). Firebase SDKs and existing CDN assets are loaded by the page.
+## AI safety
+The UI supports Gemini/OpenAI provider selection, but production API keys should not be embedded in a public GitHub HTML file. Use a secure server/proxy or Firebase Cloud Function for real API calls.
 
-## Firebase
-Publish the included rules to the same Firebase project before using cloud persistence:
-- Firestore rules: `firestore.rules`
-- Storage rules: `storage.rules`
-
-Authentication providers used by the current app:
-- Google
-- Email/Password (required for the Admin-created account feature)
+## Important security note
+The included starter Firestore rule allows authenticated users to read/write the shared state. The in-app permission matrix controls the UI, but it is not a tamper-proof server-side authorization boundary. For a real enterprise deployment, move role/permission enforcement to Firestore rules/custom claims or a trusted backend.
