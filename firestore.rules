@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Existing Enterprise OS shared state.
+    match /micro_training_center/shared_state {
+      allow read, write: if request.auth != null;
+    }
+
+    // MTC+ additions are stored as individual documents so one record can be
+    // saved/merged without replacing the whole application state.
+    match /mtc_plus/{collection}/{document} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

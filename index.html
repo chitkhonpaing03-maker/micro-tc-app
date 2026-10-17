@@ -1378,18 +1378,27 @@
         onSnapshot(sharedDocRef, (docSnap) => {
           if (docSnap.exists()) {
             const cloudData = docSnap.data();
+            // Merge cloud + local state. Never replace local arrays with an empty
+            // or older cloud snapshot, because this app is designed to preserve
+            // existing MTC data while new records are added.
+            const mergeById = (a,b) => {
+              const m = new Map((Array.isArray(a)?a:[]).filter(x=>x?.id).map(x=>[x.id,x]));
+              (Array.isArray(b)?b:[]).filter(x=>x?.id).forEach(x=>m.set(x.id,{...(m.get(x.id)||{}),...x}));
+              return [...m.values()];
+            };
             state = {
               ...defaultData,
+              ...state,
               ...cloudData,
-              courses: cloudData.courses || defaultData.courses,
-              paymentMethods: cloudData.paymentMethods || defaultData.paymentMethods,
-              leadSources: cloudData.leadSources || defaultData.leadSources,
-              users: cloudData.users || defaultData.users,
-              leads: cloudData.leads || [],
-              expenses: cloudData.expenses || [],
-              scripts: cloudData.scripts || defaultData.scripts,
-              batches: cloudData.batches || defaultData.batches,
-              auditLogs: cloudData.auditLogs || []
+              courses: mergeById(state.courses || defaultData.courses, cloudData.courses || []),
+              paymentMethods: Array.from(new Set([...(state.paymentMethods || defaultData.paymentMethods), ...(cloudData.paymentMethods || [])])),
+              leadSources: Array.from(new Set([...(state.leadSources || defaultData.leadSources), ...(cloudData.leadSources || [])])),
+              users: mergeById(state.users || defaultData.users, cloudData.users || []),
+              leads: mergeById(state.leads || [], cloudData.leads || []),
+              expenses: mergeById(state.expenses || [], cloudData.expenses || []),
+              scripts: mergeById(state.scripts || defaultData.scripts, cloudData.scripts || []),
+              batches: mergeById(state.batches || defaultData.batches, cloudData.batches || []),
+              auditLogs: mergeById(state.auditLogs || [], cloudData.auditLogs || [])
             };
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
             document.getElementById('syncStatusBadge').innerHTML = `<i class="fa-solid fa-cloud text-micro-yellow mr-1"></i>Live Synced`;
@@ -1401,6 +1410,7 @@
           if (user) {
             localStorage.setItem('MICRO_TC_ACTIVE_USER', JSON.stringify({ email: user.email, displayName: user.displayName }));
             activateUserSession(user);
+            try { await loadCloud(); } catch (e) { console.warn('MTC+ post-login sync', e); }
           }
         });
       } catch (err) {
@@ -2683,17 +2693,24 @@
   const cfg = window.__MTC_FIREBASE_CONFIG__ || {apiKey:"AIzaSyA_FVMmgcE11h09sB8nhFpc0C3BSzq2Qek",authDomain:"micro-training-center.firebaseapp.com",projectId:"micro-training-center",storageBucket:"micro-training-center.firebasestorage.app",messagingSenderId:"535516234007",appId:"1:535516234007:web:3c8844c8196c39023f3752",measurementId:"G-35Y4E4BBFE"};
   const KEY='MTC_PLUS_V1';
   const blank={students:[],customers:[],codes:[],staff:[],courses:[],batches:[],accounts:[],monthlyCloses:[]};
-  let s=JSON.parse(localStorage.getItem(KEY)||'null')||blank;
-  let fb={app:null,db:null,auth:null,storage:null,setDoc:null,getDocs:null,addDoc:null,collection:null,doc:null,onSnapshot:null,uploadBytes:null,getDownloadURL:null,storageRef:null,secondary:null,secondaryAuth:null,createUserWithEmailAndPassword:null};
-  let lastCode='';
+  const normalizeBlank=(src)=>{const out={};for(const k of Object.keys(blank))out[k]=Array.isArray(src?.[k])?src[k]:[];return out};
+  let s=normalizeBlank(JSON.parse(localStorage.getItem(KEY)||'null')||blank);
+  let fb={app:null,db:null,auth:null,storage:null,setDoc:null,deleteDoc:null,getDocs:null,addDoc:null,collection:null,doc:null,onSnapshot:null,uploadBytes:null,getDownloadURL:null,storageRef:null,secondary:null,secondaryAuth:null,createUserWithEmailAndPassword:null};
+  let lastCode=localStorage.getItem(KEY+'_LAST_CODE')||'';
   const $=id=>document.getElementById(id);
-  const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  const esc=v=>String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const nowISO=()=>new Date().toISOString();
   const userName=()=>window.__MTC_ACTIVE_USER__?.displayName||window.__MTC_ACTIVE_USER__?.email||'Admin';
-  function saveLocal(){localStorage.setItem(KEY,JSON.stringify(s));}
-  function arrMerge(oldArr,newArr){const m=new Map((oldArr||[]).map(x=>[x.id,x]));(newArr||[]).forEach(x=>{if(x?.id&&!m.has(x.id))m.set(x.id,x)});return [...m.values()]}
+  function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(s));localStorage.setItem(KEY+'_LAST_CODE',lastCode||'')}catch(e){console.warn('MTC+ local save failed',e)}}
+  function arrMerge(oldArr,newArr){const m=new Map((oldArr||[]).filter(x=>x?.id).map(x=>[x.id,x]));(newArr||[]).filter(x=>x?.id).forEach(x=>{if(!m.has(x.id))m.set(x.id,x)});return [...m.values()]}
+  const pendingKey=KEY+'_PENDING';
+  function getPending(){try{return JSON.parse(localStorage.getItem(pendingKey)||'[]')}catch(e){return []}}
+  function setPending(v){try{localStorage.setItem(pendingKey,JSON.stringify(v))}catch(e){}}
+  function queueCloud(col,obj){const q=getPending();const k=`${col}/${obj.id}`;if(!q.some(x=>x.key===k))q.push({key:k,col,id:obj.id,obj});setPending(q)}
   async function cloudAdd(col,obj){try{if(fb.addDoc&&fb.collection&&fb.db){await fb.addDoc(fb.collection(fb.db,'mtc_plus',col),obj);return true}}catch(e){console.warn('MTC+ cloud add',e)}return false}
-  async function cloudSet(col,id,obj){try{if(fb.setDoc&&fb.doc&&fb.db){await fb.setDoc(fb.doc(fb.db,'mtc_plus',col,id),obj,{merge:true});return true}}catch(e){console.warn('MTC+ cloud set',e)}return false}
+  async function cloudSet(col,id,obj){try{if(fb.setDoc&&fb.doc&&fb.db&&fb.auth?.currentUser){await fb.setDoc(fb.doc(fb.db,'mtc_plus',col,id),obj,{merge:true});return true}}catch(e){console.warn('MTC+ cloud set',e)}return false}
+  async function flushPending(){if(!fb.auth?.currentUser)return;const q=getPending();const left=[];for(const item of q){const ok=await cloudSet(item.col,item.id,item.obj);if(!ok)left.push(item)}setPending(left);if(q.length&&!left.length)notify('Cloud sync ပြီးပါပြီ')}
+
   async function initFirebase(){
     try{
       const appmod=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
@@ -2701,24 +2718,33 @@
       const au=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
       const st=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js');
       fb.app=appmod.getApps().length?appmod.getApps()[0]:appmod.initializeApp(cfg);
-      fb.db=fs.getFirestore(fb.app);fb.collection=fs.collection;fb.doc=fs.doc;fb.setDoc=fs.setDoc;fb.addDoc=fs.addDoc;fb.getDocs=fs.getDocs;fb.onSnapshot=fs.onSnapshot;
+      fb.db=fs.getFirestore(fb.app);fb.collection=fs.collection;fb.doc=fs.doc;fb.setDoc=fs.setDoc;fb.deleteDoc=fs.deleteDoc;fb.addDoc=fs.addDoc;fb.getDocs=fs.getDocs;fb.onSnapshot=fs.onSnapshot;
       fb.auth=au.getAuth(fb.app);fb.storage=st.getStorage(fb.app);fb.uploadBytes=st.uploadBytes;fb.getDownloadURL=st.getDownloadURL;fb.storageRef=st.ref;
       try{fb.secondary=appmod.initializeApp(cfg,'MTCPlusSecondary');fb.secondaryAuth=au.getAuth(fb.secondary);fb.createUserWithEmailAndPassword=au.createUserWithEmailAndPassword}catch(e){console.warn('secondary auth',e)}
-      await loadCloud();
+      if(fb.auth?.currentUser) await loadCloud();
     }catch(e){console.warn('MTC+ Firebase unavailable; local mode',e)}
   }
   async function loadCloud(){
-    if(!fb.getDocs||!fb.db)return;
+    if(!fb.getDocs||!fb.db||!fb.auth?.currentUser)return;
     for(const col of Object.keys(blank)){
-      try{const snap=await fb.getDocs(fb.collection(fb.db,'mtc_plus',col));s[col]=snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.warn(col,e)}
+      try{
+        const snap=await fb.getDocs(fb.collection(fb.db,'mtc_plus',col));
+        const cloudRows=snap.docs.map(d=>({id:d.id,...d.data()}));
+        // Merge-only: never replace local records with an empty/partial cloud result.
+        s[col]=arrMerge(s[col],cloudRows);
+        const cloudIds=new Set(cloudRows.map(x=>x.id));
+        for(const row of s[col]) if(!cloudIds.has(row.id)) queueCloud(col,row);
+      }catch(e){console.warn('MTC+ cloud load',col,e)}
     }
-    saveLocal();renderAll();
+    saveLocal();
+    await flushPending();
+    renderAll();
   }
   function courses(){const old=(window.state?.courses||[]).map(c=>typeof c==='string'?{name:c}:c).filter(Boolean);const names=new Map();[...old,...s.courses].forEach(c=>{const n=c.name||c.course||'';if(n&&!names.has(n))names.set(n,c)});return [...names.values()]}
   function fillSelect(id,placeholder='Select course'){const el=$(id);if(!el)return;const cur=el.value;el.innerHTML=`<option value="">${placeholder}</option>`+courses().map(c=>`<option value="${esc(c.name||c.course)}">${esc(c.name||c.course)}</option>`).join('');if(cur)el.value=cur}
   function fillBatchSelect(){const el=$('mpStudentBatch');if(!el)return;el.innerHTML='<option value="">No batch selected</option>'+s.batches.map(b=>`<option value="${esc(b.id)}">${esc(b.course)} — ${esc(b.name)} — ${esc(b.days||'')} ${esc(b.time||'')}</option>`).join('')}
   function renderKpi(){
-    const m=[['Students',s.students.length,'🎓'],['Customers',s.customers.length,'◉'],['Generated Codes',s.codes.length,'⌁'],['Staff',s.staff.length,'♙']];$('mpKpis').innerHTML=m.map(x=>`<div class="mp-card"><div class="mp-muted">${x[2]} ${x[0]}</div><div class="mp-kpi">${x[1].toLocaleString()}</div></div>`).join('')}
+    const m=[['Students',s.students.length,'🎓'],['Customers',s.customers.length,'◉'],['Generated Codes',s.codes.length,'⌁'],['Staff',s.staff.length,'♙']];$('mpKpis').innerHTML=m.map(x=>`<div class="mp-card"><div class="mp-muted">${x[2]} ${x[0]}</div><div class="mp-kpi">${x[1].toLocaleString()}</div></div>`).join('');
   }
   function renderStudents(){
     $('mpStudentRows').innerHTML=s.students.slice().reverse().map(x=>`<tr><td class="mp-code">${esc(x.code)}</td><td>${esc(x.name)}</td><td>${esc(x.course)}</td><td><span class="mp-badge ${x.type==='paid'?'mp-paid':'mp-free'}">${x.type==='paid'?'PAID':'DAY 1 FREE'}</span></td><td>${esc(x.phone||'-')}</td><td>${esc(x.batchName||'-')}</td><td>${esc(x.startDate||x.createdAt?.slice(0,10)||'-')}</td><td><button class="mp-btn mp-danger" onclick="MTCPlus.deleteItem('students','${x.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="8" class="mp-empty">No student data yet.</td></tr>'
@@ -2738,19 +2764,33 @@
   function notify(msg){if(window.showToast)window.showToast(msg);else alert(msg)}
   function uid(prefix){return prefix+'_'+crypto.randomUUID().replaceAll('-','').slice(0,14)}
   function shortCode(name,course){const clean=v=>String(v||'').replace(/[^A-Za-z0-9\u1000-\u109F]/g,'').toUpperCase();const a=clean(name).slice(0,2)||'ST';const b=clean(course).slice(0,2)||'MT';return `MTC-${a}${b}-${String(Math.floor(Math.random()*9000)+1000)}`}
-  async function add(col,obj){s[col].push(obj);saveLocal();await cloudSet(col,obj.id,obj);renderAll()}
+  async function add(col,obj){
+    s[col].push(obj);
+    saveLocal();
+    const ok=await cloudSet(col,obj.id,obj);
+    if(!ok) queueCloud(col,obj);
+    renderAll();
+    if(!ok) notify('Local မှာသိမ်းပြီးပါပြီ။ Login/Internet ပြန်ရတဲ့အခါ Cloud ကို အလိုအလျောက် Sync လုပ်ပါမည်။');
+  }
   const MTCPlus={
     open(){ $('mtcPlusShell').classList.add('open'); renderAll(); },
     close(){ $('mtcPlusShell').classList.remove('open'); },
     go(page){document.querySelectorAll('.mp-nav').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.mp-page').forEach(p=>p.classList.toggle('active',p.id==='mp-'+page));$('mpPageTitle').textContent=({home:'MTC+ Dashboard',students:'Student Data',codes:'Code Generator',customers:'Customer Inquiry',academic:'Teacher Schedule',staff:'Staff & Department',courses:'Courses & Batches',reports:'Reports',certificates:'Certificates',accounts:'Accounts',backup:'Backup / Restore'})[page]||'MTC+'},
-    async generateCode(){const name=$('mpCodeName').value.trim(),course=$('mpCodeCourse').value;if(!name||!course)return notify('Name နဲ့ Course ရွေးပေးပါ','error');let code=shortCode(name,course);while(s.codes.some(x=>x.code===code))code=shortCode(name,course);const obj={id:uid('code'),code,name,course,createdBy:userName(),createdAt:nowISO()};await add('codes',obj);lastCode=code;$('mpGeneratedCode').innerHTML=`<div class="mp-card" style="text-align:center;background:#fff9e6;border:2px dashed #ffaf00"><div class="mp-muted">Generated Student Code</div><div style="font-size:30px;font-weight:1000;letter-spacing:2px;margin:6px">${esc(code)}</div><button class="mp-btn mp-primary" onclick="navigator.clipboard.writeText('${esc(code)}');MTCPlus.toast('Code copied')">Copy Code</button></div>`;notify('Student Code generate ပြီးပါပြီ')},
+    async generateCode(){const name=$('mpCodeName').value.trim(),course=$('mpCodeCourse').value;if(!name||!course)return notify('Name နဲ့ Course ရွေးပေးပါ','error');let code=shortCode(name,course);while(s.codes.some(x=>x.code===code))code=shortCode(name,course);const obj={id:uid('code'),code,name,course,createdBy:userName(),createdAt:nowISO()};await add('codes',obj);lastCode=code;saveLocal();$('mpGeneratedCode').innerHTML=`<div class="mp-card" style="text-align:center;background:#fff9e6;border:2px dashed #ffaf00"><div class="mp-muted">Generated Student Code</div><div style="font-size:30px;font-weight:1000;letter-spacing:2px;margin:6px">${esc(code)}</div><button class="mp-btn mp-primary" onclick="navigator.clipboard.writeText('${esc(code)}');MTCPlus.toast('Code copied')">Copy Code</button></div>`;notify('Student Code generate ပြီးပါပြီ')},
     copyLastCode(){if(!lastCode)return notify('အရင် Generate လုပ်ပါ','error');navigator.clipboard.writeText(lastCode);notify('Code copied')},
     async saveStudent(){const name=$('mpStudentName').value.trim(),course=$('mpStudentCourse').value;if(!name||!course)return notify('Student Name နဲ့ Course လိုပါတယ်','error');const batch=s.batches.find(b=>b.id===$('mpStudentBatch').value);let code=shortCode(name,course);while(s.students.some(x=>x.code===code))code=shortCode(name,course);const obj={id:uid('stu'),code,name,course,type:$('mpStudentType').value,phone:$('mpStudentPhone').value.trim(),startDate:$('mpStudentStart').value||new Date().toISOString().slice(0,10),batchId:batch?.id||'',batchName:batch?.name||'',note:$('mpStudentNote').value.trim(),createdBy:userName(),createdAt:nowISO()};await add('students',obj);$('mpStudentForm').reset();notify('Student data saved')},
     resetStudent(){$('mpStudentForm').reset()},
     async saveCustomer(){const name=$('mpCustomerName').value.trim();if(!name)return notify('Customer Name လိုပါတယ်','error');const obj={id:uid('cus'),name,phone:$('mpCustomerPhone').value.trim(),course:$('mpCustomerCourse').value,source:$('mpCustomerSource').value.trim(),note:$('mpCustomerNote').value.trim(),createdBy:userName(),createdAt:nowISO()};await add('customers',obj);$('mpCustomerForm').reset();notify('Customer inquiry saved')},
     async saveStaff(){const name=$('mpStaffName').value.trim();if(!name)return notify('Display Name လိုပါတယ်','error');let photo='';const f=$('mpStaffPhoto').files[0];if(f){try{if(fb.storage&&fb.uploadBytes){const r=fb.storageRef(fb.storage,`mtc_plus/staff/${Date.now()}_${f.name.replace(/[^a-zA-Z0-9.]/g,'_')}`);await fb.uploadBytes(r,f);photo=await fb.getDownloadURL(r)}else{photo=await new Promise((res,rej)=>{const rd=new FileReader();rd.onload=()=>res(rd.result);rd.onerror=rej;rd.readAsDataURL(f)})}}catch(e){notify('Photo upload မအောင်မြင်ပါ','error')}}const obj={id:uid('staff'),name,dept:$('mpStaffDept').value,role:$('mpStaffRole').value.trim(),photo,createdBy:userName(),createdAt:nowISO()};await add('staff',obj);$('mpStaffName').value='';$('mpStaffRole').value='';$('mpStaffPhoto').value='';notify('Staff profile saved')},
     async saveCourseAndBatch(){const name=$('mpCourseName').value.trim();if(!name)return notify('Course name လိုပါတယ်','error');const c={id:uid('course'),name,fee:Number($('mpCourseFee').value||0),createdBy:userName(),createdAt:nowISO()};await add('courses',c);const bname=$('mpBatchName').value.trim()||'Batch 01';const b={id:uid('batch'),course:name,name:bname,teacherId:$('mpBatchTeacher').value,days:$('mpBatchDays').value.trim(),time:$('mpBatchTime').value.trim(),room:$('mpBatchRoom').value.trim(),createdBy:userName(),createdAt:nowISO()};await add('batches',b);if(window.state){window.state.courses=window.state.courses||[];if(!window.state.courses.some(x=>(x.name||x)===name))window.state.courses.push({name,fee:c.fee});try{window.renderAll();}catch(e){}}notify('Course + Batch saved and synced')},
-    async deleteItem(col,id){if(!confirm('Delete this record?'))return;s[col]=s[col].filter(x=>x.id!==id);saveLocal();renderAll();notify('Deleted locally. Existing legacy data was not changed.')},
+    async deleteItem(col,id){
+      if(!confirm('Delete this record?'))return;
+      s[col]=s[col].filter(x=>x.id!==id);
+      saveLocal();
+      try{if(fb.auth?.currentUser&&fb.doc&&fb.db&&fb.deleteDoc)await fb.deleteDoc(fb.doc(fb.db,'mtc_plus',col,id));}catch(e){console.warn('MTC+ cloud delete',e)}
+      renderAll();
+      notify('Record deleted. Existing legacy data was not changed.');
+    },
     renderReport(){const start=$('mpReportStart').value,end=$('mpReportEnd').value,course=$('mpReportCourse').value,type=$('mpReportType').value;const inRange=d=>(!start||d>=start)&&(!end||d<=end);let rows=[];if(type==='all'||type==='students')s.students.forEach(x=>{if(inRange((x.startDate||x.createdAt?.slice(0,10)||''))&&(!course||x.course===course))rows.push({date:x.startDate||x.createdAt?.slice(0,10),type:'Student',name:x.name,code:x.code,course:x.course,phone:x.phone,status:x.type})});if(type==='all'||type==='customers')s.customers.forEach(x=>{if(inRange(x.createdAt?.slice(0,10)||'')&&(!course||x.course===course))rows.push({date:x.createdAt?.slice(0,10),type:'Customer',name:x.name,code:'',course:x.course,phone:x.phone,status:'Inquiry'})});if(type==='all'||type==='codes')s.codes.forEach(x=>{if(inRange(x.createdAt?.slice(0,10)||'')&&(!course||x.course===course))rows.push({date:x.createdAt?.slice(0,10),type:'Code',name:x.name,code:x.code,course:x.course,phone:'',status:'Generated'})});rows.sort((a,b)=>String(b.date).localeCompare(String(a.date)));$('mpReportSummary').innerHTML=`<div class="mp-grid"><div class="mp-card"><div class="mp-muted">Total Records</div><div class="mp-kpi">${rows.length}</div></div><div class="mp-card"><div class="mp-muted">Students</div><div class="mp-kpi">${rows.filter(x=>x.type==='Student').length}</div></div><div class="mp-card"><div class="mp-muted">Customers</div><div class="mp-kpi">${rows.filter(x=>x.type==='Customer').length}</div></div><div class="mp-card"><div class="mp-muted">Codes</div><div class="mp-kpi">${rows.filter(x=>x.type==='Code').length}</div></div></div>`;$('mpReportRows').innerHTML=rows.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.name)}</td><td class="mp-code">${esc(x.code)}</td><td>${esc(x.course||'-')}</td><td>${esc(x.phone||'-')}</td><td>${esc(x.status)}</td></tr>`).join('')||'<tr><td colspan="7" class="mp-empty">No records in selected range.</td></tr>'},
     exportReport(kind){this.renderReport();const start=$('mpReportStart').value||'all',end=$('mpReportEnd').value||'all';const rows=[...document.querySelectorAll('#mpReportRows tr')].map(tr=>[...tr.children].map(td=>td.innerText));if(kind==='csv'){const csv='\uFEFF'+[['Date','Type','Name','Code','Course','Phone','Status'],...rows].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`MTC_Report_${start}_${end}.csv`;a.click()}else{const el=document.createElement('div');el.style.padding='20px';el.innerHTML=`<h2>MTC Report</h2><p>${start} → ${end}</p><table style="width:100%;border-collapse:collapse;font-size:10px"><tr>${['Date','Type','Name','Code','Course','Phone','Status'].map(x=>`<th style="border:1px solid #ccc;padding:5px">${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(v=>`<td style="border:1px solid #ccc;padding:5px">${esc(v)}</td>`).join('')}</tr>`).join('')}</table>`;html2pdf().from(el).set({filename:`MTC_Report_${start}_${end}.pdf`,html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}}).save()}},
     async closeCurrentMonth(){const d=new Date(),month=d.toISOString().slice(0,7);if(s.monthlyCloses.some(x=>x.month===month))return notify('ဒီလစာရင်းပိတ်ထားပြီးပါပြီ');const obj={id:uid('close'),month,closedAt:nowISO(),closedBy:userName(),studentCount:s.students.filter(x=>(x.startDate||x.createdAt||'').startsWith(month)).length,customerCount:s.customers.filter(x=>(x.createdAt||'').startsWith(month)).length,codeCount:s.codes.filter(x=>(x.createdAt||'').startsWith(month)).length};await add('monthlyCloses',obj);notify(`${month} month closed. Previous data remains searchable.`)},
